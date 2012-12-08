@@ -9,6 +9,7 @@ import memcache
 import mutagen
 import sys
 from optparse import OptionParser
+from sha import sha
 
 class Song():
 
@@ -86,17 +87,17 @@ class Song():
         x = 0
         if conn:
             cur = conn.cursor()
-            query = """SELECT id, filename, score FROM songs ORDER by played ASC, score DESC, uniq ASC LIMIT 1"""
+            query = """SELECT id, filename, score FROM caro_song ORDER by played ASC, score DESC, uniq ASC LIMIT 1"""
             cur.execute(query)
             rows = cur.fetchall()
             filename = rows[0][1]
             song_id = rows[0][0]
             song_score = rows[0][2]
 
-            query = """UPDATE songs set played = played + 1 WHERE id=%s"""
+            query = """UPDATE caro_song set played = played + 1 WHERE id=%s"""
             cur.execute(query, (song_id, ))
 
-            query = """INSERT INTO played (song_id, date_played) VALUES (%s, now())"""
+            query = """INSERT INTO caro_historyentry (song_id, date_played) VALUES (%s, now())"""
             cur.execute(query, (song_id, ))
 
             self.onair(filename, song_score)
@@ -144,11 +145,12 @@ class Song():
 
             if artist and album and genre and title:
 
-                query = """INSERT INTO caro_song (score, filename, artist, album, title, genre) VALUES (0, %s, %s, %s, %s, %s);"""
+                query = """INSERT INTO caro_song (score, filename, artist, album, title, genre, played, uniq) VALUES (0, %s, %s, %s, %s, %s, 0, %s);"""
                 try:
                     cur.execute(query, (filename, artist, album,
                                         title,
                                         genre,
+                                        sha(filename).hexdigest()
                                         ))
                 except KeyError:
                     query = """INSERT INTO caro_logs (filename, message, date_import) VALUES (%s, 'ERROR 02', now());"""

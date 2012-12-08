@@ -1,47 +1,31 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-
-import os, syslog, time
-from optparse import OptionParser
+#
+# Copyright (c) 2012 Rodolphe Quiédeville <rodolphe@quiedeville.org>
+#
+#     This program is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+"""
+Read the next song from database and print the filename on STDOUT
+"""
 from song import Song
 
-def readopts(cmdargs):
-    """
-    Read options passed on command line
-    """
-    opts = ""
-    parser = OptionParser()
-    parser.add_option("--exclude-list-file",
-                      action="store",
-                      type="string",
-                      dest="exclude_filelist",
-                      default=None)
-
-    parser.add_option("--binary",
-                      action="store",
-                      type="string",
-                      dest="clocpath",
-                      default="/usr/bin/cloc")
-
-    options = parser.parse_args(args=cmdargs)[0]
-
-    if options.exclude_filelist is not None:
-        opts = load_exclude(options.exclude_filelist)
-
-    if options.clocpath is not None:
-        if not path.isfile(options.clocpath):
-            exit('File does not exists : %s' % (options.clocpath))
-        if not access(options.clocpath, X_OK):
-            exit('File does not exists : %s' % (options.clocpath))
-    return options.clocpath, opts
-
-
 def main():
-    #(binary, opts) = readopts(cmdarg)
-
-    conf = "dbname=radio user=rodo password=rodo host=localhost port=5432"
-    counter = 0
-    nbt = Song(conf)
+    """
+    Main function
+    """
+    nbt = Song()
     return nbt.next()
 
 if __name__ == "__main__":

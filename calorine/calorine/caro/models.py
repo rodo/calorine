@@ -34,6 +34,8 @@ class Song(models.Model):
     album = models.CharField(max_length=200, verbose_name='titre', blank=True)
     filename = models.CharField(max_length=200, verbose_name='titre', blank=True)
     score = models.IntegerField(verbose_name='titre', blank=True)
+    played = models.IntegerField(blank=True, default=0)
+    uniq = models.CharField(max_length=40, blank=True)
 
     def __unicode__(self):
         """
