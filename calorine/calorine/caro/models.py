@@ -28,11 +28,11 @@ class Song(models.Model):
     """
     The song object
     """
-    artist = models.CharField(max_length=200, verbose_name='titre', blank=True)
-    title = models.CharField(max_length=200, verbose_name='titre', blank=True)
-    genre = models.CharField(max_length=200, verbose_name='titre', blank=True)
-    album = models.CharField(max_length=200, verbose_name='titre', blank=True)
-    filename = models.CharField(max_length=200, verbose_name='titre', blank=True)
+    artist = models.CharField(max_length=300, verbose_name='titre', blank=True)
+    title = models.CharField(max_length=300, verbose_name='titre', blank=True)
+    genre = models.CharField(max_length=300, verbose_name='titre', blank=True)
+    album = models.CharField(max_length=300, verbose_name='titre', blank=True)
+    filename = models.CharField(max_length=300, verbose_name='titre', blank=True)
     score = models.IntegerField(verbose_name='titre', blank=True)
     played = models.IntegerField(blank=True, default=0)
     uniq = models.CharField(max_length=40, blank=True)
