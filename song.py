@@ -8,13 +8,58 @@ import psycopg2
 import memcache
 import mutagen
 import sys
+from optparse import OptionParser
 
 class Song():
 
-    def __init__(self, conf):
+    def __init__(self):
         """Class initialization"""
-        self.conf = conf
+        self.conf = self.readopts()
         self.memcache_conn()
+
+    def readopts(self):
+        """
+        Read options passed on command line
+        """
+        parser = OptionParser()
+        parser.add_option("--dbname", action="store", type="string", dest="dbname", default=None)
+        
+        parser.add_option("--user",
+                          action="store",
+                          type="string",
+                          dest="user",
+                          default=None)
+        
+        parser.add_option("--password",
+                          action="store",
+                          type="string",
+                          dest="password",
+                          default=None)
+        
+        parser.add_option("--host",
+                          action="store",
+                          type="string",
+                          dest="host",
+                          default=None)    
+        
+        parser.add_option("--port",
+                          action="store",
+                          type="string",
+                          dest="port",
+                          default=None)
+        
+        (options, args) = parser.parse_args()
+
+        if options.dbname is None:
+            print "dbname is mandatory"
+            exit(1)
+
+        conf = "dbname=%s" % options.dbname
+        for parm in ['user', 'password', 'host', 'port']:
+            if options.__dict__[parm] is not None:
+                conf = "%s %s" % (conf, options.__dict__[parm])
+        return conf
+
 
     def memcache_conn(self):
         """

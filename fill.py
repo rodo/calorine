@@ -1,69 +1,59 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-
-import threading
-import os, syslog, time
-from stat import ST_MTIME
-import psycopg2
-import mutagen
+#
+# Copyright (c) 2012 Rodolphe Quiédeville <rodolphe@quiedeville.org>
+#
+#     This program is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+"""
+fill.py is used to fill the database with music files
+"""
+import os
+import sys
 from song import Song
 
-def readopts(cmdargs):
+def importdir(path, counter):
     """
-    Read options passed on command line
+    Import all files present in dir recursively
     """
-    opts = ""
-    parser = OptionParser()
-    parser.add_option("--exclude-list-file",
-                      action="store",
-                      type="string",
-                      dest="exclude_filelist",
-                      default=None)
-
-    parser.add_option("--binary",
-                      action="store",
-                      type="string",
-                      dest="clocpath",
-                      default="/usr/bin/cloc")
-
-    options = parser.parse_args(args=cmdargs)[0]
-
-    if options.exclude_filelist is not None:
-        opts = load_exclude(options.exclude_filelist)
-
-    if options.clocpath is not None:
-        if not path.isfile(options.clocpath):
-            exit('File does not exists : %s' % (options.clocpath))
-        if not access(options.clocpath, X_OK):
-            exit('File does not exists : %s' % (options.clocpath))
-    return options.clocpath, opts
-
-def importdir(path, counter, conf):
-
     extensions = ['ogg', 'mp3']
-    nbt = Song(conf)
+    nbt = Song()
     for filename in os.listdir(path):
-        if os.path.isdir(os.path.join(path,filename.strip())):
-            importdir(os.path.join(path,filename.strip()), counter, conf)
+        if os.path.isdir(os.path.join(path, filename.strip())):
+            importdir(os.path.join(path, filename.strip()), counter)
         else:
             ext = filename.split('.')[-1]
             if ext in extensions:
-                nbt.newsong(os.path.join(path,filename.strip()))
+                nbt.newsong(os.path.join(path, filename.strip()))
                 print counter, filename.strip()
                 counter += 1
     return counter
 
 def main():
+    """
+    Main function
+    """
+    if len(sys.argv) == 1:
+        print "Usage fill.py [options] --dbname=DBNAME DIRNAME"
+        sys.exit(1)
+    path = sys.argv[-1]
 
-    conf = "dbname=devradio"
+    if not os.path.isdir(path):
+        print "%s does not exists" % path
 
     counter = 0
-
-    path = "/home/Music/AATrier"
-
-    importdir(path, counter, conf)
+    importdir(path, counter)
 
 if __name__ == "__main__":
     main()
-
-
