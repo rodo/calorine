@@ -53,9 +53,10 @@ def importdir(path):
 def mp3ogg(fname):
 
     mpg = subprocess.Popen(["/usr/bin/mpg123",
-                            fname,
                             "-w",
-                            "-"], stdout=subprocess.PIPE)
+                            "-",
+                            fname],
+                           stdout=subprocess.PIPE)
     
     ogg = subprocess.Popen(["/usr/bin/oggenc",
                             "-o",
