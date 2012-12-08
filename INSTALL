@@ -1,0 +1,4 @@
+On Debian
+=========
+
+apt-get install python-django python-django-registration python-psycopg2
