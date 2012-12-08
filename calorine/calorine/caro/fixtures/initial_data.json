@@ -1,0 +1,14 @@
+[
+  {"pk": 1, 
+  "model": "auth.user", 
+  "fields": {"username": "admin", 
+  	     "first_name": "admin",
+	     "last_name": "admin",
+	     "is_active": true, 
+	     "is_superuser": true, 
+	     "is_staff": true, 
+	     "groups": [], "user_permissions": [], 
+	     "password": "sha1$e09a2$3b2e5b2962fd5d327d4366a48e2781b1c6682d36", 
+	     "email": "admin@example.com" }
+   }
+]

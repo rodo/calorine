@@ -1,0 +1,88 @@
+{% load i18n %}
+{% include "header.html" %}
+{% include "navbar.html" %}
+<div class="container">
+    <div class="row">
+      <div class="span12">
+
+	  <div class="pagination pagination-small">
+	    <ul>
+	      <li class="previous">
+		<a href="?page={{songs.previous_page_number}}">&larr;</a>
+	      </li>
+	      {% for page in songs.paginator.page_range %}
+	      {% if page == songs.number %}
+	      <li class="active">
+	      {% else %}
+	      <li>
+		{% endif %}
+		<a href="?page={{page}}">{{page}}</a>
+	      </li>
+	      {% endfor %}
+	      <li class="next">
+		<a href="?page={{songs.next_page_number}}">&rarr;</a>
+	      </li>
+	    </ul>
+	  </div>
+
+	  {% if dc %}
+	  <div id="deleteConfirmed" class="alert alert-block alert-info fade in">
+	    <a class="close" data-dismiss="alert" href="#">&times;</a>
+	    <p>{% trans "Delete confirmed" %}</p>
+	  </div>
+	  {% endif %}
+
+	  <table class="table table-striped">
+	    <thead>
+	      <tr>
+		<th class="span2"><span class="result"></span></th>
+		<th class="span4">Titre</th>
+		<th class="span3">Artiste</th>
+		<th class="span4">Album</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	      {% for song in songs.object_list %}
+	      <tr>
+		<td>
+		  <a class="btn btn-primary" href="#" onclick="add_to_playlist({{song.id}})">Playlist</a>
+		</td>
+		<td>{{song.title}}</td>
+		<td>{{song.artist}}</td>
+		<td>{{song.album}}</td>
+	      </tr>
+
+	      <div class="modal hide" id="myModal{{book.uuid}}">
+		<div class="modal-header">
+		  <h3>{% trans "Confirm delete" %}</h3>
+		</div>
+		<div class="modal-body">
+		  <p>
+		    <ul>
+		      <li>{% trans "Firstname" %} {% trans "Name" %} : {{book.firstname}} {{ book.name }}</li>
+		      <li>{% trans "Adult places" %} : {{book.places_adult }}</li>
+		      <li>{% trans "Child places" %} : {{book.places_child }}</li>
+		      <li>{% trans "Amount" %} : {{book.price_total|floatformat:2 }}</li>
+		      <li>{% trans "Email" %} : {{book.email}}</li>
+		      <li>{% trans "Date" %} : {{book.booking_date|date:"D j b Y H:i"}}</li>
+		    </ul>
+		  </p>
+		</div>
+		<div class="modal-footer">
+		  <a href="#" class="btn" data-dismiss="modal">{% trans "Cancel" %}</a>
+		  <a href="{{prefix_url}}/resalist/{{perf.id}}/delete/{{book.uuid}}" class="btn btn-primary">{% trans "Delete" %}</a>
+		</div>
+	      </div>
+
+	      {% endfor %}
+	    </tbody>
+	  </table>
+
+
+      </div><!--/row-->
+    </div><!--/row-->
+
+  </div><!--/.container-->
+  <script src="{{ STATIC_URL }}js/bootstrap-modal.js"></script>
+  <script src="{{ STATIC_URL }}js/bootstrap-alert.js"></script>
+  {% include "footer.html" %}

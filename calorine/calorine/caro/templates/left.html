@@ -1,0 +1,30 @@
+{% load i18n %}
+<!-- infobox in left.html -->
+<div class="span3">
+  {% if user.is_authenticated %}
+  <div class="well">
+      Compte : {{ user.username }}<br />
+      {{ user.first_name }} {{ user.last_name }}<br />
+      <a href="/accounts/profile/">Mon compte</a> <br/>
+      <a href="/accounts/api/">API</a> <br/>
+      {% if user.is_staff %}
+      <a href="/admin/">Accès admin</a><br/>
+      {% endif %}
+  </div>
+  
+  <div class="well">
+      <a href="/events/new">{% trans "New events" %}</a> <br/>
+      <a href="/accounts/spectacle/nouveau">{% trans "New show" %}</a> <br/>
+  </div>
+  {% endif %}
+
+  <div class="well sidebar-nav">
+    <ul class="nav nav-list">
+      <li><h6>{{ info_title }}</h6></li>
+      <li>{{ info_information }}</li>
+      {% if info_url %}
+      <li><a href="{{ info_url }}" target="_blank"><i class="icon-plus"></i> plus d'infos</a></li>
+      {% endif %}
+    </ul>	  
+  </div><!--/.well -->
+</div><!--/span--><!-- /infobox -->

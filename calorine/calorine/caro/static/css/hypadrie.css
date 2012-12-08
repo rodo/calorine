@@ -1,0 +1,30 @@
+/* We do not use pattern for now
+body { 
+       background-image: url('/static/patterns/grey/grey.png');
+       }
+*/
+
+.table td { line-height: 14px; }
+
+
+
+
+#divleaf { border: 1px black solid; 
+           width: 600px; 
+           height: 330px;
+           }
+
+#divleaf img { 
+               max-width: none; 
+               }
+
+div.page-header { 
+                  border-bottom: none;
+                  margin: 0px;
+                  padding-bottom: 12px;
+                  }
+
+
+span.badge:hover{ 
+             cursor:default;
+             } 
