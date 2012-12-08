@@ -112,7 +112,6 @@ class Song():
         cur = conn.cursor()
         cur.execute(qry, (fsig,))
         datas = cur.fetchall()
-        cur.close()
         return len(datas)
 
     def newsong(self, filename):
