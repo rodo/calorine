@@ -29,7 +29,13 @@ def importdir(path, counter):
     """
     extensions = ['ogg', 'mp3']
     nbt = Song()
-    for filename in os.listdir(path):
+    dirlist = []
+    try:
+        dirlist = os.listdir(path)
+    except OSError as e:
+        pass
+
+    for filename in dirlist:
         if os.path.isdir(os.path.join(path, filename.strip())):
             importdir(os.path.join(path, filename.strip()), counter)
         else:
@@ -38,6 +44,7 @@ def importdir(path, counter):
                 nbt.newsong(os.path.join(path, filename.strip()))
                 print counter, filename.strip()
                 counter += 1
+
     return counter
 
 def main():
