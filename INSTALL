@@ -1,4 +1,6 @@
 On Debian
 =========
 
-apt-get install python-django python-django-registration python-psycopg2
+apt-get install python-django python-django-registration python-psycopg2 python-mutagen python-memcache
+
+python-whoosh

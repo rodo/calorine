@@ -9,7 +9,7 @@ import memcache
 import mutagen
 import sys
 from optparse import OptionParser
-from sha import sha
+from utils import hashfile
 
 class Song():
 
@@ -107,6 +107,14 @@ class Song():
 
         return filename
 
+    def checkfile(self, conn, fsig):
+        qry = "SELECT id FROM caro_song WHERE uniq=%s"
+        cur = conn.cursor()
+        cur.execute(qry, (fsig,))
+        datas = cur.fetchall()
+        cur.close()
+        return len(datas)
+
     def newsong(self, filename):
         """Do the job"""
 
@@ -145,18 +153,32 @@ class Song():
 
             if artist and album and genre and title:
 
-                query = """INSERT INTO caro_song (score, filename, artist, album, title, genre, played, uniq) VALUES (0, %s, %s, %s, %s, %s, 0, %s);"""
-                try:
-                    cur.execute(query, (filename, artist, album,
-                                        title,
-                                        genre,
-                                        sha(filename).hexdigest()
-                                        ))
-                except KeyError:
-                    query = """INSERT INTO caro_logs (filename, message, date_import) VALUES (%s, 'ERROR 02', now());"""
-                    cur.execute(query, (filename,))
-                    pass
-
+                fsig = hashfile(filename)
+                chk = self.checkfile(conn, fsig)
+                if chk == 0:
+                    self.insertfile(conn, 
+                                    [filename, artist, album, title, genre, fsig])
 
             conn.commit()
         conn.close()
+
+
+
+
+    def insertfile(self, conn, datas):
+        """
+        
+        """
+        query = """INSERT INTO caro_song (score, filename, artist, album, title, genre, played, uniq) VALUES (0, %s, %s, %s, %s, %s, 0, %s);"""
+        try:
+            cur.execute(query, (datas[0],
+                                datas[1],
+                                datas[2],
+                                datas[3],
+                                datas[4],
+                                datas[5]
+                                ))
+        except KeyError:
+            query = """INSERT INTO caro_logs (filename, message, date_import) VALUES (%s, 'ERROR 02', now());"""
+            cur.execute(query, (datas[0],))
+            pass
