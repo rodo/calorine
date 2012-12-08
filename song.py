@@ -58,7 +58,7 @@ class Song():
         conf = "dbname=%s" % options.dbname
         for parm in ['user', 'password', 'host', 'port']:
             if options.__dict__[parm] is not None:
-                conf = "%s %s" % (conf, options.__dict__[parm])
+                conf = "%s=%s" % (conf, options.__dict__[parm])
         return conf
 
 
