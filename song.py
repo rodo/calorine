@@ -93,7 +93,7 @@ class Song():
             song_score = rows[2]
 
             cur = conn.cursor()
-            query = """UPDATE caro_song set played = played + 1 WHERE id=%s"""
+            query = """UPDATE caro_song set played = played + 1, score = 0 WHERE id=%s"""
             cur.execute(query, (song_id, ))
 
             query = """INSERT INTO caro_historyentry (song_id, date_played) VALUES (%s, now())"""
@@ -184,13 +184,15 @@ class Song():
                 cur.execute(query, (filename, msg, ))
 
             if artist and album and genre and title:
-
                 fsig = hashfile(filename)
                 chk = self.checkfile(conn, fsig)
                 if chk == 0:
                     self.insertfile(conn, 
                                     [filename, artist, album, title, genre, fsig])
-
+                else:
+                    print "File exists in DB"
+            else:
+                print "Missiong tag"
             conn.commit()
         conn.close()
 
