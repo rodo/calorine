@@ -116,8 +116,10 @@ class Song():
         return len(datas)
 
     def newsong(self, filename):
-        """Do the job"""
-
+        """
+        Create a new song in database
+        """
+        datas = None
         try:
             unicode(filename)
         except UnicodeDecodeError:
@@ -134,7 +136,6 @@ class Song():
 
 
         if datas is not None:
-
             artist = None
             album = None
             title = None
@@ -167,7 +168,7 @@ class Song():
 
     def insertfile(self, conn, datas):
         """
-        
+        Insert datas in database
         """
         query = """INSERT INTO caro_song (score, filename, artist, album, title, genre, played, uniq) VALUES (0, %s, %s, %s, %s, %s, 0, %s);"""
         cur = conn.cursor()
@@ -182,4 +183,4 @@ class Song():
         except KeyError:
             query = """INSERT INTO caro_logs (filename, message, date_import) VALUES (%s, 'ERROR 02', now());"""
             cur.execute(query, (datas[0],))
-            pass
+
