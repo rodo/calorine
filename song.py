@@ -112,6 +112,7 @@ class Song():
         cur = conn.cursor()
         cur.execute(qry, (fsig,))
         datas = cur.fetchall()
+        cur.close()
         return len(datas)
 
     def newsong(self, filename):
@@ -169,6 +170,7 @@ class Song():
         
         """
         query = """INSERT INTO caro_song (score, filename, artist, album, title, genre, played, uniq) VALUES (0, %s, %s, %s, %s, %s, 0, %s);"""
+        cur = conn.cursor()
         try:
             cur.execute(query, (datas[0],
                                 datas[1],
