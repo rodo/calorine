@@ -27,7 +27,7 @@ def importdir(path, counter):
     """
     Import all files present in dir recursively
     """
-    extensions = ['ogg', 'mp3']
+    extensions = ['ogg']
     nbt = Song()
     dirlist = []
     try:
