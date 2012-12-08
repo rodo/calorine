@@ -8,6 +8,7 @@ import psycopg2
 import memcache
 import mutagen
 import sys
+from os import path
 from optparse import OptionParser
 from utils import hashfile
 
@@ -86,14 +87,12 @@ class Song():
         conn = psycopg2.connect(self.conf)
         x = 0
         if conn:
-            cur = conn.cursor()
-            query = """SELECT id, filename, score FROM caro_song ORDER by played ASC, score DESC, uniq ASC LIMIT 1"""
-            cur.execute(query)
-            rows = cur.fetchall()
-            filename = rows[0][1]
-            song_id = rows[0][0]
-            song_score = rows[0][2]
+            rows = self.fetchfile(conn)
+            filename = rows[1]
+            song_id = rows[0]
+            song_score = rows[2]
 
+            cur = conn.cursor()
             query = """UPDATE caro_song set played = played + 1 WHERE id=%s"""
             cur.execute(query, (song_id, ))
 
@@ -106,6 +105,38 @@ class Song():
             conn.close()
 
         return filename
+
+    def fetchfile(self, conn):
+        """
+
+        """
+        cur = conn.cursor()
+        exists = False
+        i = 0
+        limit = 1000
+        datas = None
+        while (not exists) and (i < limit):
+            query = """SELECT id, filename, score FROM caro_song WHERE score >= 0 ORDER by played ASC, score DESC, uniq ASC LIMIT 1"""
+            cur.execute(query)
+            rows = cur.fetchall()
+            i = i + 1
+            exists = path.isfile(rows[0][1])
+            datas = rows[0]
+
+            if not exists:
+                self.markfile(conn, datas[0])
+                print datas[1]
+
+        return datas
+        
+    def markfile(self, conn, song_id):
+        """
+        Mark a song with score = -1000
+        """
+        cur = conn.cursor()
+        query = """UPDATE caro_song SET score = -1000 WHERE id=%s"""
+        cur.execute(query, (song_id, ))
+
 
     def checkfile(self, conn, fsig):
         qry = "SELECT id FROM caro_song WHERE uniq=%s"
