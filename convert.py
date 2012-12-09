@@ -22,6 +22,10 @@ convert.py convert all files from mp3 to ogg recursively
 import os
 import sys
 import subprocess
+import mutagen
+
+__OGGENC__ = "/usr/bin/oggenc"
+__MPG123__ = "/usr/bin/mpg123"
 
 def importdir(path):
     """
@@ -45,23 +49,49 @@ def importdir(path):
             ext = filename.split('.')[-1]
             if ext in extensions:
                 if not os.path.isfile("%s.ogg" % fullname[:-4]):
-                    mp3ogg(fullname)
+                    datas = readtags(fullname)
+                    mp3ogg(fullname, datas)
 
 
     return counter
 
-def mp3ogg(fname):
+def readtags(fname):
+    """Read mp3 IDS Tags
 
-    mpg = subprocess.Popen(["/usr/bin/mpg123",
+    Return array with tags
+    """
+    datas = {}
+    fields = ['album', 'artist', 'title', 'genre', 'date', 'tracknumber']
+    muts = mutagen.File(fname, easy=True)
+    for fld in fields:
+        if not muts.has_key(fld):
+            datas[fld] = ''
+        else:
+            data = muts[fld]
+            datas[fld] = data[0]
+    return datas
+
+def mp3ogg(fname, datas):
+    """
+    Encode mp3 files to ogg vorbis
+    """
+    mpg = subprocess.Popen([__MPG123__,
                             "-w",
                             "-",
                             fname],
                            stdout=subprocess.PIPE)
     
-    ogg = subprocess.Popen(["/usr/bin/oggenc",
-                            "-o",
-                            "%s.ogg" % fname[:-4],
-                            "-"],
+    command = [__OGGENC__,
+               "--artist", datas['artist'],
+               "--title", datas['title'],
+               "--album", datas['album'],
+               "--genre", datas['genre'],
+               "--date", datas['date'],
+               "--tracknum", datas['tracknumber'],
+               "-o", "%s.ogg" % fname[:-4],
+               "-"]
+
+    ogg = subprocess.Popen(command,
                            stdin=mpg.stdout, stdout=subprocess.PIPE)
     output = ogg.communicate()[0]
 
@@ -70,6 +100,14 @@ def main():
     """
     Main function
     """
+    if not os.path.isfile(__OGGENC__):
+        print "%s not found, please install vorbis tools" % __OGGENC__
+        sys.exit(2)
+
+    if not os.path.isfile(__MPG123__):
+        print "%s not found, please install vorbis tools" % __MPG123__
+        sys.exit(2)
+
     if len(sys.argv) == 1:
         print "Usage convert.py DIRNAME"
         sys.exit(1)

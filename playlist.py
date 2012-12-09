@@ -20,13 +20,16 @@
 Read the next song from database and print the filename on STDOUT
 """
 from song import Song
+from utils import trigger
 
 def main():
     """
     Main function
     """
     nbt = Song()
-    return nbt.next()
+    fname = nbt.next()
+    trigger(fname, "/tmp/python_unix_sockets_example")
+    return fname
 
 if __name__ == "__main__":
     print main()
