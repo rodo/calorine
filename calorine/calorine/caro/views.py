@@ -32,28 +32,15 @@ from calorine.caro.models import Song
 from calorine.caro.models import Logs
 from calorine.caro.models import PlaylistEntry
 from datetime import datetime
+from django.views.generic import ListView
 
-def songs(request):
-    """
-    The songs in databases
-    """
 
-    blist = Song.objects.filter(score__gt=0)
-    paginator = Paginator(blist, 10)
+class SongList(ListView):
+    queryset = Song.objects.filter(score__gt=0)
+    paginate_by = 10
+    template_name = "songs.html"
+    context_object_name = "songs"
 
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-
-    try:
-        songs = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        songs = paginator.page(paginator.num_pages)
-
-    return render(request,
-                  'songs.html',
-                  {'songs': songs,})
 
 def playlist(request):
     """
