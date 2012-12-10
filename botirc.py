@@ -39,10 +39,10 @@ class BotModeration(ircbot.SingleServerIRCBot):
         """
         serv.join(self.chan)
         wmsg = ["yo les baiseaux", "salut les bouseux",
-                "yo les baiseaux", "coucou tout le monde",
-                "yo les baiseaux", "Yi ah c'est moi !",
-                "yo les baiseaux", "salut les bouseux",
-                "yo les baiseaux", "salut les bouseux"]
+                "coucou les filles", "coucou tout le monde",
+                "\o calorine est dans la place !", "Yi ah c'est moi !",
+                "kikoo les chouchous", "salut les bouseux",
+                "yo gros", "bonjour bonjour les amours"]
         rand = int(random() * 10)
         serv.privmsg(self.chan, wmsg[rand])
 
@@ -69,9 +69,10 @@ class BotModeration(ircbot.SingleServerIRCBot):
                 break
 
         if message == "calorine: cassos":
-            serv.disconnect("Au revoir, comme aurait dit VGE")
-            self.inputthread.go_on = False
             self.queue.stop()
+            self.speak("ok je comprends")
+            self.inputthread.go_on = False
+            serv.disconnect("Au revoir, comme aurait dit VGE")
             sys.exit(0)
 
     def speak(self, message):
