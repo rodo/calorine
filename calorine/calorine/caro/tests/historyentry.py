@@ -54,6 +54,4 @@ class HistoryEntryTests(TestCase):  # pylint: disable-msg=R0904
             song=song,
             date_played=datetime.utcnow().replace(tzinfo=utc))
 
-
         self.assertGreater(hist.id, 0)
-

@@ -48,4 +48,3 @@ class SongTests(TestCase):  # pylint: disable-msg=R0904
                                    score=0)
 
         self.assertGreater(song.id, 0)
-

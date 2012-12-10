@@ -26,6 +26,7 @@ from calorine.caro.models import Song
 from datetime import datetime
 from django.utils.timezone import utc
 
+
 class PlaylistEntryTests(TestCase):  # pylint: disable-msg=R0904
     """
     The profile view
@@ -49,9 +50,9 @@ class PlaylistEntryTests(TestCase):  # pylint: disable-msg=R0904
                                    genre='Blues',
                                    score=0)
 
-        ple = PlaylistEntry.objects.create(song=song,
-                                           date_add=datetime.utcnow().replace(tzinfo=utc),
-                                           score=0)
-        
-        self.assertGreater(ple.id, 0)
+        ple = PlaylistEntry.objects.create(
+            song=song,
+            date_add=datetime.utcnow().replace(tzinfo=utc),
+            score=0)
 
+        self.assertGreater(ple.id, 0)

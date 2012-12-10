@@ -21,6 +21,7 @@ Fulltext indexing with haystack
 from haystack import indexes
 from calorine.caro.models import Song
 
+
 class SongIndex(indexes.RealTimeSearchIndex, indexes.Indexable):
     """
     Fulltext indexing for objects Song
