@@ -10,6 +10,7 @@ import socket
 from threading import Thread
 from botcommon import OutputManager
 from random import random
+from optparse import OptionParser
 
 """
 python-irclib
@@ -85,7 +86,7 @@ class sockinput(Thread):
 
     def __init__(self, bot):
         Thread.__init__(self)
-        self.sockfile = "/tmp/python_unix_sockets_example"
+        self.sockfile = "/tmp/calorine.socket"
         self.bot = bot
         self.go_on = True
         if os.path.exists( self.sockfile ):
@@ -111,8 +112,31 @@ class sockinput(Thread):
                     self.bot.speak(data)
 
 
-if __name__ == "__main__":
+def readopts():
+    """
+    Read options passed on command line
+    """
+    parser = OptionParser()
+    parser.add_option("--dbname", action="store", type="string", dest="dbname", default=None)
+    
+    parser.add_option("-c", "--chan",
+                      action="store",
+                      type="string",
+                      dest="chan",
+                      default=None)
+    
+    (options, args) = parser.parse_args()
+    return options
+
+def main():
+    """
+    Main
+    """
+    options = readopts()
     bot = BotModeration()
-    bot.chan = "#fsci"
+    bot.chan = "#%s" % options.chan
     bot.start()
+
+if __name__ == "__main__":
+    main()
     
