@@ -18,7 +18,6 @@
 """
 Fulltext indexing with haystack
 """
-from django.conf import settings
 from haystack import indexes
 from calorine.caro.models import Song
 
