@@ -19,9 +19,8 @@
 Unit tests for Song
 
 """
-from django.conf import settings
 from django.contrib.auth.models import User
-from django.test import TestCase, Client
+from django.test import TestCase
 from calorine.caro.models import Song
 
 
