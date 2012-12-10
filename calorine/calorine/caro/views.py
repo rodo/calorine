@@ -46,7 +46,7 @@ class HistoryList(ListView):
 
 
 class PlayList(ListView):
-    queryset = PlaylistEntry.objects.all().order_by("-score")
+    queryset = PlaylistEntry.objects.all().order_by('-score', 'date_add')
     paginate_by = 10
     template_name = 'playlist.html'
     context_object_name = "songs"
@@ -62,7 +62,7 @@ class PlayList(ListView):
 
 
 class Profile(ListView):
-    queryset = PlaylistEntry.objects.all().order_by('-pk')[:4]
+    queryset = PlaylistEntry.objects.all().order_by('-pk', 'date_add')[:4]
     template_name = 'profile.html'
     context_object_name = "songs"
 
