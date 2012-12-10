@@ -149,7 +149,6 @@ class Song():
 
             if not exists:
                 self.markfile(datas[0])
-                print datas[1]
 
         return datas
         
