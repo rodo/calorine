@@ -1,29 +1,11 @@
 {% load i18n %}
 {% include "header.html" %}
 {% include "navbar.html" %}
+
 <div class="container">
-    <div class="row">      
-      <div class="span12">	  
-	
-	  <div class="pagination">
-	    <ul>
-	      <li class="previous">
-		<a href="?page={{songs.previous_page_number}}">&larr;</a>
-	      </li>
-	      {% for page in songs.paginator.page_range %}
-	      {% if page == songs.number %}
-	      <li class="active">
-	      {% else %}
-	      <li>
-		{% endif %}
-		<a href="?page={{page}}">{{page}}</a>
-	      </li>
-	      {% endfor %}
-	      <li class="next">
-		<a href="?page={{songs.next_page_number}}">&rarr;</a>
-	      </li>
-	    </ul>
-	  </div>
+    <div class="row">
+      <div class="span12">
+        {% include "paginator.html" %}
 
 	  <table class="table table-striped">
 	    <thead>
@@ -35,7 +17,7 @@
 	      </tr>
 	    </thead>
 	    <tbody>
-	      {% for song in songs.object_list %}
+	      {% for song in songs %}
 	      <tr>
 		<td>
 		  <a class="btn btn-success" onclick="inc_playlist({{song.id}})" href="#">Encore</a>
