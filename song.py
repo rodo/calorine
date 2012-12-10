@@ -18,6 +18,7 @@ class Song():
         """Class initialization"""
         self.conf = self.readopts()
         self.memcache_conn()
+        self.conn = psycopg2.connect(self.conf)
 
     def readopts(self):
         """
@@ -84,75 +85,86 @@ class Song():
     def next(self):
         """Do the job"""
         res = 0
-        conn = psycopg2.connect(self.conf)
+
         x = 0
-        if conn:
-            rows = self.fetchfile(conn)
-            filename = rows[1]
-            song_id = rows[0]
-            song_score = rows[2]
 
-            cur = conn.cursor()
-            query = """UPDATE caro_song set played = played + 1, score = 0 WHERE id=%s"""
-            cur.execute(query, (song_id, ))
+        rows = self.next_playlist()
+        if rows is None:
+            rows = self.next_random()
+        filename = rows[1]
+        song_id = rows[0]
+        song_score = rows[2]
 
-            query = """INSERT INTO caro_historyentry (song_id, date_played) VALUES (%s, now())"""
-            cur.execute(query, (song_id, ))
+        cur = self.conn.cursor()
+        query = """UPDATE caro_song set played = played + 1, score = 0 WHERE id=%s"""
+        cur.execute(query, (song_id, ))
 
-            self.onair(filename, song_score)
+        query = """DELETE FROM caro_playlistentry WHERE song_id=%s"""
+        cur.execute(query, (song_id, ))
 
-            conn.commit()
-            conn.close()
+        query = """INSERT INTO caro_historyentry (song_id, date_played) VALUES (%s, now())"""
+        cur.execute(query, (song_id, ))
+
+        self.onair(filename, song_score)
+        
+        self.conn.commit()
 
         return filename
 
 
-    def next_playlist():
+    def next_playlist(self):
         """
+        Fetch song from playlist
         """
-        return fname
+        query = """SELECT s.id, s.filename, s.score FROM caro_playlistentry AS p, caro_song as s WHERE s.id = p.song_id AND s.score >= 0 ORDER BY s.score DESC, date_add ASC LIMIT 1"""
+        rows = self.fetchfile(query)
+        return rows
 
-    def next_random():
+    def next_random(self):
         """
+        Fetch a random song
         """
-        return fname
+        query = """SELECT id, filename, score FROM caro_song WHERE score >= 0 ORDER by played ASC, score DESC, uniq ASC LIMIT 1"""
+        rows = self.fetchfile(query)
+        return rows
 
 
-    def fetchfile(self, conn):
+    def fetchfile(self, query):
         """
-
+        Fetch file from db and mark it as deleted if not exists
         """
-        cur = conn.cursor()
+        cur = self.conn.cursor()
         exists = False
         i = 0
         limit = 1000
         datas = None
         while (not exists) and (i < limit):
-            query = """SELECT id, filename, score FROM caro_song WHERE score >= 0 ORDER by played ASC, score DESC, uniq ASC LIMIT 1"""
             cur.execute(query)
             rows = cur.fetchall()
+            if len(rows) == 0:
+                break
             i = i + 1
             exists = path.isfile(rows[0][1])
             datas = rows[0]
 
             if not exists:
-                self.markfile(conn, datas[0])
+                self.markfile(datas[0])
                 print datas[1]
 
         return datas
         
-    def markfile(self, conn, song_id):
+    def markfile(self, song_id):
         """
         Mark a song with score = -1000
         """
-        cur = conn.cursor()
+        cur = self.conn.cursor()
         query = """UPDATE caro_song SET score = -1000 WHERE id=%s"""
         cur.execute(query, (song_id, ))
 
 
-    def checkfile(self, conn, fsig):
+    def checkfile(self, fsig):
         qry = "SELECT id FROM caro_song WHERE uniq=%s"
-        cur = conn.cursor()
+        cur = self.conn.cursor()
         cur.execute(qry, (fsig,))
         datas = cur.fetchall()
         cur.close()
@@ -168,8 +180,7 @@ class Song():
         except UnicodeDecodeError:
             return
 
-        conn = psycopg2.connect(self.conf)
-        cur = conn.cursor()
+        cur = self.conn.cursor()
 
         try:
             datas = mutagen.File(filename, easy=True)
@@ -197,26 +208,22 @@ class Song():
 
             if artist and album and genre and title:
                 fsig = hashfile(filename)
-                chk = self.checkfile(conn, fsig)
+                chk = self.checkfile(fsig)
                 if chk == 0:
-                    self.insertfile(conn, 
-                                    [filename, artist, album, title, genre, fsig])
+                    self.insertfile([filename, artist, album, title, genre, fsig])
                 else:
                     print "File exists in DB"
             else:
                 print "Missiong tag"
-            conn.commit()
-        conn.close()
+            self.conn.commit()
 
 
-
-
-    def insertfile(self, conn, datas):
+    def insertfile(self, datas):
         """
         Insert datas in database
         """
         query = """INSERT INTO caro_song (score, filename, artist, album, title, genre, played, uniq) VALUES (0, %s, %s, %s, %s, %s, 0, %s);"""
-        cur = conn.cursor()
+        cur = self.conn.cursor()
         try:
             cur.execute(query, (datas[0],
                                 datas[1],
