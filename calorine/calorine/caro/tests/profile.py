@@ -19,10 +19,8 @@
 Unit tests for profil in caro
 
 """
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
-from calorine.caro.models import Song
 
 
 class ProfileTests(TestCase):  # pylint: disable-msg=R0904
@@ -37,7 +35,6 @@ class ProfileTests(TestCase):  # pylint: disable-msg=R0904
         self.user = User.objects.create_user('admin_search',
                                              'admin_search@bar.com',
                                              'admintest')
-        settings.SITE_ID = 1
 
     def test_songs(self):
         """

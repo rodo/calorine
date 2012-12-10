@@ -50,10 +50,10 @@ class HistoryEntryTests(TestCase):  # pylint: disable-msg=R0904
                                    genre='Blues',
                                    score=0)
 
-        historyEntry = HistoryEntry.objects.create(
+        hist = HistoryEntry.objects.create(
             song=song,
             date_played=datetime.utcnow().replace(tzinfo=utc))
 
 
-        self.assertGreater(historyEntry.id, 0)
+        self.assertGreater(hist.id, 0)
 
