@@ -38,7 +38,7 @@ def songs(request):
     The songs in databases
     """
 
-    blist = Song.objects.all()
+    blist = Song.objects.filter(score__gt=0)
     paginator = Paginator(blist, 10)
 
     try:
@@ -60,7 +60,7 @@ def playlist(request):
     The playlist
     """
 
-    blist = Song.objects.all()
+    blist = PlaylistEntry.objects.all()
     paginator = Paginator(blist, 10)
 
     try:
@@ -82,18 +82,7 @@ def profile(request):
     The user's profile
     """
 
-    blist = Song.objects.all()
-    paginator = Paginator(blist, 10)
-
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-
-    try:
-        songs = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        songs = paginator.page(paginator.num_pages)
+    songs = PlaylistEntry.objects.all().order_by('-pk')[:4]
 
     return render(request,
                   'profile.html',
@@ -121,7 +110,6 @@ def logs(request):
                   'errors.html',
                   {'errors': errors,})
 
-
 def pladd(request, song_id):
     """
     The songs in databases
@@ -129,7 +117,7 @@ def pladd(request, song_id):
     song = get_object_or_404(Song, pk=song_id)
 
     ple = PlaylistEntry(song=song,
-                        score=0,
+                        score=1,
                         date_add=datetime.today())
     ple.save()
 

@@ -16,9 +16,10 @@ class OutputManager(Thread):
     self.delay = delay
     self.event = Event()
     self.queue = []
+    self.go_on = True
 
   def run(self):
-    while 1:
+    while self.go_on:
       self.event.wait()
       while self.queue:
         msg,target = self.queue.pop(0)
@@ -29,3 +30,6 @@ class OutputManager(Thread):
   def send(self, msg, target):
     self.queue.append((msg.strip(),target))
     self.event.set()
+
+  def stop(self):
+    self.go_on = False

@@ -25,13 +25,6 @@
 	    </ul>
 	  </div>
 
-	  {% if dc %}
-	  <div id="deleteConfirmed" class="alert alert-block alert-info fade in">
-	    <a class="close" data-dismiss="alert" href="#">&times;</a>
-	    <p>{% trans "Delete confirmed" %}</p>
-	  </div>
-	  {% endif %}
-
 	  <table class="table table-striped">
 	    <thead>
 	      <tr>
@@ -45,35 +38,15 @@
 	      {% for song in songs.object_list %}
 	      <tr>
 		<td>
-		  <a class="btn btn-success" href="#">Encore</a>
-		  <a class="btn btn-danger" href="#">Stop</a>
+		  <a class="btn btn-success" onclick="inc_playlist({{song.id}})" href="#">Encore</a>
+		  <a class="btn btn-danger" onclick="dec_playlist({{song.id}})" href="#">Stop</a>
 		</td>
-		<td>{{song.title}}</td>
-		<td>{{song.artist}}</td>
-		<td>{{song.album}}</td>
+		<td>{{song.song.title}}</td>
+		<td>{{song.song.artist}}</td>
+		<td>{{song.song.album}}</td>
+		<td>{{song.song.score}}</td>
+		<td>{{song.score}}</td>
 	      </tr>
-
-	      <div class="modal hide" id="myModal{{book.uuid}}">
-		<div class="modal-header">
-		  <h3>{% trans "Confirm delete" %}</h3>
-		</div>
-		<div class="modal-body">
-		  <p>
-		    <ul>
-		      <li>{% trans "Firstname" %} {% trans "Name" %} : {{book.firstname}} {{ book.name }}</li>
-		      <li>{% trans "Adult places" %} : {{book.places_adult }}</li>
-		      <li>{% trans "Child places" %} : {{book.places_child }}</li>
-		      <li>{% trans "Amount" %} : {{book.price_total|floatformat:2 }}</li>
-		      <li>{% trans "Email" %} : {{book.email}}</li>
-		      <li>{% trans "Date" %} : {{book.booking_date|date:"D j b Y H:i"}}</li>
-		    </ul>
-		  </p>
-		</div>
-		<div class="modal-footer">
-		  <a href="#" class="btn" data-dismiss="modal">{% trans "Cancel" %}</a>
-		  <a href="{{prefix_url}}/resalist/{{perf.id}}/delete/{{book.uuid}}" class="btn btn-primary">{% trans "Delete" %}</a>
-		</div>
-	      </div>
 
 	      {% endfor %}
 	    </tbody>

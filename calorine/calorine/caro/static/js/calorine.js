@@ -14,3 +14,23 @@ function add_to_playlist(id) {
 	      $('.result').html("ok");	      
 	  });
 }
+
+function inc_playlist(id) {
+
+    url = '/playlist/inc/' + id;
+
+    $.get(url, 
+	  function(data) {
+	      $('.result').html("ok");	      
+	  });
+}
+
+function dec_playlist(id) {
+
+    url = '/playlist/dec/' + id;
+
+    $.get(url, 
+	  function(data) {
+	      $('.result').html("ok");	      
+	  });
+}

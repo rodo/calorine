@@ -27,7 +27,6 @@ class BotModeration(ircbot.SingleServerIRCBot):
         self.queue = OutputManager(self.connection, .9)
         self.queue.start()
 
-
         self.inputthread = sockinput(self)
         self.inputthread.start()
         self.chan = "#fsci"
@@ -68,9 +67,10 @@ class BotModeration(ircbot.SingleServerIRCBot):
                 serv.privmsg(self.chan, "t'es gentil %s mais tu te calmes" % auteur)
                 break
 
-        if message == "cassos calorine":
-            self.inputthread.stop()
+        if message == "calorine: cassos":
             serv.disconnect("Au revoir, comme aurait dit VGE")
+            self.inputthread.go_on = False
+            self.queue.stop()
             sys.exit(0)
 
     def speak(self, message):
@@ -87,7 +87,7 @@ class sockinput(Thread):
         Thread.__init__(self)
         self.sockfile = "/tmp/python_unix_sockets_example"
         self.bot = bot
-
+        self.go_on = True
         if os.path.exists( self.sockfile ):
             os.remove( self.sockfile )
 
@@ -100,7 +100,7 @@ class sockinput(Thread):
     def run(self):
 
         syslog.syslog("Listening...")
-        while True:
+        while self.go_on:
             conn, addr = self.server.accept()
 
             while True: 
@@ -112,4 +112,7 @@ class sockinput(Thread):
 
 
 if __name__ == "__main__":
-    BotModeration().start()
+    bot = BotModeration()
+    bot.chan = "#fsci"
+    bot.start()
+    

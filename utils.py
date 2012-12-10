@@ -34,7 +34,7 @@ def strtag(fname):
         else:
             data = muts[fld]
             datas[fld] = data[0]
-    return "%s - %s" % (datas['artist'], datas['title'])
+    return "%s - %s (%s)" % (datas['artist'], datas['title'], datas['album'])
 
 def trigger(fname, socket_fname=None):
 

@@ -106,6 +106,18 @@ class Song():
 
         return filename
 
+
+    def next_playlist():
+        """
+        """
+        return fname
+
+    def next_random():
+        """
+        """
+        return fname
+
+
     def fetchfile(self, conn):
         """
 
