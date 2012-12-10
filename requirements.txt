@@ -1,0 +1,20 @@
+#
+# Required packages to run Calorine
+#
+Django>=1.4
+django-registration
+whoosh
+django-tastypie
+python-memcached
+#
+#  following package are for running tests
+#
+nosexcover
+django-nose
+pep8
+flake8
+#
+#  If you use jenkins you can add
+#
+django-jenkins
+gcovr
