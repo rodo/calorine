@@ -21,14 +21,16 @@
 	      {% for song in songs %}
 	      <tr>
 		<td>
-		  <a class="btn btn-success" onclick="inc_playlist({{song.id}})" href="#">Encore</a>
-		  <a class="btn btn-danger" onclick="dec_playlist({{song.id}})" href="#">Stop</a>
+		  <a class="btn btn-success {{song.pk}}"
+		  onclick="inc_playlist({{song.id}}); return false" href="#">Encore</a>
+		  <a class="btn btn-danger {{song.pk}}"
+		  onclick="dec_playlist({{song.id}}); return false" href="#">Stop</a>
 		</td>
 		<td>{{song.song.title}}</td>
 		<td>{{song.song.artist}}</td>
 		<td>{{song.song.album}}</td>
 		<td>{{song.song.score}}</td>
-		<td id='{{song.pk}}'>{{song.score}}</td>
+		<td class='{{song.pk}}'>{{song.score}}</td>
 	      </tr>
 
 	      {% endfor %}

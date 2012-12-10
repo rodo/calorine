@@ -22,7 +22,8 @@ function inc_playlist(id) {
     $.get(url,
 	  function(data) {
               if(data.entry){
-	          $('#'+data.entry.id).html(data.entry.score);
+                  $('a.'+data.entry.id).removeClass("btn-success")
+	          $('td.'+data.entry.id).html(data.entry.score);
                   $("#message").html("");
                   }
               if(data.message){
@@ -38,7 +39,8 @@ function dec_playlist(id) {
     $.get(url,
 	  function(data) {
               if(data.entry){
-	          $('#'+data.entry.id).html(data.entry.score);
+                  $('a.'+data.entry.id).removeClass("btn-danger")
+	          $('td.'+data.entry.id).html(data.entry.score);
                   $("#message").html("");
                   }
               if(data.message){
