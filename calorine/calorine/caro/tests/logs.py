@@ -24,6 +24,7 @@ from datetime import datetime
 from django.utils.timezone import utc
 from calorine.caro.models import Logs
 
+
 class LogsTests(TestCase):  # pylint: disable-msg=R0904
     """
     The logs object
@@ -34,8 +35,9 @@ class LogsTests(TestCase):  # pylint: disable-msg=R0904
         """
         Create a simple logs
         """
-        log = Logs.objects.create(filename='foo',
-                                  message='foobar',
-                                  date_import=datetime.utcnow().replace(tzinfo=utc))
+        log = Logs.objects.create(
+            filename='foo',
+            message='foobar',
+            date_import=datetime.utcnow().replace(tzinfo=utc))
 
         self.assertGreater(log.id, 0)
