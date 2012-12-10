@@ -13,16 +13,16 @@ from random import random
 from optparse import OptionParser
 
 """
-python-irclib
+debian package python-irclib
 """
 
 class BotModeration(ircbot.SingleServerIRCBot):
-    def __init__(self):
+    def __init__(self, chan):
         """
         Constructeur qui pourrait prendre des paramètres dans un "vrai" programme.
         """
         ircbot.SingleServerIRCBot.__init__(self, [("irc.freenode.net", 6667)],
-                                           "calorine", "Calorine radio pseudo DJ")
+                                           "calorine", "IRC bot for Calorine radio")
         self.insultes = ["con", "pute", "connard"]
 
         self.queue = OutputManager(self.connection, .9)
@@ -30,7 +30,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
 
         self.inputthread = sockinput(self)
         self.inputthread.start()
-        self.chan = "#fsci"
+        self.chan = chan
 
     def on_welcome(self, serv, ev):
         """
@@ -134,8 +134,7 @@ def main():
     Main
     """
     options = readopts()
-    bot = BotModeration()
-    bot.chan = "#%s" % options.chan
+    bot = BotModeration("#%s" % options.chan)
     bot.start()
 
 if __name__ == "__main__":
