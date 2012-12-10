@@ -49,38 +49,17 @@ class PlayList(ListView):
     context_object_name = "songs"
 
 
-def profile(request):
-    """
-    The user's profile
-    """
+class Profile(ListView):
+    queryset = PlaylistEntry.objects.all().order_by('-pk')[:4]
+    template_name = 'profile.html'
+    context_object_name = "songs"
 
-    songs = PlaylistEntry.objects.all().order_by('-pk')[:4]
 
-    return render(request,
-                  'profile.html',
-                  {'songs': songs,})
+class LogList(ListView):
+    queryset = Logs.objects.all().order_by('-date_import')
+    template_name = 'errors.html'
+    context_object_name = 'errors'
 
-def logs(request):
-    """
-    The songs in databases
-    """
-
-    objects = Logs.objects.all().order_by('-date_import')
-    paginator = Paginator(objects, 10)
-
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-
-    try:
-        errors = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        errors = paginator.page(paginator.num_pages)
-
-    return render(request,
-                  'errors.html',
-                  {'errors': errors,})
 
 def pladd(request, song_id):
     """

@@ -1,15 +1,15 @@
 from django.conf.urls import patterns, include, url
 from django.shortcuts import redirect
-from calorine.caro.views import SongList, PlayList
+from calorine.caro.views import SongList, PlayList, Profile, LogList
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = patterns('',    
+urlpatterns = patterns('',
                        url(r'^accounts/', include('registration.urls')),
-                       url(r'^accounts/profile/$', 'calorine.caro.views.profile'),
+                       url(r'^accounts/profile/$', Profile.as_view()),
                        url(r'^songs/$', SongList.as_view()),
-                       url(r'^logs$', 'calorine.caro.views.logs'),
+                       url(r'^logs$', LogList.as_view()),
                        url(r'^playlist/add/(?P<song_id>\d+)$', 'calorine.caro.views.pladd'),
                        url(r'^$', PlayList.as_view()),
                        )
