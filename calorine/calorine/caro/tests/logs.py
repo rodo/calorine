@@ -19,7 +19,7 @@
 Unit tests for profil in caro
 
 """
-from django.test import TestCase, Client
+from django.test import TestCase
 from datetime import datetime
 from django.utils.timezone import utc
 from calorine.caro.models import Logs
