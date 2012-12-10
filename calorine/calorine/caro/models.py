@@ -16,24 +16,33 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 """
-
+Models definition for caro app
 """
 
 from django.db import models
-from django.contrib.auth.models import User
-from django.contrib.sites.models import Site
-from datetime import datetime
+
 
 class Song(models.Model):
     """
     The song object
     """
-    artist = models.CharField(max_length=300, verbose_name='artiste name', blank=True)
-    title = models.CharField(max_length=300, verbose_name='titre', blank=True)
-    genre = models.CharField(max_length=300, verbose_name='the song genre', blank=True)
-    album = models.CharField(max_length=300, verbose_name='the song album', blank=True)
-    filename = models.CharField(max_length=300, verbose_name='the filname', blank=True)
-    score = models.IntegerField(verbose_name='the song score', blank=True)
+    artist = models.CharField(max_length=300,
+                              verbose_name='artiste name',
+                              blank=True)
+    title = models.CharField(max_length=300,
+                             verbose_name='titre',
+                             blank=True)
+    genre = models.CharField(max_length=300,
+                             verbose_name='the song genre',
+                             blank=True)
+    album = models.CharField(max_length=300,
+                             verbose_name='the song album',
+                             blank=True)
+    filename = models.CharField(max_length=300,
+                                verbose_name='the filname',
+                                blank=True)
+    score = models.IntegerField(verbose_name='the song score',
+                                blank=True)
     played = models.IntegerField(blank=True, default=0)
     uniq = models.CharField(max_length=40, blank=True)
 
@@ -70,9 +79,8 @@ class HistoryEntry(models.Model):
 
 class Logs(models.Model):
     """
-
+    Logs information about misc actions like imports
     """
     filename = models.CharField(max_length=280)
     message = models.CharField(max_length=280)
     date_import = models.DateTimeField(auto_now_add=True)
-
