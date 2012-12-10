@@ -213,7 +213,7 @@ class Song():
                 else:
                     print "File exists in DB"
             else:
-                print "Missiong tag"
+                print "Missing tag"
             self.conn.commit()
 
 
