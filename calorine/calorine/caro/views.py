@@ -19,15 +19,8 @@
 The django views
 """
 import json
-from django.contrib.auth import logout
-from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ObjectDoesNotExist
-from django.core.paginator import Paginator, EmptyPage, InvalidPage
-from django.contrib.sites.models import get_current_site
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
-from django.template import RequestContext, loader
-from django.conf import settings
 from django.shortcuts import render
 from calorine.caro.models import Song
 from calorine.caro.models import Logs
@@ -53,7 +46,9 @@ class PlayList(ListView):
     def get_context_data(self, **kwargs):
         context = super(PlayList, self).get_context_data(**kwargs)
         for ple in context['songs']:
-            if cache.get('ple_{}_{}'.format(self.request.user.id, ple.song.pk, ple.pk)):
+            if cache.get('ple_{}_{}'.format(self.request.user.id, 
+                                            ple.song.pk, 
+                                            ple.pk)):
                 ple.vote = True
         return context
 
@@ -70,6 +65,7 @@ class LogList(ListView):
     context_object_name = 'errors'
     paginate_by = 10
 
+
 def pladd(request, song_id):
     """
     The songs in databases
@@ -85,6 +81,9 @@ def pladd(request, song_id):
 
 
 def pldislike(request, pk):
+    """
+    dislike a song in Playlist
+    """
     return inc_desc("less", request, pk)
 
 
@@ -99,7 +98,7 @@ def inc_desc(sign, request, pk):
     ple = get_object_or_404(PlaylistEntry, pk=pk)
     if cache.get('ple_{}_{}'.format(request.user.id, ple.song.pk, ple.pk)):
         return HttpResponse(
-            json.dumps({'message': 'Do not try this with me' }),
+            json.dumps({'message': 'Do not try this with me'}),
             mimetype="application/json")
     else:
         cache.set('ple_{}_{}'.format(request.user.id, ple.song.pk, ple.pk), True)
@@ -110,6 +109,5 @@ def inc_desc(sign, request, pk):
     ple.save()
     resp = {'score': ple.score, 'id': ple.pk}
     return HttpResponse(
-        json.dumps({'entry': resp }),
-        mimetype="application/json"
-        )
+        json.dumps({'entry': resp}),
+        mimetype="application/json")
