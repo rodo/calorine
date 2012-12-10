@@ -42,27 +42,12 @@ class SongList(ListView):
     context_object_name = "songs"
 
 
-def playlist(request):
-    """
-    The playlist
-    """
+class PlayList(ListView):
+    queryset = PlaylistEntry.objects.all()
+    paginate_by = 10
+    template_name = 'playlist.html'
+    context_object_name = "songs"
 
-    blist = PlaylistEntry.objects.all()
-    paginator = Paginator(blist, 10)
-
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-
-    try:
-        songs = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        songs = paginator.page(paginator.num_pages)
-
-    return render(request,
-                  'playlist.html',
-                  {'songs': songs,})
 
 def profile(request):
     """
