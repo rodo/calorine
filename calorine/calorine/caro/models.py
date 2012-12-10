@@ -65,7 +65,7 @@ class PlaylistEntry(models.Model):
         """
         The unicode method
         """
-        return "{}".format(self.song.title)
+        return "{}".format(self.song.title)  # pylint: disable-msg=E1101
 
 
 class HistoryEntry(models.Model):
