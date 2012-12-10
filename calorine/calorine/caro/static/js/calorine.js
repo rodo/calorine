@@ -19,9 +19,15 @@ function inc_playlist(id) {
 
     url = '/playlist/inc/' + id;
 
-    $.get(url, 
+    $.get(url,
 	  function(data) {
-	      $('.result').html("ok");	      
+              if(data.entry){
+	          $('#'+data.entry.id).html(data.entry.score);
+                  $("#message").html("");
+                  }
+              if(data.message){
+                  $("#message").html(data.message);
+              }
 	  });
 }
 
@@ -29,8 +35,15 @@ function dec_playlist(id) {
 
     url = '/playlist/dec/' + id;
 
-    $.get(url, 
+    $.get(url,
 	  function(data) {
-	      $('.result').html("ok");	      
+              if(data.entry){
+	          $('#'+data.entry.id).html(data.entry.score);
+                  $("#message").html("");
+                  }
+              if(data.message){
+                  $("#message").html(data.message);
+              }
 	  });
+
 }

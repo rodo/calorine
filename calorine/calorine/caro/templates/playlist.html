@@ -5,6 +5,7 @@
 <div class="container">
     <div class="row">
       <div class="span12">
+        <div id="message"></div>
         {% include "paginator.html" %}
 
 	  <table class="table table-striped">
@@ -13,7 +14,7 @@
 		<th class="span2"></th>
 		<th class="span4">Titre</th>
 		<th class="span3">Artiste</th>
-		<th class="span4">Album</th>
+		<th class="span4">Album</th>                
 	      </tr>
 	    </thead>
 	    <tbody>
@@ -27,7 +28,7 @@
 		<td>{{song.song.artist}}</td>
 		<td>{{song.song.album}}</td>
 		<td>{{song.song.score}}</td>
-		<td>{{song.score}}</td>
+		<td id='{{song.pk}}'>{{song.score}}</td>
 	      </tr>
 
 	      {% endfor %}

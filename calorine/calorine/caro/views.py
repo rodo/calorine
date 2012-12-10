@@ -18,6 +18,7 @@
 """
 The django views
 """
+import json
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
@@ -33,17 +34,18 @@ from calorine.caro.models import Logs
 from calorine.caro.models import PlaylistEntry
 from datetime import datetime
 from django.views.generic import ListView
+from django.core.cache import cache
 
 
 class SongList(ListView):
-    queryset = Song.objects.filter(score__gt=0)
+    queryset = Song.objects.filter(score__gte=0)
     paginate_by = 10
     template_name = "songs.html"
     context_object_name = "songs"
 
 
 class PlayList(ListView):
-    queryset = PlaylistEntry.objects.all()
+    queryset = PlaylistEntry.objects.all().order_by("-score")
     paginate_by = 10
     template_name = 'playlist.html'
     context_object_name = "songs"
@@ -73,3 +75,34 @@ def pladd(request, song_id):
     ple.save()
 
     return render(request, 'playlist_add.html')
+
+
+def pldislike(request, pk):
+    return inc_desc("less", request, pk)
+
+
+def pllike(request, pk):
+    """
+    Like a song
+    """
+    return inc_desc("plus", request, pk)
+
+
+def inc_desc(sign, request, pk):
+    ple = get_object_or_404(PlaylistEntry, pk=pk)
+    if cache.get('ple_{}_{}'.format(request.user.id, ple.pk, ple.pk)):
+        return HttpResponse(
+            json.dumps({'message': 'Do not try this with me' }),
+            mimetype="application/json")
+    else:
+        cache.set('ple_{}_{}'.format(request.user.id, ple.pk, ple.pk), True)
+    if sign == "plus":
+        ple.score += 1
+    else:
+        ple.score -= 1
+    ple.save()
+    resp = {'score': ple.score, 'id': ple.pk}
+    return HttpResponse(
+        json.dumps({'entry': resp }),
+        mimetype="application/json"
+        )
