@@ -68,7 +68,7 @@ class LogList(ListView):
     queryset = Logs.objects.all().order_by('-date_import')
     template_name = 'errors.html'
     context_object_name = 'errors'
-
+    paginate_by = 10
 
 def pladd(request, song_id):
     """
