@@ -14,6 +14,7 @@ urlpatterns = patterns('',
                        url(r'^playlist/inc/(?P<pk>\d+)$', 'calorine.caro.views.pllike'),
                        url(r'^playlist/dec/(?P<pk>\d+)$', 'calorine.caro.views.pldislike'),
                        url(r'^$', PlayList.as_view(), name="playlist"),
+                       url(r'^admin/', include(admin.site.urls)),
                        )
 # Examples:
 # url(r'^$', 'calorine.views.home', name='home'),
@@ -21,4 +22,4 @@ urlpatterns = patterns('',
 # Uncomment the admin/doc line below to enable admin documentation:
 # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 # Uncomment the next line to enable the admin:
-# url(r'^admin/', include(admin.site.urls)),
+
