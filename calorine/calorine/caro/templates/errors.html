@@ -2,29 +2,10 @@
 {% include "header.html" %}
 {% include "navbar.html" %}
 <div class="container">
-    <div class="row">      
-      <div class="span12">	  
-	
-	  <div class="pagination">
-	    <ul>
-	      <li class="previous">
-		<a href="?page={{errors.previous_page_number}}">&larr;</a>
-	      </li>
-	      {% for page in errors.paginator.page_range %}
-	      {% if page == errors.number %}
-	      <li class="active">
-	      {% else %}
-	      <li>
-		{% endif %}
-		<a href="?page={{page}}">{{page}}</a>
-	      </li>
-	      {% endfor %}
-	      <li class="next">
-		<a href="?page={{errors.next_page_number}}">&rarr;</a>
-	      </li>
-	    </ul>
-	  </div>
+    <div class="row">
+      <div class="span12">
 
+        {% include "paginator.html" %}
 	  <table class="table table-striped">
 	    <thead>
 	      <tr>
@@ -34,7 +15,7 @@
 	      </tr>
 	    </thead>
 	    <tbody>
-	      {% for error in errors.object_list %}
+	      {% for error in errors %}
 	      <tr>
 		<td>{{error.message}}</td>
 		<td>{{error.filename}}</td>
@@ -46,6 +27,5 @@
 
       </div><!--/row-->
     </div><!--/row-->
-            
   </div><!--/.container-->
   {% include "footer.html" %}

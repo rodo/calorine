@@ -43,19 +43,20 @@ class Song(models.Model):
         """
         return self.title
 
+
 class PlaylistEntry(models.Model):
     """
     An entry in a playlist
     """
     song = models.ForeignKey(Song)
     date_add = models.DateTimeField()
-    score = models.IntegerField(verbose_name='titre', blank=True)
+    score = models.IntegerField(verbose_name='score', blank=True)
 
     def __unicode__(self):
         """
         The unicode method
         """
-        return self.title
+        return "{}".format(self.song.title)
 
 
 class HistoryEntry(models.Model):

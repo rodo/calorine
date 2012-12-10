@@ -1,0 +1,23 @@
+	  <div class="pagination pagination-small">
+	    <ul>
+              {% if page_obj.has_previous %}
+	      <li class="previous">
+		<a href="?page={{songs.previous_page_number}}">&larr;</a>
+	      </li>
+              {% endif %}
+	      {% for page in paginator.page_range %}
+	      {% if page == page_obj.number %}
+	      <li class="active">
+	      {% else %}
+	      <li>
+		{% endif %}
+		<a href="?page={{page}}">{{page}}</a>
+	      </li>
+	      {% endfor %}
+              {% if page_obj.has_next %}
+	      <li class="next">
+		<a href="?page={{page_obj.next_page_number}}">&rarr;</a>
+	      </li>
+              {% endif %}
+	    </ul>
+	  </div>

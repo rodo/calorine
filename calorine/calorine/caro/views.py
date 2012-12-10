@@ -42,60 +42,24 @@ class SongList(ListView):
     context_object_name = "songs"
 
 
-def playlist(request):
-    """
-    The playlist
-    """
+class PlayList(ListView):
+    queryset = PlaylistEntry.objects.all()
+    paginate_by = 10
+    template_name = 'playlist.html'
+    context_object_name = "songs"
 
-    blist = PlaylistEntry.objects.all()
-    paginator = Paginator(blist, 10)
 
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
+class Profile(ListView):
+    queryset = PlaylistEntry.objects.all().order_by('-pk')[:4]
+    template_name = 'profile.html'
+    context_object_name = "songs"
 
-    try:
-        songs = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        songs = paginator.page(paginator.num_pages)
 
-    return render(request,
-                  'playlist.html',
-                  {'songs': songs,})
+class LogList(ListView):
+    queryset = Logs.objects.all().order_by('-date_import')
+    template_name = 'errors.html'
+    context_object_name = 'errors'
 
-def profile(request):
-    """
-    The user's profile
-    """
-
-    songs = PlaylistEntry.objects.all().order_by('-pk')[:4]
-
-    return render(request,
-                  'profile.html',
-                  {'songs': songs,})
-
-def logs(request):
-    """
-    The songs in databases
-    """
-
-    objects = Logs.objects.all().order_by('-date_import')
-    paginator = Paginator(objects, 10)
-
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-
-    try:
-        errors = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        errors = paginator.page(paginator.num_pages)
-
-    return render(request,
-                  'errors.html',
-                  {'errors': errors,})
 
 def pladd(request, song_id):
     """
