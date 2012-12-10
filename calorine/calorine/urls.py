@@ -1,7 +1,8 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
-from calorine.caro.views import SongList, PlayList, Profile, LogList
+from calorine.caro.views import LogList, HistoryList
+from calorine.caro.views import SongList, PlayList, Profile
 from django.contrib import admin
 admin.autodiscover()
 
@@ -10,6 +11,7 @@ urlpatterns = patterns('',
                        url(r'^accounts/profile/$', Profile.as_view()),
                        url(r'^songs/$', login_required(SongList.as_view())),
                        url(r'^logs$', login_required(LogList.as_view())),
+                       url(r'^history/', login_required(HistoryList.as_view())),
                        url(r'^playlist/add/(?P<song_id>\d+)$', 'calorine.caro.views.pladd'),
                        url(r'^playlist/inc/(?P<pk>\d+)$', 'calorine.caro.views.pllike'),
                        url(r'^playlist/dec/(?P<pk>\d+)$', 'calorine.caro.views.pldislike'),

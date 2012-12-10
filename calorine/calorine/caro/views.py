@@ -25,6 +25,7 @@ from django.shortcuts import render
 from calorine.caro.models import Song
 from calorine.caro.models import Logs
 from calorine.caro.models import PlaylistEntry
+from calorine.caro.models import HistoryEntry
 from datetime import datetime
 from django.views.generic import ListView
 from django.core.cache import cache
@@ -37,6 +38,13 @@ class SongList(ListView):
     context_object_name = "songs"
 
 
+class HistoryList(ListView):
+    queryset = HistoryEntry.objects.all().order_by("-date_played")
+    paginate_by = 10
+    template_name = 'history.html'
+    context_object_name = "songs"
+
+
 class PlayList(ListView):
     queryset = PlaylistEntry.objects.all().order_by("-score")
     paginate_by = 10
@@ -46,8 +54,8 @@ class PlayList(ListView):
     def get_context_data(self, **kwargs):
         context = super(PlayList, self).get_context_data(**kwargs)
         for ple in context['songs']:
-            if cache.get('ple_{}_{}'.format(self.request.user.id, 
-                                            ple.song.pk, 
+            if cache.get('ple_{}_{}'.format(self.request.user.id,
+                                            ple.song.pk,
                                             ple.pk)):
                 ple.vote = True
         return context
