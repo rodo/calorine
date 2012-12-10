@@ -23,11 +23,11 @@ function inc_playlist(id) {
 	  function(data) {
               if(data.entry){
                   $('a.'+data.entry.id).removeClass("btn-success")
-	          $('td.'+data.entry.id).html(data.entry.score);
+                  $('td.'+data.entry.id).html(data.entry.score+"<span class='label label-info'>A voté !</span>");
                   $("#message").html("");
                   }
               if(data.message){
-                  $("#message").html(data.message);
+                  $("#message").html("<span class='label label-info'>"+data.message+"</span>");
               }
 	  });
 }
@@ -40,11 +40,11 @@ function dec_playlist(id) {
 	  function(data) {
               if(data.entry){
                   $('a.'+data.entry.id).removeClass("btn-danger")
-	          $('td.'+data.entry.id).html(data.entry.score);
+          $('td.'+data.entry.id).html(data.entry.score+"<span class='label label-info'>A voté !</span>");
                   $("#message").html("");
                   }
               if(data.message){
-                  $("#message").html(data.message);
+                  $("#message").html("<span class='label label-info'>"+data.message+"</span>");
               }
 	  });
 
