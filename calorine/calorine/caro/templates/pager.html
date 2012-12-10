@@ -1,0 +1,14 @@
+<div class="pager">
+  <ul>
+    {% if page_obj.has_previous %}
+    <li class="previous">
+      <a href="?page={{songs.previous_page_number}}">&larr; Recule</a>
+    </li>
+    {% endif %}
+    {% if page_obj.has_next %}
+    <li class="next">
+      <a href="?page={{page_obj.next_page_number}}">Avance &rarr;</a>
+    </li>
+    {% endif %}
+  </ul>
+</div>
