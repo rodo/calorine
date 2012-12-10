@@ -11,7 +11,9 @@ urlpatterns = patterns('',
                        url(r'^songs/$', SongList.as_view()),
                        url(r'^logs$', LogList.as_view()),
                        url(r'^playlist/add/(?P<song_id>\d+)$', 'calorine.caro.views.pladd'),
-                       url(r'^$', PlayList.as_view()),
+                       url(r'^playlist/inc/(?P<pk>\d+)$', 'calorine.caro.views.pllike'),
+                       url(r'^playlist/dec/(?P<pk>\d+)$', 'calorine.caro.views.pldislike'),
+                       url(r'^$', PlayList.as_view(), name="playlist"),
                        )
 # Examples:
 # url(r'^$', 'calorine.views.home', name='home'),
