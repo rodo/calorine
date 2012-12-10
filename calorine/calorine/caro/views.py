@@ -104,12 +104,13 @@ def pllike(request, pk):
 
 def inc_desc(sign, request, pk):
     ple = get_object_or_404(PlaylistEntry, pk=pk)
-    if cache.get('ple_{}_{}'.format(request.user.id, ple.song.pk, ple.pk)):
+    key = 'ple_{}_{}'.format(request.user.id, ple.song.pk, ple.pk)
+    if cache.get(key):
         return HttpResponse(
             json.dumps({'message': 'Do not try this with me'}),
             mimetype="application/json")
-    else:
-        cache.set('ple_{}_{}'.format(request.user.id, ple.song.pk, ple.pk), True)
+    else:        
+        cache.set(key, True)
     if sign == "plus":
         ple.score += 1
     else:
