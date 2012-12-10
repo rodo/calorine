@@ -50,6 +50,13 @@ class PlayList(ListView):
     template_name = 'playlist.html'
     context_object_name = "songs"
 
+    def get_context_data(self, **kwargs):
+        context = super(PlayList, self).get_context_data(**kwargs)
+        for ple in context['songs']:
+            if cache.get('ple_{}_{}'.format(self.request.user.id, ple.song.pk, ple.pk)):
+                ple.vote = True
+        return context
+
 
 class Profile(ListView):
     queryset = PlaylistEntry.objects.all().order_by('-pk')[:4]
@@ -61,7 +68,7 @@ class LogList(ListView):
     queryset = Logs.objects.all().order_by('-date_import')
     template_name = 'errors.html'
     context_object_name = 'errors'
-
+    paginate_by = 10
 
 def pladd(request, song_id):
     """
@@ -90,12 +97,12 @@ def pllike(request, pk):
 
 def inc_desc(sign, request, pk):
     ple = get_object_or_404(PlaylistEntry, pk=pk)
-    if cache.get('ple_{}_{}'.format(request.user.id, ple.pk, ple.pk)):
+    if cache.get('ple_{}_{}'.format(request.user.id, ple.song.pk, ple.pk)):
         return HttpResponse(
             json.dumps({'message': 'Do not try this with me' }),
             mimetype="application/json")
     else:
-        cache.set('ple_{}_{}'.format(request.user.id, ple.pk, ple.pk), True)
+        cache.set('ple_{}_{}'.format(request.user.id, ple.song.pk, ple.pk), True)
     if sign == "plus":
         ple.score += 1
     else:
