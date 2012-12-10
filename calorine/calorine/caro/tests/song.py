@@ -16,7 +16,7 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 """
-Unit tests for profil in caro
+Unit tests for Song
 
 """
 from django.conf import settings
@@ -25,7 +25,7 @@ from django.test import TestCase, Client
 from calorine.caro.models import Song
 
 
-class ProfileTests(TestCase):  # pylint: disable-msg=R0904
+class SongTests(TestCase):  # pylint: disable-msg=R0904
     """
     The profile view
 
@@ -37,13 +37,16 @@ class ProfileTests(TestCase):  # pylint: disable-msg=R0904
         self.user = User.objects.create_user('admin_search',
                                              'admin_search@bar.com',
                                              'admintest')
-        settings.SITE_ID = 1
 
-    def test_songs(self):
+    def test_create_song(self):
         """
-        View profile
+        View owner songs
         """
-        client = Client()
-        client.login(username='admin_search', password='admintest')
-        response = client.get('/accounts/profile/')
-        self.assertContains(response, self.user.username, status_code=200)
+        song = Song.objects.create(artist='Van Morrison',
+                                   album='The Healing Game',
+                                   title='Sometimes We Cry',
+                                   genre='Blues',
+                                   score=0)
+
+        self.assertGreater(song.id, 0)
+                                   
