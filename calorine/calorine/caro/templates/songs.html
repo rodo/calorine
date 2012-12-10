@@ -3,40 +3,35 @@
 {% include "navbar.html" %}
 
 <div class="container">
-    <div class="row">
-      <div class="span12">
-        {% include "paginator.html" %}
-
-	  <table class="table table-striped">
-	    <thead>
-	      <tr>
-		<th class="span2"><span class="result"></span></th>
-		<th class="span4">Titre</th>
-		<th class="span3">Artiste</th>
-		<th class="span4">Album</th>
-		<th>P</th>
-	      </tr>
-	    </thead>
-	    <tbody>
-	      {% for song in songs %}
-	      <tr>
-		<td>
-		  <a class="btn btn-primary" href="#" onclick="add_to_playlist({{song.id}})">Playlist</a>
-		</td>
-		<td>{{song.title}}</td>
-		<td>{{song.artist}}</td>
-		<td>{{song.album}}</td>
-		<td>{{song.played}}</td>
-	      </tr>
-	      {% endfor %}
-	    </tbody>
-	  </table>
-
-
-      </div><!--/row-->
+  <div class="row">
+    <div class="span12">
+      {% include "pager.html" %}
+      <table class="table table-striped">
+	<thead>
+	  <tr>
+	    <th class="span2"><span class="result"></span></th>
+	    <th class="span4">Titre</th>
+	    <th class="span3">Artiste</th>
+	    <th class="span4">Album</th>
+	    <th>P</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  {% for song in songs %}
+	  <tr>
+	    <td>
+	      <a class="btn btn-primary" href="#" onclick="add_to_playlist({{song.id}})">Playlist</a>
+	    </td>
+	    <td>{{song.title}}</td>
+	    <td>{{song.artist}}</td>
+	    <td>{{song.album}}</td>
+	    <td>{{song.played}}</td>
+	  </tr>
+	  {% endfor %}
+	</tbody>
+      </table>
+            
     </div><!--/row-->
-
-  </div><!--/.container-->
-  <script src="{{ STATIC_URL }}js/bootstrap-modal.js"></script>
-  <script src="{{ STATIC_URL }}js/bootstrap-alert.js"></script>
-  {% include "footer.html" %}
+  </div><!--/row-->
+</div><!--/.container-->
+{% include "footer.html" %}
