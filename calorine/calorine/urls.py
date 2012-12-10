@@ -13,7 +13,7 @@ urlpatterns = patterns('',
                        url(r'^playlist/add/(?P<song_id>\d+)$', 'calorine.caro.views.pladd'),
                        url(r'^playlist/inc/(?P<pk>\d+)$', 'calorine.caro.views.pllike'),
                        url(r'^playlist/dec/(?P<pk>\d+)$', 'calorine.caro.views.pldislike'),
-                       url(r'^$', login_required(PlayList.as_view(), name="playlist")),
+                       url(r'^$', login_required(PlayList.as_view()), name="playlist"),
                        url(r'^admin/', include(admin.site.urls)),
                        )
 # Examples:
