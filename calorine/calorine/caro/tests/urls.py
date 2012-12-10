@@ -62,3 +62,12 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
         client.login(username='admin_search', password='admintest')
         response = client.get('/')
         self.assertContains(response, self.user.username, status_code=200)
+
+    def test_logs(self):
+        """
+        History url
+        """
+        client = Client()
+        client.login(username='admin_search', password='admintest')
+        response = client.get('/logs/')
+        self.assertContains(response, self.user.username, status_code=200)
