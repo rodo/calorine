@@ -16,16 +16,17 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 """
-Unit tests for Song
+Unit tests for PlaylistEntry
 
 """
-from django.conf import settings
 from django.contrib.auth.models import User
-from django.test import TestCase, Client
+from django.test import TestCase
+from calorine.caro.models import PlaylistEntry
 from calorine.caro.models import Song
+from datetime import datetime
+from django.utils.timezone import utc
 
-
-class SongTests(TestCase):  # pylint: disable-msg=R0904
+class PlaylistEntryTests(TestCase):  # pylint: disable-msg=R0904
     """
     The profile view
 
@@ -38,9 +39,9 @@ class SongTests(TestCase):  # pylint: disable-msg=R0904
                                              'admin_search@bar.com',
                                              'admintest')
 
-    def test_create_song(self):
+    def test_create_playlistEntry(self):
         """
-        View owner songs
+        View owner playlistEntrys
         """
         song = Song.objects.create(artist='Van Morrison',
                                    album='The Healing Game',
@@ -48,5 +49,9 @@ class SongTests(TestCase):  # pylint: disable-msg=R0904
                                    genre='Blues',
                                    score=0)
 
-        self.assertGreater(song.id, 0)
+        ple = PlaylistEntry.objects.create(song=song,
+                                           date_add=datetime.utcnow().replace(tzinfo=utc),
+                                           score=0)
+        
+        self.assertGreater(ple.id, 0)
 
