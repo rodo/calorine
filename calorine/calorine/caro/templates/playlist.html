@@ -14,21 +14,28 @@
 		<th class="span2"></th>
 		<th class="span4">Titre</th>
 		<th class="span3">Artiste</th>
-		<th class="span4">Album</th>                
+		<th class="span4">Album</th>
 	      </tr>
 	    </thead>
 	    <tbody>
 	      {% for song in songs %}
 	      <tr>
 		<td>
-		  <a class="btn btn-success" onclick="inc_playlist({{song.id}})" href="#">Encore</a>
-		  <a class="btn btn-danger" onclick="dec_playlist({{song.id}})" href="#">Stop</a>
+		  <a class="btn {% if not song.vote %} btn-success
+		  {%endif %} {{song.pk}}"
+		  onclick="inc_playlist({{song.id}}); return false" href="#">Encore</a>
+		  <a class="btn {% if not song.vote %}btn-danger{%endif%} {{song.pk}}"
+		  onclick="dec_playlist({{song.id}}); return false" href="#">Stop</a>
 		</td>
 		<td>{{song.song.title}}</td>
 		<td>{{song.song.artist}}</td>
 		<td>{{song.song.album}}</td>
 		<td>{{song.song.score}}</td>
-		<td id='{{song.pk}}'>{{song.score}}</td>
+		<td class='{{song.pk}}'>{{song.score}}
+                  {% if song.vote %}
+                    <span class="label label-info">A voté !</span>
+                  {% endif %}
+                </td>
 	      </tr>
 
 	      {% endfor %}
