@@ -3,13 +3,13 @@
 
 {% block content %}
 <div class="page-header">
-  <h2>{% trans "Register" %}</h2>
+  <h2>{% trans "Grave tu veux un compte ?" %}</h2>
 </div>
 
 <form method="post" action=".">
   {% csrf_token %}
   {{ form.as_p }}
 
-  <input type="submit" value="{% trans 'Submit' %}" />
+  <input type="submit" value="{% trans 'Allez clique !' %}" />
 </form>
 {% endblock %}
