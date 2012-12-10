@@ -28,7 +28,7 @@ def main():
     """
     nbt = Song()
     fname = nbt.next()
-    trigger(fname, "/tmp/python_unix_sockets_example")
+    trigger(fname, "/tmp/calorine.socket")
     return fname
 
 if __name__ == "__main__":
