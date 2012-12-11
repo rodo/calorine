@@ -94,7 +94,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
                  "yo"]
         rand = int(random() * 10)
         if auteur != self.nick:
-            self.speak(canal, "%s %s" % (hello[rand], auteur))
+            self.speak("%s %s" % (hello[rand], auteur))
 
     def speak(self, message):
         """
