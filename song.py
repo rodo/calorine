@@ -211,11 +211,21 @@ class Song():
                 if chk == 0:
                     self.insertfile([filename, artist, album, title, genre, fsig])
                 else:
-                    print "File exists in DB"
+                    self.update_path(filename, fsig)
             else:
                 print "Missing tag"
             self.conn.commit()
 
+    def update_path(self, fname, sig):
+        """
+        Update file in database
+        """
+        query = """UPDATE caro_song SET filename=%s WHERE uniq=%s"""
+        cur = self.conn.cursor()
+        try:
+            cur.execute(query, (fname, sig,))
+        except:
+            pass
 
     def insertfile(self, datas):
         """
