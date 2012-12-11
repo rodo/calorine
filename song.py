@@ -231,7 +231,7 @@ class Song():
         """
         Insert datas in database
         """
-        query = """INSERT INTO caro_song (score, filename, artist, album, title, genre, played, uniq) VALUES (0, %s, %s, %s, %s, %s, 0, %s);"""
+        query = """INSERT INTO caro_song (score, filename, artist, album, title, genre, played, uniq, global_score, family) VALUES (0, %s, %s, %s, %s, %s, 0, %s, 0, 0);"""
         cur = self.conn.cursor()
         try:
             cur.execute(query, (datas[0],

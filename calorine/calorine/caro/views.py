@@ -47,7 +47,7 @@ class SongList(ListView):
             results = [ r.pk for r in srchqry ]
             queryset = Song.objects.filter(pk__in=results)
         else:
-            queryset = Song.objects.filter(score__gte=0)
+            queryset = Song.objects.filter(score__gte=0,family=0)
         return queryset
 
 

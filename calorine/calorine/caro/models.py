@@ -25,6 +25,11 @@ from django.db import models
 class Song(models.Model):
     """
     The song object
+    
+    family :
+
+      - 0 normal song
+      - 1 jingles
     """
     artist = models.CharField(max_length=300,
                               verbose_name='artiste name',
@@ -43,7 +48,13 @@ class Song(models.Model):
                                 blank=True)
     score = models.IntegerField(verbose_name='the song score',
                                 blank=True)
-    played = models.IntegerField(blank=True, default=0)
+    global_score = models.IntegerField(verbose_name='the song globalscore',
+                                       blank=True)
+    family = models.IntegerField(verbose_name='the song globalscore',
+                                 default=0,
+                                 db_index=True)
+    played = models.IntegerField(blank=True,
+                                 default=0)
     uniq = models.CharField(max_length=40, blank=True)
 
     def __unicode__(self):
