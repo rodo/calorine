@@ -3,50 +3,44 @@
 {% include "navbar.html" %}
 
 <div class="container">
-    <div class="row">
-      <div class="span12">
-        <div id="message"></div>
-        {% include "paginator.html" %}
-
-	  <table class="table table-striped">
-	    <thead>
-	      <tr>
-		<th class="span2"></th>
-		<th class="span4">Titre</th>
-		<th class="span3">Artiste</th>
-		<th class="span4">Album</th>
-	      </tr>
-	    </thead>
-	    <tbody>
-	      {% for song in songs %}
-	      <tr>
-		<td>
-		  <a class="btn {% if not song.vote %} btn-success
-		  {%endif %} {{song.pk}}"
-		  onclick="inc_playlist({{song.id}}); return false" href="#">Encore</a>
-		  <a class="btn {% if not song.vote %}btn-danger{%endif%} {{song.pk}}"
-		  onclick="dec_playlist({{song.id}}); return false" href="#">Stop</a>
-		</td>
-		<td>{{song.song.title}}</td>
-		<td>{{song.song.artist}}</td>
-		<td>{{song.song.album}}</td>
-		<td>{{song.song.score}}</td>
-		<td class='{{song.pk}}'>{{song.score}}
-                  {% if song.vote %}
-                    <span class="label label-info">A voté !</span>
-                  {% endif %}
-                </td>
-	      </tr>
-
-	      {% endfor %}
-	    </tbody>
-	  </table>
-
-
-      </div><!--/row-->
-    </div><!--/row-->
+  <div class="row">
+    <div class="span12">
+      <div id="message"></div>
+      {% include "paginator.html" %}
+      
+      <table class="table table-striped">
+	<thead>
+	  <tr>
+	    <th class="span2"></th>
+	    <th class="span4">Titre</th>
+	    <th class="span3">Artiste</th>
+	    <th class="span4">Album</th>
+	    <th>Vote</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  {% for song in songs %}
+	  <tr>
+	    <td class="{{song.pk}}">
+              {% if song.vote %}
+              <span class="label label-info">A voté !</span>
+	      {% else %}
+	      <a class="btn-mini btn-success {{song.pk}}" onclick="inc_playlist({{song.id}}); return false" href="/">Encore</a>
+	      <a class="btn-mini btn-danger {{song.pk}}" onclick="dec_playlist({{song.id}}); return false" href="/">Stop</a>
+              {% endif %}
+	    </td>
+	    <td>{{song.song.title}}</td>
+	    <td>{{song.song.artist}}</td>
+	    <td>{{song.song.album}}</td>
+	    <td><span class="badge badge-info">{{song.score}}</span></td>
+	  </tr>
+	  
+	  {% endfor %}
+	</tbody>
+      </table>
             
-  </div><!--/.container-->
-  <script src="{{ STATIC_URL }}js/bootstrap-modal.js"></script>
-  <script src="{{ STATIC_URL }}js/bootstrap-alert.js"></script>
-  {% include "footer.html" %}
+    </div><!--/row-->
+  </div><!--/row-->
+  
+</div><!--/.container-->
+{% include "footer.html" %}

@@ -1,6 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf8 -*
-
+#
+# Copyright (c) 2012 Rodolphe Quiédeville <rodolphe@quiedeville.org>
+#
+#     This program is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
 import os
 import sys
 import irclib
@@ -12,6 +27,8 @@ from threading import Thread
 from botcommon import OutputManager
 from random import random
 from optparse import OptionParser
+from time import sleep
+import ttclient
 
 """
 debian package python-irclib
@@ -74,7 +91,7 @@ class BotCalorine(ircbot.SingleServerIRCBot):
                 break
 
         if message.startswith(self.nick):
-            self.action(message)
+            self.action(message, serv)
 
     def on_join(self, serv, event):
         """
@@ -96,14 +113,18 @@ class BotCalorine(ircbot.SingleServerIRCBot):
         """
         self.queue.send(message, self.chan)
 
-    def action(self, message):
+    def action(self, message, serv):
         msg = message.lower()
         if message.startswith(self.nick):
             if message == "%s: cassos" % self.nick:
                 self.queue.stop()
+                sleep(.7)  # ensure the stop was read
                 self.speak("ok je comprends")
-                self.inputthread.go_on = False
+                self.inputthread.stop()
+                ttclient.trigger()
+                sleep(.2)
                 serv.disconnect("Au revoir, comme aurait dit VGE")
+                sleep(2)
                 sys.exit(0)
             elif msg.startswith("%s: je kiffe " % self.nick):
                 self.addpl(message)
@@ -165,12 +186,13 @@ class sockinput(Thread):
         self.server.bind(self.sockfile)
         self.server.listen(5)
 
-    def run(self):
+    def stop(self):
+        self.go_on = False
 
+    def run(self):
         syslog.syslog("Listening...")
         while self.go_on:
             conn, addr = self.server.accept()
-
             while True:
                 data = conn.recv( 1024 )
                 if not data:
@@ -190,19 +212,35 @@ def readopts():
                       action="store",
                       type="string",
                       dest="chan",
-                      default=None)
+                      default="calorine")
+
+    parser.add_option("-n", "--nick",
+                      action="store",
+                      type="string",
+                      dest="nick",
+                      default='calorine')
+
+    parser.add_option("-u", "--url",
+                      action="store",
+                      type="string",
+                      dest="url",
+                      default='http://calorine.quiedeville.org/')
 
     (options, args) = parser.parse_args()
+
+    if not options.chan.startswith("#"):
+        options.chan = "#%s" % options.chan
+
     return options
 
 def main():
     """
     Main
     """
-    nickname = 'calorine'
-    url = 'http://calorine.quiedeville.org:8042/chezleo'
     options = readopts()
-    bot = BotCalorine(nickname, "#%s" % options.chan, url)
+    bot = BotCalorine(options.nick,
+                      options.chan,
+                      options.url)
     bot.start()
 
 if __name__ == "__main__":

@@ -22,8 +22,8 @@ function inc_playlist(id) {
     $.get(url,
 	  function(data) {
               if(data.entry){
-                  $('a.'+data.entry.id).removeClass("btn-success")
-                  $('td.'+data.entry.id).html(data.entry.score+"<span class='label label-info'>A voté !</span>");
+                  $('a.'+data.entry.id).hide();
+                  $('td.'+data.entry.id).html("<span class='label label-info'>A voté !</span>");
                   $("#message").html("");
                   }
               if(data.message){
@@ -39,8 +39,8 @@ function dec_playlist(id) {
     $.get(url,
 	  function(data) {
               if(data.entry){
-                  $('a.'+data.entry.id).removeClass("btn-danger")
-          $('td.'+data.entry.id).html(data.entry.score+"<span class='label label-info'>A voté !</span>");
+                  $('a.'+data.entry.id).hide();
+                  $('td.'+data.entry.id).html("<span class='label label-info'>A voté !</span>");
                   $("#message").html("");
                   }
               if(data.message){
