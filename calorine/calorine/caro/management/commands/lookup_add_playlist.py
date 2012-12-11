@@ -47,9 +47,9 @@ class Command(BaseCommand):
                         song=song,
                         date_add=datetime.utcnow().replace(tzinfo=utc),
                         score=0)
-                    self.stdout.write('Add %s %s %s to playlist\n' % (song.artist,
-                                                                      song.title,
-                                                                      song.album))
+                    self.stdout.write('%s - %s - %s a été ajouté à la playlist\n' % (song.artist,
+                                                                                     song.title,
+                                                                                     song.album))
                 else:
                     self.stdout.write('On a rien trouvé')
             except Song.DoesNotExist:

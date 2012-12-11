@@ -125,6 +125,11 @@ class BotCalorine(ircbot.SingleServerIRCBot):
             self.speak("euh, ça non je ne peux pas, Britney ça fait saigner les oreilles, désolé")
             return 0
 
+        if ' dion' in msg:
+            self.speak("mais tu sais qu'écouter Céline Dion tue un chaton ?")
+            return 0
+
+
         if ';' in msg:
             self.speak("hum j'aime pas trop les points-virgules")
             return 0
