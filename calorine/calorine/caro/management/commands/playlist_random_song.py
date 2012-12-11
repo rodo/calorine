@@ -14,7 +14,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         try:
-            count = Song.objects.all().count()
+            count = Song.objects.filter(family=0).count()
             rand_id = sample(xrange(1, count), 1)[0]
             song = Song.objects.all()[rand_id]
             ple = PlaylistEntry.objects.create(

@@ -25,34 +25,34 @@ from datetime import datetime
 from random import sample
 from calorine.caro.models import PlaylistEntry
 from calorine.caro.models import Song
-import os
+
 
 class Command(BaseCommand):
     help = 'Lookup for a song and add it to playlist'
 
     def handle(self, *args, **options):
-        
+
         if len(args) > 0:
             qry_str = args[0]
 
             try:
-                srchqry = SearchQuerySet().filter(content__contains=qry_str).models(Song)
+                srchqry = SearchQuerySet().filter(
+                    content__contains=qry_str).models(Song)
                 results = [ r.pk for r in srchqry ]
 
                 count = Song.objects.filter(pk__in=results).count()
                 if count > 0:
                     rand_id = sample(xrange(1, count), 1)[0]
                     song = Song.objects.filter(pk__in=results)[rand_id]
-                    ple = PlaylistEntry.objects.create(
+                    PlaylistEntry.objects.create(
                         song=song,
                         date_add=datetime.utcnow().replace(tzinfo=utc),
                         score=0)
-                    self.stdout.write('%s - %s - %s est dans playlist\n' % (song.artist,
-                                                                            song.title,
-                                                                            song.album))
+                    msg = '%s - %s - %s est dans playlist\n' % (song.artist,
+                                                                song.title,
+                                                                song.album)
+                    self.stdout.write(msg)
                 else:
                     self.stdout.write('On a rien trouvé')
             except Song.DoesNotExist:
                 raise CommandError('Unable to find a song')
-
-

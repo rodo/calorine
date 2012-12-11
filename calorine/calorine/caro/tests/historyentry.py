@@ -48,7 +48,8 @@ class HistoryEntryTests(TestCase):  # pylint: disable-msg=R0904
                                    album='The Healing Game',
                                    title='Sometimes We Cry',
                                    genre='Blues',
-                                   score=0)
+                                   score=0,
+                                   global_score=0)
 
         hist = HistoryEntry.objects.create(
             song=song,

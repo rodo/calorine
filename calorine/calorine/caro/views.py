@@ -31,6 +31,7 @@ from django.views.generic import ListView
 from django.core.cache import cache
 from haystack.query import SearchQuerySet
 
+
 class SongList(ListView):
     paginate_by = 10
     template_name = "songs.html"
@@ -43,11 +44,12 @@ class SongList(ListView):
             qry_str = None
 
         if qry_str is not None:
-            srchqry = SearchQuerySet().filter(content__contains=qry_str).models(Song)
-            results = [ r.pk for r in srchqry ]
+            srchqry = SearchQuerySet().filter(
+                content__contains=qry_str).models(Song)
+            results = [r.pk for r in srchqry]
             queryset = Song.objects.filter(pk__in=results)
         else:
-            queryset = Song.objects.filter(score__gte=0,family=0)
+            queryset = Song.objects.filter(score__gte=0, family=0)
         return queryset
 
 

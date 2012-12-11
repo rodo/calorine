@@ -25,7 +25,7 @@ from django.db import models
 class Song(models.Model):
     """
     The song object
-    
+
     family :
 
       - 0 normal song

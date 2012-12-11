@@ -21,6 +21,7 @@ Unit tests for Song
 """
 from django.contrib.auth.models import User
 from django.test import TestCase
+from django.test import Client
 from calorine.caro.models import Song
 
 
@@ -45,6 +46,33 @@ class SongTests(TestCase):  # pylint: disable-msg=R0904
                                    album='The Healing Game',
                                    title='Sometimes We Cry',
                                    genre='Blues',
-                                   score=0)
+                                   score=0,
+                                   global_score=0)
 
         self.assertGreater(song.id, 0)
+
+    def test_jingles(self):
+        """
+        Jingles must not be shown in /songs/        
+        """
+        song = Song.objects.create(artist='Van Morrison',
+                                   album='The Healing Game',
+                                   title='Sometimes We Cry',
+                                   genre='Blues',
+                                   score=0,
+                                   family=0,
+                                   global_score=0)
+
+        jingle = Song.objects.create(artist='Lino Ventura',
+                                     album='Les tontons flingueurs',
+                                     title='Les mecs de 100 kilos',
+                                     genre='Film',
+                                     score=0,
+                                     family=1,
+                                     global_score=0)
+
+        client = Client()
+        client.login(username='admin_search', password='admintest')
+        response = client.get('/songs/')
+        self.assertContains(response, song.album, status_code=200)
+        self.assertNotContains(response, jingle.album, status_code=200)
