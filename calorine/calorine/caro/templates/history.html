@@ -21,7 +21,7 @@
 	  {% for song in songs %}
 	  <tr>
 	    <td>
-	      <a class="btn btn-primary" href="#" onclick="add_to_playlist({{song.id}})">Playlist</a>
+	      <a class="btn btn-primary" href="#" onclick="add_to_playlist({{song.song.id}})">Playlist</a>
 	    </td>
 	    <td>{{song.song.title}}</td>
 	    <td>{{song.song.artist}}</td>
