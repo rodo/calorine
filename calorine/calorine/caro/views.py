@@ -29,13 +29,26 @@ from calorine.caro.models import HistoryEntry
 from datetime import datetime
 from django.views.generic import ListView
 from django.core.cache import cache
-
+from haystack.query import SearchQuerySet
 
 class SongList(ListView):
-    queryset = Song.objects.filter(score__gte=0)
     paginate_by = 10
     template_name = "songs.html"
     context_object_name = "songs"
+
+    def get_queryset(self):
+        try:
+            qry_str = self.request.GET.get('q')
+        except NameError:
+            qry_str = None
+
+        if qry_str is not None:
+            srchqry = SearchQuerySet().filter(content__contains=qry_str).models(Song)
+            results = [ r.pk for r in srchqry ]
+            queryset = Song.objects.filter(pk__in=results)
+        else:
+            queryset = Song.objects.filter(score__gte=0)
+        return queryset
 
 
 class HistoryList(ListView):
