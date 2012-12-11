@@ -6,9 +6,6 @@ class Command(BaseCommand):
     help = 'Remove from db unonw on disk song'
 
     def handle(self, *args, **options):
-        try:
-            PlaylistEntry.objects.filter().delete()
-        except Song.DoesNotExist:
-            raise CommandError('Unable to empty playlist')
+        PlaylistEntry.objects.filter().delete()
 
         self.stdout.write('Successfully empty playlist\n')

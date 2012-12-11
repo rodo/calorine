@@ -17,7 +17,7 @@ class Command(BaseCommand):
             count = Song.objects.filter(family=0).count()
             rand_id = sample(xrange(1, count), 1)[0]
             song = Song.objects.all()[rand_id]
-            ple = PlaylistEntry.objects.create(
+            PlaylistEntry.objects.create(
                 song=song,
                 date_add=datetime.utcnow().replace(tzinfo=utc),
                 score=0)

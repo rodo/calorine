@@ -53,7 +53,7 @@ class SongTests(TestCase):  # pylint: disable-msg=R0904
 
     def test_jingles(self):
         """
-        Jingles must not be shown in /songs/        
+        Jingles must not be shown in /songs/
         """
         song = Song.objects.create(artist='Van Morrison',
                                    album='The Healing Game',

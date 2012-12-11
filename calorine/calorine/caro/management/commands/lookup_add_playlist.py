@@ -38,7 +38,7 @@ class Command(BaseCommand):
             try:
                 srchqry = SearchQuerySet().filter(
                     content__contains=qry_str).models(Song)
-                results = [ r.pk for r in srchqry ]
+                results = [r.pk for r in srchqry]
 
                 count = Song.objects.filter(pk__in=results).count()
                 if count > 0:
