@@ -23,7 +23,7 @@ class BotModeration(ircbot.SingleServerIRCBot):
         """
         ircbot.SingleServerIRCBot.__init__(self, [("irc.freenode.net", 6667)],
                                            "calorine", "IRC bot for Calorine radio")
-        self.insultes = ["con", "pute", "connard"]
+        self.insultes = ["con ", "pute", "connard"]
 
         self.queue = OutputManager(self.connection, .9)
         self.queue.start()
@@ -74,6 +74,21 @@ class BotModeration(ircbot.SingleServerIRCBot):
             self.inputthread.go_on = False
             serv.disconnect("Au revoir, comme aurait dit VGE")
             sys.exit(0)
+
+    def on_join(self, serv, ev):
+        """
+        When someone join
+        """
+        auteur = irclib.nm_to_n(ev.source())
+        canal = ev.target()
+
+        hello = ["salut", "coucou", "bonjour",
+                 "yo", "bisous", "kiss",
+                 "salut", "Big smack pour", "hi",
+                 "yo"]
+        rand = int(random() * 10)
+        serv.privmsg(canal, "%s %s" % (hello[rand] % auteur))
+
 
     def speak(self, message):
         """
