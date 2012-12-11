@@ -16,7 +16,6 @@ class Command(BaseCommand):
         try:
             count = Song.objects.all().count()
             rand_id = sample(xrange(1, count), 1)[0]
-            print rand_id, count
             song = Song.objects.all()[rand_id]
             ple = PlaylistEntry.objects.create(
                 song=song,
