@@ -23,7 +23,10 @@ class OutputManager(Thread):
       self.event.wait()
       while self.queue:
         msg,target = self.queue.pop(0)
-        self.connection.privmsg(target, msg)
+        try:
+          self.connection.privmsg(target, msg)
+        except:
+          pass
         time.sleep(self.delay)
       self.event.clear()
 
