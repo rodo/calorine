@@ -17,20 +17,20 @@ debian package python-irclib
 """
 
 class BotModeration(ircbot.SingleServerIRCBot):
-    def __init__(self, chan):
+    def __init__(self, nick, chan, url):
         """
         Constructeur qui pourrait prendre des paramètres dans un "vrai" programme.
         """
         ircbot.SingleServerIRCBot.__init__(self, [("irc.freenode.net", 6667)],
-                                           "calorine", "IRC bot for Calorine radio")
-        self.insultes = ["con ", "pute", "connard"]
-
+                                           nick, "IRC bot for Calorine radio")
         self.queue = OutputManager(self.connection, .9)
         self.queue.start()
 
         self.inputthread = sockinput(self)
         self.inputthread.start()
         self.chan = chan
+        self.nick = nick
+        self.url = url
 
     def on_welcome(self, serv, ev):
         """
@@ -63,17 +63,23 @@ class BotModeration(ircbot.SingleServerIRCBot):
         canal = ev.target()
         message = ev.arguments()[0].lower() # Les insultes sont écrites en minuscules.
 
-        for insulte in self.insultes:
+        insultes = ["con ", "pute", "connard", "salope", "salop", "crétin"]
+
+        for insulte in insultes:
             if insulte in message:
                 serv.privmsg(self.chan, "t'es gentil %s mais tu te calmes" % auteur)
                 break
 
-        if message == "calorine: cassos":
-            self.queue.stop()
-            self.speak("ok je comprends")
-            self.inputthread.go_on = False
-            serv.disconnect("Au revoir, comme aurait dit VGE")
-            sys.exit(0)
+        if message.startswith(self.nick):
+
+            if message == "%s: cassos" % self.nick:
+                self.queue.stop()
+                self.speak("ok je comprends")
+                self.inputthread.go_on = False
+                serv.disconnect("Au revoir, comme aurait dit VGE")
+                sys.exit(0)
+            else:
+                self.speak("tu aimes la musique, ecoute %s" % self.url)
 
     def on_join(self, serv, ev):
         """
@@ -87,14 +93,15 @@ class BotModeration(ircbot.SingleServerIRCBot):
                  "salut", "Big smack pour", "hi",
                  "yo"]
         rand = int(random() * 10)
-        serv.privmsg(canal, "%s %s" % (hello[rand] % auteur))
-
+        if auteur != self.nick:
+            self.speak(canal, "%s %s" % (hello[rand], auteur))
 
     def speak(self, message):
         """
         speak on chan
         """
         self.queue.send(message, self.chan)
+
 
 class sockinput(Thread):
     """Listen on a sockfile
@@ -148,8 +155,10 @@ def main():
     """
     Main
     """
+    nickname = 'calorine'
+    url = 'http://calorine.quiedeville.org:8042/chezleo'
     options = readopts()
-    bot = BotModeration("#%s" % options.chan)
+    bot = BotModeration(nickname, "#%s" % options.chan, url)
     bot.start()
 
 if __name__ == "__main__":
