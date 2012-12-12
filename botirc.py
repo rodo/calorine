@@ -23,6 +23,7 @@ import ircbot
 import syslog
 import socket
 import subprocess
+import memcache
 from threading import Thread
 from botcommon import OutputManager
 from random import random
@@ -35,6 +36,9 @@ debian package python-irclib
 """
 
 class BotCalorine(ircbot.SingleServerIRCBot):
+
+    pl_prefix = ["je kiffe", "j'aime", "je like", "donne moi du",
+                 "allez balance", "vas-y envoi"]
 
     def __init__(self, nick, chan, url):
         """
@@ -125,17 +129,30 @@ class BotCalorine(ircbot.SingleServerIRCBot):
                 sleep(.2)
                 serv.disconnect("Au revoir, comme aurait dit VGE")
                 sleep(2)
+                syslog.syslog("quit on cassos irc message")
                 sys.exit(0)
             elif msg.startswith("%s: asv" % self.nick):
                 self.asv()
-            elif msg.startswith("%s: je kiffe " % self.nick):
-                self.addpl(message)
-            elif msg.startswith("%s: j'aime " % self.nick):
-                self.addpl(message)
-            elif msg.startswith("%s: donne moi du " % self.nick):
-                self.addpl(message)
+            elif msg.startswith("%s: onair" % self.nick):
+                self.onair()
             else:
-                self.speak("tu aimes la musique, ecoute %s" % self.url)
+                for plp in self.pl_prefix:
+                    if msg.startswith("%s: %s" % (self.nick, plp)):
+                        self.addpl(message)
+
+    def onair(self):
+        """asv command
+        """
+        conn = '127.0.0.1:11211'
+        prefix = "calorine_"
+        info = "pas d'info"
+        try:
+            mmc = memcache.Client([conn], debug=0)
+            info = "onair : %s " % (mmc.get("%s:1:onair_full" % prefix))
+        except:
+            syslog.syslog("error on connecting to memcache %s" % conn)
+
+        self.speak(info)
 
     def asv(self):
         """asv command
@@ -144,7 +161,7 @@ class BotCalorine(ircbot.SingleServerIRCBot):
 
     def addpl(self, message):
         msg = message.lower()
-        pl_prefix = ["je kiffe", "j'aime", "je like", "donne moi du"]
+
         manage = os.path.join(os.path.dirname(__file__),
                               'calorine',
                               'manage.py')
@@ -169,7 +186,7 @@ class BotCalorine(ircbot.SingleServerIRCBot):
             self.speak("je n'aime pas les esperluettes d'abord")
             return 0
 
-        for plp in pl_prefix:
+        for plp in self.pl_prefix:
             if msg.startswith("%s: %s" % (self.nick, plp)):
                 index = len(self.nick) + 2 + len(plp) + 1
                 lookup = message[index:]
