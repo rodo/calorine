@@ -24,6 +24,7 @@ import sys
 import hashlib
 import mutagen
 
+
 def checkID3(filename):
     """
     Create a new song in database
@@ -56,17 +57,18 @@ def checkID3(filename):
             
     return datas
 
+
 def sigfile(fpath):
     """
     Calculate the sha1 value of a file
     """
-    sha1 = hashlib.sha1()
+    sigsha = hashlib.sha1()
     f = open(fpath, 'rb')
     try:
-        sha1.update(f.read())
+        sigsha.update(f.read())
     finally:
         f.close()
-    return sha1.hexdigest()
+    return sigsha.hexdigest()
 
 
 def importdir(path):
@@ -80,7 +82,7 @@ def importdir(path):
     dirlist = []
     try:
         dirlist = os.listdir(path)
-    except OSError as e:
+    except OSError:
         pass
 
     for filename in dirlist:
@@ -94,21 +96,3 @@ def importdir(path):
                 paths.append(os.path.join(path, filename.strip()))
 
     return paths
-
-def main():
-    """
-    Main function
-    """
-    if len(sys.argv) == 1:
-        print "Usage fill.py [options] --dbname=DBNAME DIRNAME"
-        sys.exit(1)
-    path = sys.argv[-1]
-
-    if not os.path.isdir(path):
-        print "%s does not exists" % path
-
-    counter = 0
-    importdir(path, counter)
-
-if __name__ == "__main__":
-    main()
