@@ -22,6 +22,7 @@ from django.core.management.base import BaseCommand
 from calorine.caro.models import Song
 from calorine.caro.utils import importdir, checkID3, sigfile
 
+
 class Command(BaseCommand):
     help = 'Remove from db unonw on disk song'
 
@@ -61,7 +62,6 @@ class Command(BaseCommand):
         song.filename = fpath
         song.save()
         self.stdout.write("%s updated in db\n" % song.title)
-
 
     def _createsong(self, tags, sig, fpath):
         """Create a new song in db

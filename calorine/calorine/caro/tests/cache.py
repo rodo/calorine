@@ -22,25 +22,25 @@ Unit tests for profil in caro
 from django.test import TestCase
 from django.conf import settings
 
+
 class CachesTests(TestCase):  # pylint: disable-msg=R0904
     """
     The logs object
 
     """
 
-    def SetUp(self):
+    def SetUp(self):  # pylint: disable-msg=C0103
         """setUp the tests
         """
         settings.CACHES = {
             'default': {
                 'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
                 'LOCATION': '127.0.0.1:11211',
-                'KEY_PREFIX': 'calo_tests_'
-                }
-            }
+                'KEY_PREFIX': 'calo_tests_'}}
 
     def test_cache(self):
-
+        """Debug cache use
+        """
         import memcache
         from django.core.cache import cache
 
@@ -48,7 +48,7 @@ class CachesTests(TestCase):  # pylint: disable-msg=R0904
         value = "from"
         prefix = settings.CACHES['default']['KEY_PREFIX']
 
-        mc = memcache.Client(['127.0.0.1:11211'], debug=1)
-        mc.set("%s:1:%s" % (prefix, key), value)
+        mmc = memcache.Client(['127.0.0.1:11211'], debug=0)
+        mmc.set("%s:1:%s" % (prefix, key), value)
 
         self.assertEqual(cache.get(key), value)
