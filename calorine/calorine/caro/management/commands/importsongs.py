@@ -18,7 +18,7 @@
 """
 Lookup for a song and to playlist
 """
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from calorine.caro.models import Song
 from calorine.caro.utils import importdir, checkID3, sigfile
 
@@ -43,24 +43,24 @@ class Command(BaseCommand):
 
                 if len(exsong) > 0:
                     if exsong[0].filename != fpath:
-                        self._updatesong(exsong[0], sig, fpath)
+                        self._updatesong(exsong[0], fpath)
                         update += 1
                     else:
                         exists += 1
                 else:
-                    self._createtesong(tags, sig, fpath)
+                    self._createsong(tags, sig, fpath)
                     insert += 1
+
         self.stdout.write("%d songs already present db\n" % exists)
         self.stdout.write("%d songs path updated in db\n" % update)
         self.stdout.write("%d songs inserted in db\n" % insert)
 
-    def _updatesong(self, song, sig, fpath):
+    def _updatesong(self, song, fpath):
         """Update the path if file moved
         """
         song.filename = fpath
         song.save
         self.stdout.write("%s updated in db\n" % song.title)
-
 
 
     def _createsong(self, tags, sig, fpath):
