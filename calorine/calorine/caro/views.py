@@ -33,7 +33,7 @@ from haystack.query import SearchQuerySet
 
 
 class SongList(ListView):
-    paginate_by = 10
+    paginate_by = 17
     template_name = "songs.html"
     context_object_name = "songs"
 
@@ -52,17 +52,23 @@ class SongList(ListView):
             queryset = Song.objects.filter(score__gte=0, family=0)
         return queryset
 
+    def get_context_data(self, **kwargs):
+        context = super(SongList, self).get_context_data(**kwargs)
+        for song in context['songs']:
+            if cache.get('song_{}'.format(song.pk)):
+                song.vote = True
+        return context
 
 class HistoryList(ListView):
     queryset = HistoryEntry.objects.all().order_by("-date_played")
-    paginate_by = 10
+    paginate_by = 17
     template_name = 'history.html'
     context_object_name = "songs"
 
 
 class PlayList(ListView):
     queryset = PlaylistEntry.objects.all().order_by('-score', 'date_add')
-    paginate_by = 10
+    paginate_by = 17
     template_name = 'playlist.html'
     context_object_name = "songs"
 
@@ -86,7 +92,7 @@ class LogList(ListView):
     queryset = Logs.objects.all().order_by('-date_import')
     template_name = 'errors.html'
     context_object_name = 'errors'
-    paginate_by = 10
+    paginate_by = 17
 
 
 def pladd(request, song_id):
@@ -99,7 +105,7 @@ def pladd(request, song_id):
                         score=1,
                         date_add=datetime.today())
     ple.save()
-
+    pldislike(request, ple.pk)
     return render(request, 'playlist_add.html')
 
 
@@ -123,12 +129,15 @@ def inc_desc(sign, request, pk):
     """
     ple = get_object_or_404(PlaylistEntry, pk=pk)
     key = 'ple_{}_{}'.format(request.user.id, ple.song.pk, ple.pk)
+    song_key = 'song_{}'.format(ple.song.pk)
     if cache.get(key):
         return HttpResponse(
             json.dumps({'message': 'Do not try this with me'}),
             mimetype="application/json")
     else:
         cache.set(key, True)
+        cache.set(song_key, True)
+
     if sign == "plus":
         ple.score += 1
     else:

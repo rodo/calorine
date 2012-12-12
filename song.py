@@ -26,31 +26,31 @@ class Song():
         """
         parser = OptionParser()
         parser.add_option("--dbname", action="store", type="string", dest="dbname", default=None)
-        
+
         parser.add_option("--user",
                           action="store",
                           type="string",
                           dest="user",
                           default=None)
-        
+
         parser.add_option("--password",
                           action="store",
                           type="string",
                           dest="password",
                           default=None)
-        
+
         parser.add_option("--host",
                           action="store",
                           type="string",
                           dest="host",
-                          default=None)    
-        
+                          default=None)
+
         parser.add_option("--port",
                           action="store",
                           type="string",
                           dest="port",
                           default=None)
-        
+
         (options, args) = parser.parse_args()
 
         if options.dbname is None:
@@ -74,14 +74,21 @@ class Song():
         """
         Store the actual playing song
         """
+        for key in ['title', 'artist', 'score', 'full']:
+            self.memcache.delete(":1:onair_%s" % key)
+
         try:
             datas = mutagen.File(song, easy=True)
-
-            self.memcache.set("onair_title", datas["title"][0])
-            self.memcache.set("onair_artist", datas["artist"][0])
-            self.memcache.set("onair_score", score)
-            self.memcache.set("onair_full", "%s - %s" % (datas["artist"][0],
-                                                         datas["title"][0]))
+            
+            self.memcache.set(":1:onair_title", 
+                              datas["title"][0])
+            self.memcache.set(":1:onair_artist",
+                              datas["artist"][0])
+            self.memcache.set(":1:onair_score",
+                              score)
+            self.memcache.set(":1:onair_full",
+                              "%s - %s" % (datas["artist"][0],
+                                           datas["title"][0]))
         except:
             pass
 
@@ -102,6 +109,8 @@ class Song():
         query = """UPDATE caro_song set played = played + 1, score = 0 WHERE id=%s"""
         cur.execute(query, (song_id, ))
 
+        self.memcache.delete(":1:song_%d" % song_id)
+
         query = """DELETE FROM caro_playlistentry WHERE song_id=%s"""
         cur.execute(query, (song_id, ))
 
@@ -109,7 +118,7 @@ class Song():
         cur.execute(query, (song_id, ))
 
         self.onair(filename, song_score)
-        
+
         self.conn.commit()
 
         return filename
@@ -154,7 +163,7 @@ class Song():
                 self.markfile(datas[0])
 
         return datas
-        
+
     def markfile(self, song_id):
         """
         Mark a song with score = -1000

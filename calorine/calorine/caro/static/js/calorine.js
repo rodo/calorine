@@ -12,6 +12,8 @@ function add_to_playlist(id) {
     $.get(url,
 	  function(data) {
 	      $('.result').html("ok");
+	      $('.btn_'+id).addClass("disabled");
+	      $('.btn_'+id).removeClass("btn-primary");
 	  });
 }
 

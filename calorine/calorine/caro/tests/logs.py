@@ -23,13 +23,36 @@ from django.test import TestCase
 from datetime import datetime
 from django.utils.timezone import utc
 from calorine.caro.models import Logs
-
+from django.conf import settings
 
 class LogsTests(TestCase):  # pylint: disable-msg=R0904
     """
     The logs object
 
     """
+
+    def SetUp(self):
+        """setUp the tests
+        """
+        settings.CACHES = {
+            'default': {
+                'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+                'LOCATION': '127.0.0.1:11211',
+                }
+            }
+
+    def test_cache(self):
+
+        import memcache
+        from django.core.cache import cache
+
+        key = "onair_title_foo"
+        value = "from"
+
+        mc = memcache.Client(['127.0.0.1:11211'], debug=1)
+        mc.set(":1:%s" % key, value)
+
+        self.assertEqual(cache.get(key), value)
 
     def test_create_logs(self):
         """
@@ -41,3 +64,4 @@ class LogsTests(TestCase):  # pylint: disable-msg=R0904
             date_import=datetime.utcnow().replace(tzinfo=utc))
 
         self.assertGreater(log.id, 0)
+

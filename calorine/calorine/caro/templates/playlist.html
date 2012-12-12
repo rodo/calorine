@@ -7,7 +7,6 @@
     <div class="span12">
       <div id="message"></div>
       {% include "paginator.html" %}
-      
       <table class="table table-striped">
 	<thead>
 	  <tr>
@@ -25,14 +24,14 @@
               {% if song.vote %}
               <span class="label label-info">A voté !</span>
 	      {% else %}
-	      <a class="btn-mini btn-success {{song.pk}}" onclick="inc_playlist({{song.id}}); return false" href="/">Encore</a>
-	      <a class="btn-mini btn-danger {{song.pk}}" onclick="dec_playlist({{song.id}}); return false" href="/">Stop</a>
+	      <a class="btn-mini btn-success {{song.pk}}" onclick="inc_playlist({{song.id}}); return false" href="#">Encore</a>
+	      <a class="btn-mini btn-danger {{song.pk}}" onclick="dec_playlist({{song.id}}); return false" href="#">Stop</a>
               {% endif %}
 	    </td>
 	    <td>{{song.song.title}}</td>
 	    <td>{{song.song.artist}}</td>
 	    <td>{{song.song.album}}</td>
-	    <td><span class="badge badge-info">{{song.score}}</span></td>
+	    <td><span class="badge badge-info span_{{song.pk}}">{{song.score}}</span></td>
 	  </tr>
 	  
 	  {% endfor %}

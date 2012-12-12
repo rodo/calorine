@@ -19,6 +19,19 @@
  Context processors definition
 
 """
+from django.core.cache import cache
+
+
+def onair(request):
+    """Retrieve datas from cache
+    """
+    key = 'onair_full'
+    artist = ''
+    if cache.get(key):
+        artist = cache.get(key)
+
+    return {'ONAIR_ARTIST': artist}
+
 
 
 def searchq(request):
