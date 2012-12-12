@@ -59,7 +59,7 @@ class Command(BaseCommand):
         """Update the path if file moved
         """
         song.filename = fpath
-        song.save
+        song.save()
         self.stdout.write("%s updated in db\n" % song.title)
 
 
