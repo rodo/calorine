@@ -19,6 +19,7 @@
 The django views
 """
 import json
+from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -26,6 +27,7 @@ from calorine.caro.models import Song
 from calorine.caro.models import Logs
 from calorine.caro.models import PlaylistEntry
 from calorine.caro.models import HistoryEntry
+from calorine.caro.models import Vote
 from datetime import datetime
 from django.views.generic import ListView
 from django.core.cache import cache
@@ -105,7 +107,7 @@ def pladd(request, song_id):
                         score=1,
                         date_add=datetime.today())
     ple.save()
-    pldislike(request, ple.pk)
+    pllike(request, ple.pk)
     return render(request, 'playlist_add.html')
 
 
@@ -130,6 +132,11 @@ def inc_desc(sign, request, pk):
     ple = get_object_or_404(PlaylistEntry, pk=pk)
     key = 'ple_{}_{}'.format(request.user.id, ple.song.pk, ple.pk)
     song_key = 'song_{}'.format(ple.song.pk)
+    song = get_object_or_404(Song, pk=ple.song.id)
+
+    vote = Vote(song=song,user=request.user)
+    vote.save()
+
     if cache.get(key):
         return HttpResponse(
             json.dumps({'message': 'Do not try this with me'}),

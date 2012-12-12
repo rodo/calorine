@@ -23,7 +23,7 @@ from django.test import TestCase
 from datetime import datetime
 from django.utils.timezone import utc
 from calorine.caro.models import Logs
-from django.conf import settings
+
 
 class LogsTests(TestCase):  # pylint: disable-msg=R0904
     """
@@ -41,4 +41,3 @@ class LogsTests(TestCase):  # pylint: disable-msg=R0904
             date_import=datetime.utcnow().replace(tzinfo=utc))
 
         self.assertGreater(log.id, 0)
-

@@ -19,6 +19,7 @@
 Models definition for caro app
 """
 
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -95,3 +96,13 @@ class Logs(models.Model):
     filename = models.CharField(max_length=280)
     message = models.CharField(max_length=280)
     date_import = models.DateTimeField(auto_now_add=True)
+
+
+class Vote(models.Model):
+    """
+    En entry in history
+
+    """
+    song = models.ForeignKey(Song)
+    user = models.ForeignKey(User)
+    date_vote = models.DateTimeField(auto_now_add=True)
