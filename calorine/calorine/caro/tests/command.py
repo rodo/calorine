@@ -22,7 +22,11 @@ Unit tests for Vote
 from django.contrib.auth.models import User
 from django.test import TestCase
 from calorine.caro.models import Song
+from calorine.caro.models import PlaylistEntry
 from django.core.management import call_command
+from datetime import datetime
+from django.utils.timezone import utc
+
 
 class CommandTests(TestCase):  # pylint: disable-msg=R0904
     """
@@ -54,6 +58,33 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         call_command('cleansongs')
 
         after = Song.objects.filter(score=-1000).count()
-        
+
+        self.assertTrue(before > 0)
+        self.assertEqual(after, 0)
+
+    def test_emptyplaylist(self):
+        """
+        cleansongs manage command
+        """
+        song = Song.objects.create(artist='Van Morrison',
+                                   album='The Healing Game',
+                                   title='Sometimes We Cry',
+                                   genre='Blues',
+                                   score=-1000,
+                                   family=0,
+                                   global_score=0)
+
+        ple = PlaylistEntry.objects.create(
+            song=song,
+            date_add=datetime.utcnow().replace(tzinfo=utc),
+            score=0)
+
+
+        before = PlaylistEntry.objects.all().count()
+
+        call_command('empty_playlist')
+
+        after = PlaylistEntry.objects.all().count()
+
         self.assertTrue(before > 0)
         self.assertEqual(after, 0)
