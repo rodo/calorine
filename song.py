@@ -74,19 +74,24 @@ class Song():
         """
         Store the actual playing song
         """
+        prefix = 'calorine_'
         for key in ['title', 'artist', 'score', 'full']:
-            self.memcache.delete(":1:onair_%s" % key)
+            self.memcache.delete("%s:1:onair_%s" % (prefix, key))
 
         try:
             datas = mutagen.File(song, easy=True)
-            
-            self.memcache.set(":1:onair_title", 
-                              datas["title"][0])
-            self.memcache.set(":1:onair_artist",
-                              datas["artist"][0])
-            self.memcache.set(":1:onair_score",
-                              score)
-            self.memcache.set(":1:onair_full",
+        except:
+            pass
+
+        try:
+            self.memcache.set("%s:1:onair_title" % prefix, datas["title"][0])
+            self.memcache.set("%s:1:onair_artist" % prefix, datas["artist"][0])
+            self.memcache.set("%s:1:onair_score" % prefix, score)
+        except:
+            pass
+
+        try:
+            self.memcache.set("%s:1:onair_full" % prefix,
                               "%s - %s" % (datas["artist"][0],
                                            datas["title"][0]))
         except:

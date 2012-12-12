@@ -25,12 +25,13 @@ from django.core.cache import cache
 def onair(request):
     """Retrieve datas from cache
     """
-    key = 'onair_full'
+    key_full = 'onair_full'
     artist = ''
-    if cache.get(key):
-        artist = cache.get(key)
+    full = ''
+    if cache.get(key_full):
+        full = cache.get(key_full)
 
-    return {'ONAIR_ARTIST': artist}
+    return {'ONAIR_FULL': full}
 
 
 def searchq(request):
