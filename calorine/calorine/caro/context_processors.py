@@ -33,7 +33,6 @@ def onair(request):
     return {'ONAIR_ARTIST': artist}
 
 
-
 def searchq(request):
     """
     The search string
