@@ -42,10 +42,15 @@ def checkID3(filename):
 
     if mdat is not None:
         try:
+            genre = mdat['genre'][0]
+        except:
+            genre = ''
+
+        try:
             datas = {'artist': mdat['artist'][0],
                      'album': mdat['album'][0],
                      'title': mdat['title'][0],
-                     'genre': mdat['genre'][0]}
+                     'genre': genre}
         except KeyError as e:
             msg = str(sys.exc_type), ":", "%s is not in the list." % sys.exc_value
             
