@@ -19,7 +19,6 @@
 The django views
 """
 import json
-from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -60,6 +59,7 @@ class SongList(ListView):
             if cache.get('song_{}'.format(song.pk)):
                 song.vote = True
         return context
+
 
 class HistoryList(ListView):
     queryset = HistoryEntry.objects.all().order_by("-date_played")
@@ -134,7 +134,7 @@ def inc_desc(sign, request, pk):
     song_key = 'song_{}'.format(ple.song.pk)
     song = get_object_or_404(Song, pk=ple.song.id)
 
-    vote = Vote(song=song,user=request.user)
+    vote = Vote(song=song, user=request.user)
     vote.save()
 
     if cache.get(key):
