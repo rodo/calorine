@@ -26,7 +26,6 @@ def onair(request):
     """Retrieve datas from cache
     """
     key_full = 'onair_full'
-    artist = ''
     full = ''
     if cache.get(key_full):
         full = cache.get(key_full)
