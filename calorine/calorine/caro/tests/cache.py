@@ -20,25 +20,35 @@ Unit tests for profil in caro
 
 """
 from django.test import TestCase
-from datetime import datetime
-from django.utils.timezone import utc
-from calorine.caro.models import Logs
 from django.conf import settings
 
-class LogsTests(TestCase):  # pylint: disable-msg=R0904
+class CachesTests(TestCase):  # pylint: disable-msg=R0904
     """
     The logs object
 
     """
 
-    def test_create_logs(self):
+    def SetUp(self):
+        """setUp the tests
         """
-        Create a simple logs
-        """
-        log = Logs.objects.create(
-            filename='foo',
-            message='foobar',
-            date_import=datetime.utcnow().replace(tzinfo=utc))
+        settings.CACHES = {
+            'default': {
+                'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+                'LOCATION': '127.0.0.1:11211',
+                'KEY_PREFIX': 'calo_tests_'
+                }
+            }
 
-        self.assertGreater(log.id, 0)
+    def test_cache(self):
 
+        import memcache
+        from django.core.cache import cache
+
+        key = "onair_title_foo"
+        value = "from"
+        prefix = settings.CACHES['default']['KEY_PREFIX']
+
+        mc = memcache.Client(['127.0.0.1:11211'], debug=1)
+        mc.set("%s:1:%s" % (prefix, key), value)
+
+        self.assertEqual(cache.get(key), value)
