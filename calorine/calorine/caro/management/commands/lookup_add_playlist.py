@@ -40,7 +40,7 @@ class Command(BaseCommand):
                     content__contains=qry_str).models(Song)
                 results = [r.pk for r in srchqry]
 
-                count = Song.objects.filter(pk__in=results).count()
+                count = Song.objects.filter(pk__in=results).count() - 1
                 if count > 0:
                     rand_id = sample(xrange(1, count), 1)[0]
                     song = Song.objects.filter(pk__in=results)[rand_id]
