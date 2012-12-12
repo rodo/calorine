@@ -21,6 +21,7 @@ Unit tests for urls in caro
 """
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
+from calorine.caro.models import Song
 
 
 class UrlsTests(TestCase):  # pylint: disable-msg=R0904
@@ -65,9 +66,36 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
 
     def test_logs(self):
         """
-        History url
+        logs url
         """
         client = Client()
         client.login(username='admin_search', password='admintest')
         response = client.get('/logs/')
         self.assertContains(response, self.user.username, status_code=200)
+
+    def test_profile(self):
+        """
+        History url
+        """
+        client = Client()
+        client.login(username='admin_search', password='admintest')
+        response = client.get('/accounts/profile/')
+        self.assertContains(response, self.user.username, status_code=200)
+
+    def test_playlistadd(self):
+        """
+        History url
+        """
+        song = Song.objects.create(artist='Van Morrison',
+                                   album='The Healing Game',
+                                   title='Sometimes We Cry',
+                                   genre='Blues',
+                                   score=0,
+                                   family=0,
+                                   global_score=0)
+
+        client = Client()
+        client.login(username='admin_search', password='admintest')
+        response = client.get('/playlist/add/%d' % song.id)
+        self.assertContains(response, 'ok', status_code=200)
+
