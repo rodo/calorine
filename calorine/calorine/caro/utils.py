@@ -52,9 +52,9 @@ def checkID3(filename):
                      'album': mdat['album'][0],
                      'title': mdat['title'][0],
                      'genre': genre}
-        except KeyError as e:
+        except KeyError:
             msg = str(sys.exc_type), ":", "%s is not in the list." % sys.exc_value
-            
+
     return datas
 
 
@@ -63,11 +63,11 @@ def sigfile(fpath):
     Calculate the sha1 value of a file
     """
     sigsha = hashlib.sha1()
-    f = open(fpath, 'rb')
+    fbj = open(fpath, 'rb')
     try:
-        sigsha.update(f.read())
+        sigsha.update(fbj.read())
     finally:
-        f.close()
+        fbj.close()
     return sigsha.hexdigest()
 
 
