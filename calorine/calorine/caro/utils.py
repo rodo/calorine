@@ -21,14 +21,57 @@ fill.py is used to fill the database with music files
 """
 import os
 import sys
-from song import Song
+import hashlib
+import mutagen
 
-def importdir(path, counter):
+def checkID3(filename):
+    """
+    Create a new song in database
+    """
+    datas = None
+    mdat = None
+    try:
+        unicode(filename)
+    except UnicodeDecodeError:
+        pass
+
+    try:
+        mdat = mutagen.File(filename, easy=True)
+    except:
+        pass
+
+    if mdat is not None:
+        try:
+            datas = {'artist': mdat['artist'][0],
+                     'album': mdat['album'][0],
+                     'title': mdat['title'][0],
+                     'genre': mdat['genre'][0]}
+        except KeyError as e:
+            msg = str(sys.exc_type), ":", "%s is not in the list." % sys.exc_value
+            
+    return datas
+
+def sigfile(fpath):
+    """
+    Calculate the sha1 value of a file
+    """
+    sha1 = hashlib.sha1()
+    f = open(fpath, 'rb')
+    try:
+        sha1.update(f.read())
+    finally:
+        f.close()
+    return sha1.hexdigest()
+
+
+def importdir(path):
     """
     Import all files present in dir recursively
+
+    Return an array containing all paths
     """
+    paths = []
     extensions = ['ogg']
-    nbt = Song()
     dirlist = []
     try:
         dirlist = os.listdir(path)
@@ -37,15 +80,15 @@ def importdir(path, counter):
 
     for filename in dirlist:
         if os.path.isdir(os.path.join(path, filename.strip())):
-            importdir(os.path.join(path, filename.strip()), counter)
+            for filex in importdir(os.path.join(path,
+                                                filename.strip())):
+                paths.append(filex)
         else:
             ext = filename.split('.')[-1]
             if ext in extensions:
-                nbt.newsong(os.path.join(path, filename.strip()))
-                print counter, filename.strip()
-                counter += 1
+                paths.append(os.path.join(path, filename.strip()))
 
-    return counter
+    return paths
 
 def main():
     """
