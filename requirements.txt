@@ -6,6 +6,7 @@ django-registration
 whoosh
 django-tastypie
 python-memcached
+mutagen
 #
 #  following package are for running tests
 #
