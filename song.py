@@ -74,13 +74,16 @@ class Song():
         """
         Store the actual playing song
         """
-        datas = mutagen.File(song, easy=True)
+        try:
+            datas = mutagen.File(song, easy=True)
 
-        self.memcache.set("onair_title", datas["title"][0])
-        self.memcache.set("onair_artist", datas["artist"][0])
-        self.memcache.set("onair_score", score)
-        self.memcache.set("onair_full", "%s - %s" % (datas["artist"][0],
-                                                     datas["title"][0]))
+            self.memcache.set("onair_title", datas["title"][0])
+            self.memcache.set("onair_artist", datas["artist"][0])
+            self.memcache.set("onair_score", score)
+            self.memcache.set("onair_full", "%s - %s" % (datas["artist"][0],
+                                                         datas["title"][0]))
+        except:
+            pass
 
     def next(self):
         """Do the job"""
