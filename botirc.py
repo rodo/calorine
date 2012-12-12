@@ -126,6 +126,8 @@ class BotCalorine(ircbot.SingleServerIRCBot):
                 serv.disconnect("Au revoir, comme aurait dit VGE")
                 sleep(2)
                 sys.exit(0)
+            elif msg.startswith("%s: asv" % self.nick):
+                self.asv()
             elif msg.startswith("%s: je kiffe " % self.nick):
                 self.addpl(message)
             elif msg.startswith("%s: j'aime " % self.nick):
@@ -134,6 +136,11 @@ class BotCalorine(ircbot.SingleServerIRCBot):
                 self.addpl(message)
             else:
                 self.speak("tu aimes la musique, ecoute %s" % self.url)
+
+    def asv(self):
+        """asv command
+        """
+        self.speak("petit curieux va :-) allez rejoint moi sur %s, canailloute" % self.url)
 
     def addpl(self, message):
         msg = message.lower()
