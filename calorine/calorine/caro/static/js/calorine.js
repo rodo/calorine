@@ -4,7 +4,7 @@
  *
  */
 
-var int=self.setInterval(function(){onair()},3000);
+var int=self.setInterval(function(){onair()},42000);
 
 function onair() {
 
