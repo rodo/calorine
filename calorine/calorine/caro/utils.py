@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 # Copyright (c) 2012 Rodolphe Quiédeville <rodolphe@quiedeville.org>
@@ -23,6 +22,7 @@ import os
 import sys
 import hashlib
 import mutagen
+from calorine.caro.models import Logs
 
 
 def checkID3(filename):
