@@ -177,4 +177,3 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
         response = client.get('/playlist/dec/%d' % ple.id)
 
         self.assertContains(response, '{', status_code=200)
-
