@@ -27,6 +27,8 @@ class SongIndex(indexes.RealTimeSearchIndex, indexes.Indexable):
     Fulltext indexing for objects Song
     """
     text = indexes.CharField(document=True, use_template=True)
+    artist = indexes.CharField(model_attr='artist')
+    album = indexes.CharField(model_attr='album')
     title = indexes.CharField(model_attr='title')
 
     def get_model(self):
