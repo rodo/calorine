@@ -18,7 +18,7 @@
 """
 Lookup for a song and to playlist
 """
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.utils.timezone import utc
 from haystack.query import SearchQuerySet
 from datetime import datetime
@@ -53,8 +53,8 @@ class Command(BaseCommand):
                     date_add=datetime.utcnow().replace(tzinfo=utc),
                     score=0)
                 msg = '%s - %s - %s est dans playlist\n' % (song.artist,
-                                                                song.title,
-                                                                song.album)
+                                                            song.title,
+                                                            song.album)
                 self.stdout.write(msg)
             else:
                 self.stdout.write('On a rien trouvé')
