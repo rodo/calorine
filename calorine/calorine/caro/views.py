@@ -107,6 +107,7 @@ def profile(request):
                    'streams': streams
                    })
 
+
 def onair(request):
     """The onair
     """
@@ -125,7 +126,6 @@ def onair(request):
     except:
         album = ''
 
-
     datas = {'artist': artist,
              'title': title,
              'album': album}
@@ -133,10 +133,9 @@ def onair(request):
     response = HttpResponse(mimetype='application/json; charset=utf-8')
 
     from json import dumps
-    response.write(json.dumps(datas))
+    response.write(dumps(datas))
 
     return response
-
 
 
 def pladd(request, song_id):
