@@ -144,8 +144,7 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         importsongs
         """
         Song.objects.all().delete()
-        dpath = path.join(path.dirname(__file__),
-                         'samples')
+        dpath = path.join(path.dirname(__file__), 'samples')
 
         call_command('importsongs', dpath)
 
@@ -153,3 +152,4 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         artist = Song.objects.filter(artist='Foobar').count()
 
         self.assertEqual(genre, 1)
+        self.assertEqual(artist, 1)
