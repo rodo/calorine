@@ -3,9 +3,10 @@
 #
 Django>=1.4
 django-registration
-whoosh
 django-tastypie
 python-memcached
+django-haystack
+whoosh
 mutagen
 #
 #  following package are for running tests
