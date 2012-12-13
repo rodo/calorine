@@ -21,7 +21,6 @@ Unit tests for Song
 """
 from django.contrib.auth.models import User
 from django.test import TestCase
-from django.test import Client
 from calorine.caro.models import Song
 from haystack.query import SearchQuerySet
 from django.test.utils import override_settings
@@ -66,13 +65,13 @@ class SearchTests(TestCase):  # pylint: disable-msg=R0904
         """
         Use haystack search on title
         """
-        song = Song.objects.create(artist='Pixies',
-                                   album='Death to the Pixies',
-                                   title='Caribou',
-                                   genre='Rock',
-                                   score=0,
-                                   family=0,
-                                   global_score=0)
+        Song.objects.create(artist='Pixies',
+                            album='Death to the Pixies',
+                            title='Caribou',
+                            genre='Rock',
+                            score=0,
+                            family=0,
+                            global_score=0)
 
         nbr = len(SearchQuerySet().filter(
                 title__contains='caribou').models(Song))
@@ -83,10 +82,10 @@ class SearchTests(TestCase):  # pylint: disable-msg=R0904
         """
         Use haystack search on artist
         """
-    
+
         Song.objects.create(artist='Popa Chubby',
                             album='''How'd a White Boy Get the Blues?''',
-                            title='No Comfort', 
+                            title='No Comfort',
                             genre='Rock',
                             score=0,
                             family=0,
@@ -96,6 +95,3 @@ class SearchTests(TestCase):  # pylint: disable-msg=R0904
                 artist__contains='popa').models(Song))
 
         self.assertEqual(nbr, 1)
-
-
-
