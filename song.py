@@ -172,9 +172,15 @@ class Song():
     def markfile(self, song_id):
         """
         Mark a song with score = -1000
+        Delete the file from Playlist
         """
         cur = self.conn.cursor()
         query = """UPDATE caro_song SET score = -1000 WHERE id=%s"""
+        cur.execute(query, (song_id, ))
+
+        self.memcache.delete(":1:song_%d" % song_id)
+
+        query = """DELETE FROM caro_playlistentry WHERE song_id=%s"""
         cur.execute(query, (song_id, ))
 
 
