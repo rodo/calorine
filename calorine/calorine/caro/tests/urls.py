@@ -98,4 +98,3 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
         client.login(username='admin_search', password='admintest')
         response = client.get('/playlist/add/%d' % song.id)
         self.assertContains(response, 'ok', status_code=200)
-

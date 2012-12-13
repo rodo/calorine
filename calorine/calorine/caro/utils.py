@@ -53,7 +53,10 @@ def checkID3(filename):
                      'title': mdat['title'][0],
                      'genre': genre}
         except KeyError:
-            msg = str(sys.exc_type), ":", "%s is not in the list." % sys.exc_value
+            msg =  "%s : %s is not in the list." % (str(sys.exc_type),
+                                                    sys.exc_value)
+            log = Logs.objects.create(filename=filename,
+                                      message=msg)
 
     return datas
 
