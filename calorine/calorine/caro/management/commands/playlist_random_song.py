@@ -30,20 +30,17 @@ class Command(BaseCommand):
     help = 'Add a random song to playlist'
 
     def handle(self, *args, **options):
-        try:
-            count = Song.objects.filter(family=0).count()
-            if count > 1:
-                rand_id = sample(xrange(1, count), 1)[0]
-            else:
-                rand_id = 0
-            song = Song.objects.all()[rand_id]
-            PlaylistEntry.objects.create(
-                song=song,
-                date_add=datetime.utcnow().replace(tzinfo=utc),
-                score=0)
 
-        except Song.DoesNotExist:
-            raise CommandError('Unable to find a song')
+        count = Song.objects.filter(family=0).count()
+        if count > 1:
+            rand_id = sample(xrange(1, count), 1)[0]
+        else:
+            rand_id = 0
+        song = Song.objects.all()[rand_id]
+        PlaylistEntry.objects.create(
+            song=song,
+            date_add=datetime.utcnow().replace(tzinfo=utc),
+            score=0)
 
         self.stdout.write('Add %s %s %s to playlist\n' % (song.artist,
                                                           song.title,
