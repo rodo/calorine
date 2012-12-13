@@ -21,8 +21,11 @@ Unit tests for urls in caro
 """
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
-from calorine.caro.models import Song
 from django.core.cache import cache
+from datetime import datetime
+from django.utils.timezone import utc
+from calorine.caro.models import Song
+from calorine.caro.models import PlaylistEntry
 
 
 class UrlsTests(TestCase):  # pylint: disable-msg=R0904
@@ -128,3 +131,50 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
         client.login(username='admin_search', password='admintest')
         response = client.get('/songs/?q=van')
         self.assertContains(response, song.artist, status_code=200)
+
+    def test_playlist_inc(self):
+        """
+        Positive vote in playlist
+        """
+        song = Song.objects.create(artist='Van Morrison',
+                                   album='The Healing Game',
+                                   title='Sometimes We Cry',
+                                   genre='Blues',
+                                   score=0,
+                                   family=0,
+                                   global_score=0)
+
+        ple = PlaylistEntry.objects.create(
+            song=song,
+            date_add=datetime.utcnow().replace(tzinfo=utc),
+            score=0)
+
+        client = Client()
+        client.login(username='admin_search', password='admintest')
+        response = client.get('/playlist/inc/%d' % ple.id)
+
+        self.assertContains(response, '{', status_code=200)
+
+    def test_playlist_dec(self):
+        """
+        Negative vote in playlist
+        """
+        song = Song.objects.create(artist='Van Morrison',
+                                   album='The Healing Game',
+                                   title='Sometimes We Cry',
+                                   genre='Blues',
+                                   score=0,
+                                   family=0,
+                                   global_score=0)
+
+        ple = PlaylistEntry.objects.create(
+            song=song,
+            date_add=datetime.utcnow().replace(tzinfo=utc),
+            score=0)
+
+        client = Client()
+        client.login(username='admin_search', password='admintest')
+        response = client.get('/playlist/dec/%d' % ple.id)
+
+        self.assertContains(response, '{', status_code=200)
+
