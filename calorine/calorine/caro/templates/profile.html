@@ -16,7 +16,7 @@
 	<tbody>
 	  {% for stream in streams %}
 	  <tr>
-	    <td>{{stream.url}}</td>
+	    <td><a href="{{stream.url}}">{{stream.url}}</a></td>
 	  </tr>
 	  {% endfor %}
 	</tbody>
@@ -59,7 +59,7 @@
 	  </tr>
 	</thead>
 	<tbody>
-	  {% for song in songs %}
+	  {% for song in ples %}
 	  <tr>
 	    <td>{{song.song.title}}</td>
 	    <td>{{song.song.album}}</td>
