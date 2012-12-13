@@ -34,5 +34,4 @@ class SongIndex(indexes.RealTimeSearchIndex, indexes.Indexable):
 
     def index_queryset(self):
         """Used when the entire index for model is updated."""
-        return self.get_model().objects.filter(
-            family=0)
+        return self.get_model().objects.filter(family=0)
