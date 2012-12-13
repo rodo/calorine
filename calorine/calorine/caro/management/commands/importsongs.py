@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-  pylint: disable-msg=R0801
 #
 # Copyright (c) 2012 Rodolphe Quiédeville <rodolphe@quiedeville.org>
 #
@@ -24,7 +24,7 @@ from calorine.caro.utils import importdir, checkID3, sigfile
 
 
 class Command(BaseCommand):
-    help = 'Remove from db unonw on disk song'
+    help = 'Import recursively all ogg file in a directory'
 
     def handle(self, *args, **options):
 
@@ -34,6 +34,8 @@ class Command(BaseCommand):
 
         if len(args) > 0:
             dirpath = args[0]
+        else:
+            return "missing path, please add path to lookup\n"
 
         for fpath in importdir(dirpath):
             tags = checkID3(fpath)

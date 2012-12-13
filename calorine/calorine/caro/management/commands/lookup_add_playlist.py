@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-  pylint: disable-msg=R0801
 #
 # Copyright (c) 2012 Rodolphe Quiédeville <rodolphe@quiedeville.org>
 #

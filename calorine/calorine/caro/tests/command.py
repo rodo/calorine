@@ -180,6 +180,49 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         self.assertEqual(genre, 1)
         self.assertEqual(artist, 1)
 
+    def test_importsongs_samedir(self):
+        """
+        importsongs twice to test update path
+
+        The same file is in the twice dir
+        """
+        Song.objects.all().delete()
+        first = path.join(path.dirname(__file__),
+                          'samples',
+                          'first')
+
+        dpath = path.join(path.dirname(__file__),
+                          'samples',
+                          'second')
+
+        call_command('importsongs', first)
+        call_command('importsongs', first)
+
+        genre = Song.objects.filter(genre='Sample').count()
+        artist = Song.objects.filter(artist='Foobar').count()
+
+        self.assertEqual(genre, 1)
+        self.assertEqual(artist, 1)
+
+    def test_importsongs_missingpath(self):
+        """
+        importsongs twice to test update path
+
+        The same file is in the twice dir
+        """
+        Song.objects.all().delete()
+        first = path.join(path.dirname(__file__),
+                          'samples',
+                          'first')
+
+        dpath = path.join(path.dirname(__file__),
+                          'samples',
+                          'second')
+
+        call_command('importsongs')
+
+        self.assertEqual(Song.objects.all().count(), 0)
+
     def test_lookup_add_playlist(self):
         """
         Management command lookup_add_playlist
