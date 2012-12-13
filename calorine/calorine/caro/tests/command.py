@@ -153,3 +153,61 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
 
         self.assertEqual(genre, 1)
         self.assertEqual(artist, 1)
+
+    def test_lookup_add_playlist(self):
+        """
+        Management command lookup_add_playlist
+
+        Lookup for a song and add them in playlist if found
+        """
+        PlaylistEntry.objects.all().delete()
+
+        Song.objects.create(artist='Fatoumata Diawara',
+                            album='Kanou',
+                            title='Nayan',
+                            genre='Folk Wassoulou',
+                            score=0,
+                            family=0,
+                            global_score=0)
+        
+        before = PlaylistEntry.objects.all().count()
+
+        call_command('lookup_add_playlist', 'Nayan')
+
+        after = PlaylistEntry.objects.all().count()
+
+        self.assertEqual(before, 0)
+        self.assertEqual(after, 1)
+
+    def test_lookup_add_playlist2songsmatch(self):
+        """
+        Management command lookup_add_playlist
+
+        Lookup for a song and add them in playlist if found
+        """
+        PlaylistEntry.objects.all().delete()
+
+        Song.objects.create(artist='Fatoumata Diawara',
+                            album='Kanou',
+                            title='Nayan',
+                            genre='Folk Wassoulou',
+                            score=0,
+                            family=0,
+                            global_score=0)
+
+        Song.objects.create(artist='Fatoumata Diawara',
+                            album='Kanou',
+                            title='Kanou',
+                            genre='Folk Wassoulou',
+                            score=0,
+                            family=0,
+                            global_score=0)
+        
+        before = PlaylistEntry.objects.all().count()
+
+        call_command('lookup_add_playlist', 'Fatoumata')
+
+        after = PlaylistEntry.objects.all().count()
+
+        self.assertEqual(before, 0)
+        self.assertEqual(after, 1)
