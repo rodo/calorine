@@ -76,3 +76,16 @@ class SongTests(TestCase):  # pylint: disable-msg=R0904
         response = client.get('/songs/')
         self.assertContains(response, song.album, status_code=200)
         self.assertNotContains(response, jingle.album, status_code=200)
+
+    def test_playlistEntry_unicode(self):
+        """
+        Check the unicode() function
+        """
+        song = Song.objects.create(artist='Van Morrison',
+                                   album='The Healing Game',
+                                   title='Sometimes We Cry',
+                                   genre='Blues',
+                                   score=0,
+                                   global_score=0)
+
+        self.assertEqual("{}".format(song), song.title)

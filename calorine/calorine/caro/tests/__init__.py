@@ -6,5 +6,6 @@ from calorine.caro.tests.logs import LogsTests
 from calorine.caro.tests.cache import CachesTests
 from calorine.caro.tests.vote import VoteTests
 from calorine.caro.tests.urls import UrlsTests
+from calorine.caro.tests.stream import StreamTests
 from calorine.caro.tests.command import CommandTests
 from calorine.caro.tests.context_processors import ContextProcessorsTests
