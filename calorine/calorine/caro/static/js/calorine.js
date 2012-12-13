@@ -1,3 +1,27 @@
+/*
+ *
+ *
+ *
+ */
+
+var int=self.setInterval(function(){onair()},3000);
+
+function onair() {
+
+    url = '/onair.json';
+
+    $.get(url,
+	  function(data) {
+	      text = "On air :";
+
+              text = text + " " + data.artist;
+              text = text + " - " + data.title;
+              text = text + " - " + data.album;
+
+	      $("#onair").html(text);
+	  });
+}
+
 
 function initboot() {
     $(".collapse").collapse();

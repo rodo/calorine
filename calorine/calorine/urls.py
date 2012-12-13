@@ -9,6 +9,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
                        url(r'^accounts/', include('registration.urls')),
                        url(r'^accounts/profile/$', 'calorine.caro.views.profile'),
+                       url(r'^onair.json$', 'calorine.caro.views.onair'),
                        url(r'^songs/$', login_required(SongList.as_view())),
                        url(r'^logs/$', login_required(LogList.as_view())),
                        url(r'^history/', login_required(HistoryList.as_view())),

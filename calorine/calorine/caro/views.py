@@ -107,6 +107,37 @@ def profile(request):
                    'streams': streams
                    })
 
+def onair(request):
+    """The onair
+    """
+    try:
+        artist = cache.get('onair_artist')
+    except:
+        artist = ''
+
+    try:
+        title = cache.get('onair_title')
+    except:
+        title = ''
+
+    try:
+        album = cache.get('onair_album')
+    except:
+        album = ''
+
+
+    datas = {'artist': artist,
+             'title': title,
+             'album': album}
+
+    response = HttpResponse(mimetype='application/json; charset=utf-8')
+
+    from json import dumps
+    response.write(json.dumps(datas))
+
+    return response
+
+
 
 def pladd(request, song_id):
     """
