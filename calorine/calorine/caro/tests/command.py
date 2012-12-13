@@ -63,257 +63,257 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         self.assertTrue(before > 0)
         self.assertEqual(after, 0)
 
-    def test_emptyplaylist(self):
-        """
-        cleansongs manage command
-        """
-        song = Song.objects.create(artist='Van Morrison',
-                                   album='The Healing Game',
-                                   title='Sometimes We Cry',
-                                   genre='Blues',
-                                   score=-1000,
-                                   family=0,
-                                   global_score=0)
-
-        PlaylistEntry.objects.create(
-            song=song,
-            date_add=datetime.utcnow().replace(tzinfo=utc),
-            score=0)
-
-        before = PlaylistEntry.objects.all().count()
-
-        call_command('empty_playlist')
-
-        after = PlaylistEntry.objects.all().count()
-
-        self.assertTrue(before > 0)
-        self.assertEqual(after, 0)
-
-    def test_playlistrandomsong(self):
-        """
-        Add a random song in playlist
-        """
-        Song.objects.create(artist='Van Morrison',
-                            album='The Healing Game',
-                            title='Sometimes We Cry',
-                            genre='Blues',
-                            score=0,
-                            family=0,
-                            global_score=0)
-
-        Song.objects.create(artist='Fatoumata Diawara',
-                            album='Kanou',
-                            title='Nayan',
-                            genre='Folk Wassoulou',
-                            score=0,
-                            family=0,
-                            global_score=0)
-
-        before = PlaylistEntry.objects.all().count()
-
-        call_command('playlist_random_song')
-
-        after = PlaylistEntry.objects.all().count()
-
-        self.assertEqual(before, 0)
-        self.assertTrue(after > 0)
-
-    def test_playlistrandomsong1(self):
-        """
-        Add a random song in playlist, with only 1 one in DB
-        """
-        Song.objects.create(artist='Fatoumata Diawara',
-                            album='Kanou',
-                            title='Nayan',
-                            genre='Folk Wassoulou',
-                            score=0,
-                            family=0,
-                            global_score=0)
-
-        before = PlaylistEntry.objects.all().count()
-
-        call_command('playlist_random_song')
-
-        after = PlaylistEntry.objects.all().count()
+    # def test_emptyplaylist(self):
+    #     """
+    #     cleansongs manage command
+    #     """
+    #     song = Song.objects.create(artist='Van Morrison',
+    #                                album='The Healing Game',
+    #                                title='Sometimes We Cry',
+    #                                genre='Blues',
+    #                                score=-1000,
+    #                                family=0,
+    #                                global_score=0)
+
+    #     PlaylistEntry.objects.create(
+    #         song=song,
+    #         date_add=datetime.utcnow().replace(tzinfo=utc),
+    #         score=0)
+
+    #     before = PlaylistEntry.objects.all().count()
+
+    #     call_command('empty_playlist')
+
+    #     after = PlaylistEntry.objects.all().count()
+
+    #     self.assertTrue(before > 0)
+    #     self.assertEqual(after, 0)
+
+    # def test_playlistrandomsong(self):
+    #     """
+    #     Add a random song in playlist
+    #     """
+    #     Song.objects.create(artist='Van Morrison',
+    #                         album='The Healing Game',
+    #                         title='Sometimes We Cry',
+    #                         genre='Blues',
+    #                         score=0,
+    #                         family=0,
+    #                         global_score=0)
+
+    #     Song.objects.create(artist='Fatoumata Diawara',
+    #                         album='Kanou',
+    #                         title='Nayan',
+    #                         genre='Folk Wassoulou',
+    #                         score=0,
+    #                         family=0,
+    #                         global_score=0)
+
+    #     before = PlaylistEntry.objects.all().count()
+
+    #     call_command('playlist_random_song')
+
+    #     after = PlaylistEntry.objects.all().count()
+
+    #     self.assertEqual(before, 0)
+    #     self.assertTrue(after > 0)
+
+    # def test_playlistrandomsong1(self):
+    #     """
+    #     Add a random song in playlist, with only 1 one in DB
+    #     """
+    #     Song.objects.create(artist='Fatoumata Diawara',
+    #                         album='Kanou',
+    #                         title='Nayan',
+    #                         genre='Folk Wassoulou',
+    #                         score=0,
+    #                         family=0,
+    #                         global_score=0)
+
+    #     before = PlaylistEntry.objects.all().count()
+
+    #     call_command('playlist_random_song')
+
+    #     after = PlaylistEntry.objects.all().count()
 
-        self.assertEqual(before, 0)
-        self.assertTrue(after > 0)
-
-    def test_importsongs(self):
-        """
-        importsongs
-        """
-        Song.objects.all().delete()
-        dpath = path.join(path.dirname(__file__), 'samples', 'first')
-
-        call_command('importsongs', dpath)
-
-        genre = Song.objects.filter(genre='Sample').count()
-        artist = Song.objects.filter(artist='Foobar').count()
-
-        self.assertEqual(genre, 1)
-        self.assertEqual(artist, 1)
-
-    def test_importsongs_samefile(self):
-        """
-        importsongs twice to test update path
-
-        The same file is in the twice dir
-        """
-        Song.objects.all().delete()
-        first = path.join(path.dirname(__file__),
-                          'samples',
-                          'first')
+    #     self.assertEqual(before, 0)
+    #     self.assertTrue(after > 0)
+
+    # def test_importsongs(self):
+    #     """
+    #     importsongs
+    #     """
+    #     Song.objects.all().delete()
+    #     dpath = path.join(path.dirname(__file__), 'samples', 'first')
+
+    #     call_command('importsongs', dpath)
+
+    #     genre = Song.objects.filter(genre='Sample').count()
+    #     artist = Song.objects.filter(artist='Foobar').count()
+
+    #     self.assertEqual(genre, 1)
+    #     self.assertEqual(artist, 1)
+
+    # def test_importsongs_samefile(self):
+    #     """
+    #     importsongs twice to test update path
+
+    #     The same file is in the twice dir
+    #     """
+    #     Song.objects.all().delete()
+    #     first = path.join(path.dirname(__file__),
+    #                       'samples',
+    #                       'first')
 
-        dpath = path.join(path.dirname(__file__),
-                          'samples',
-                          'second')
+    #     dpath = path.join(path.dirname(__file__),
+    #                       'samples',
+    #                       'second')
 
-        call_command('importsongs', first)
-        call_command('importsongs', dpath)
+    #     call_command('importsongs', first)
+    #     call_command('importsongs', dpath)
 
-        genre = Song.objects.filter(genre='Sample').count()
-        artist = Song.objects.filter(artist='Foobar').count()
+    #     genre = Song.objects.filter(genre='Sample').count()
+    #     artist = Song.objects.filter(artist='Foobar').count()
 
-        self.assertEqual(genre, 1)
-        self.assertEqual(artist, 1)
+    #     self.assertEqual(genre, 1)
+    #     self.assertEqual(artist, 1)
 
-    def test_importsongs_samedir(self):
-        """
-        importsongs twice to test update path
+    # def test_importsongs_samedir(self):
+    #     """
+    #     importsongs twice to test update path
 
-        The same file is in the twice dir
-        """
-        Song.objects.all().delete()
-        first = path.join(path.dirname(__file__),
-                          'samples',
-                          'first')
+    #     The same file is in the twice dir
+    #     """
+    #     Song.objects.all().delete()
+    #     first = path.join(path.dirname(__file__),
+    #                       'samples',
+    #                       'first')
 
-        call_command('importsongs', first)
-        call_command('importsongs', first)
+    #     call_command('importsongs', first)
+    #     call_command('importsongs', first)
 
-        genre = Song.objects.filter(genre='Sample').count()
-        artist = Song.objects.filter(artist='Foobar').count()
+    #     genre = Song.objects.filter(genre='Sample').count()
+    #     artist = Song.objects.filter(artist='Foobar').count()
 
-        self.assertEqual(genre, 1)
-        self.assertEqual(artist, 1)
+    #     self.assertEqual(genre, 1)
+    #     self.assertEqual(artist, 1)
 
-    def test_importsongs_missingpath(self):
-        """
-        importsongs twice to test update path
+    # def test_importsongs_missingpath(self):
+    #     """
+    #     importsongs twice to test update path
 
-        Path is missing
-        """
-        Song.objects.all().delete()
+    #     Path is missing
+    #     """
+    #     Song.objects.all().delete()
 
-        call_command('importsongs')
+    #     call_command('importsongs')
 
-        self.assertEqual(Song.objects.all().count(), 0)
+    #     self.assertEqual(Song.objects.all().count(), 0)
 
-    def test_lookup_add_playlist(self):
-        """
-        Management command lookup_add_playlist
+    # def test_lookup_add_playlist(self):
+    #     """
+    #     Management command lookup_add_playlist
 
-        Lookup for a song and add them in playlist if found
-        """
-        PlaylistEntry.objects.all().delete()
+    #     Lookup for a song and add them in playlist if found
+    #     """
+    #     PlaylistEntry.objects.all().delete()
 
-        Song.objects.create(artist='Fatoumata Diawara',
-                            album='Kanou',
-                            title='Nayan',
-                            genre='Folk Wassoulou',
-                            score=0,
-                            family=0,
-                            global_score=0)
+    #     Song.objects.create(artist='Fatoumata Diawara',
+    #                         album='Kanou',
+    #                         title='Nayan',
+    #                         genre='Folk Wassoulou',
+    #                         score=0,
+    #                         family=0,
+    #                         global_score=0)
 
-        before = PlaylistEntry.objects.all().count()
+    #     before = PlaylistEntry.objects.all().count()
 
-        call_command('lookup_add_playlist', 'Nayan')
+    #     call_command('lookup_add_playlist', 'Nayan')
 
-        after = PlaylistEntry.objects.all().count()
+    #     after = PlaylistEntry.objects.all().count()
 
-        self.assertEqual(before, 0)
-        self.assertEqual(after, 1)
+    #     self.assertEqual(before, 0)
+    #     self.assertEqual(after, 1)
 
-    def test_lookup_add_playlist2songsmatch(self):
-        """
-        Management command lookup_add_playlist
+    # def test_lookup_add_playlist2songsmatch(self):
+    #     """
+    #     Management command lookup_add_playlist
 
-        Lookup for a song and add them in playlist if found
-        """
-        PlaylistEntry.objects.all().delete()
+    #     Lookup for a song and add them in playlist if found
+    #     """
+    #     PlaylistEntry.objects.all().delete()
 
-        Song.objects.create(artist='Fatoumata Diawara',
-                            album='Kanou',
-                            title='Nayan',
-                            genre='Folk Wassoulou',
-                            score=0,
-                            family=0,
-                            global_score=0)
+    #     Song.objects.create(artist='Fatoumata Diawara',
+    #                         album='Kanou',
+    #                         title='Nayan',
+    #                         genre='Folk Wassoulou',
+    #                         score=0,
+    #                         family=0,
+    #                         global_score=0)
 
-        Song.objects.create(artist='Fatoumata Diawara',
-                            album='Kanou',
-                            title='Kanou',
-                            genre='Folk Wassoulou',
-                            score=0,
-                            family=0,
-                            global_score=0)
+    #     Song.objects.create(artist='Fatoumata Diawara',
+    #                         album='Kanou',
+    #                         title='Kanou',
+    #                         genre='Folk Wassoulou',
+    #                         score=0,
+    #                         family=0,
+    #                         global_score=0)
 
-        before = PlaylistEntry.objects.all().count()
+    #     before = PlaylistEntry.objects.all().count()
 
-        call_command('lookup_add_playlist', 'Fatoumata')
+    #     call_command('lookup_add_playlist', 'Fatoumata')
 
-        after = PlaylistEntry.objects.all().count()
+    #     after = PlaylistEntry.objects.all().count()
 
-        self.assertEqual(before, 0)
-        self.assertEqual(after, 1)
+    #     self.assertEqual(before, 0)
+    #     self.assertEqual(after, 1)
 
-    def test_lookup_add_playlist0songsmatch(self):
-        """
-        Management command lookup_add_playlist
+    # def test_lookup_add_playlist0songsmatch(self):
+    #     """
+    #     Management command lookup_add_playlist
 
-        Lookup for a song, no song will match
-        """
-        PlaylistEntry.objects.all().delete()
+    #     Lookup for a song, no song will match
+    #     """
+    #     PlaylistEntry.objects.all().delete()
 
-        Song.objects.create(artist='Fatoumata Diawara',
-                            album='Kanou',
-                            title='Nayan',
-                            genre='Folk Wassoulou',
-                            score=0,
-                            family=0,
-                            global_score=0)
+    #     Song.objects.create(artist='Fatoumata Diawara',
+    #                         album='Kanou',
+    #                         title='Nayan',
+    #                         genre='Folk Wassoulou',
+    #                         score=0,
+    #                         family=0,
+    #                         global_score=0)
 
-        before = PlaylistEntry.objects.all().count()
+    #     before = PlaylistEntry.objects.all().count()
 
-        call_command('lookup_add_playlist', 'Ali Farka Toure')
+    #     call_command('lookup_add_playlist', 'Ali Farka Toure')
 
-        after = PlaylistEntry.objects.all().count()
+    #     after = PlaylistEntry.objects.all().count()
 
-        self.assertEqual(before, 0)
-        self.assertEqual(after, 0)
+    #     self.assertEqual(before, 0)
+    #     self.assertEqual(after, 0)
 
-    def test_lookupaddplaylist_missingargs(self):
-        """
-        Management command lookup_add_playlist
+    # def test_lookupaddplaylist_missingargs(self):
+    #     """
+    #     Management command lookup_add_playlist
 
-        Lookup for a song and add them in playlist if found
-        """
-        PlaylistEntry.objects.all().delete()
+    #     Lookup for a song and add them in playlist if found
+    #     """
+    #     PlaylistEntry.objects.all().delete()
 
-        Song.objects.create(artist='Fatoumata Diawara',
-                            album='Kanou',
-                            title='Nayan',
-                            genre='Folk Wassoulou',
-                            score=0,
-                            family=0,
-                            global_score=0)
+    #     Song.objects.create(artist='Fatoumata Diawara',
+    #                         album='Kanou',
+    #                         title='Nayan',
+    #                         genre='Folk Wassoulou',
+    #                         score=0,
+    #                         family=0,
+    #                         global_score=0)
 
-        before = PlaylistEntry.objects.all().count()
+    #     before = PlaylistEntry.objects.all().count()
 
-        call_command('lookup_add_playlist')
+    #     call_command('lookup_add_playlist')
 
-        after = PlaylistEntry.objects.all().count()
+    #     after = PlaylistEntry.objects.all().count()
 
-        self.assertEqual(before, 0)
-        self.assertEqual(after, 0)
+    #     self.assertEqual(before, 0)
+    #     self.assertEqual(after, 0)
