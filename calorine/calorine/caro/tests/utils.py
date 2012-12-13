@@ -20,8 +20,7 @@ Unit tests for urls in caro
 
 """
 from django.contrib.auth.models import User
-from django.test import TestCase, Client
-from calorine.caro.models import Song
+from django.test import TestCase
 from calorine.caro.utils import importdir, checkid3, sigfile
 from os import path
 
@@ -89,7 +88,7 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
 
         atnd = [path.join(rtpath, 'samples', 'notagg.ogg'),
                 path.join(rtpath, 'samples', 'second', 'test2.ogg'),
-                path.join(rtpath, 'samples', 'first', 'test.ogg'),]
+                path.join(rtpath, 'samples', 'first', 'test.ogg')]
 
         self.assertEqual(datas.sort(), atnd.sort())
 

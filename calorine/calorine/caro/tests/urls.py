@@ -94,7 +94,6 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
         response = client.get('/onair.json')
         self.assertContains(response, 'footist', status_code=200)
 
-
     def test_playlistadd(self):
         """
         History url

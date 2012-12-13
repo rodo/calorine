@@ -169,8 +169,6 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
                           'samples',
                           'second')
 
-
-
         call_command('importsongs', first)
         call_command('importsongs', dpath)
 
@@ -191,10 +189,6 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
                           'samples',
                           'first')
 
-        dpath = path.join(path.dirname(__file__),
-                          'samples',
-                          'second')
-
         call_command('importsongs', first)
         call_command('importsongs', first)
 
@@ -208,16 +202,9 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         """
         importsongs twice to test update path
 
-        The same file is in the twice dir
+        Path is missing
         """
         Song.objects.all().delete()
-        first = path.join(path.dirname(__file__),
-                          'samples',
-                          'first')
-
-        dpath = path.join(path.dirname(__file__),
-                          'samples',
-                          'second')
 
         call_command('importsongs')
 

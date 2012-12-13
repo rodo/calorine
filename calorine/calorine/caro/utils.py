@@ -54,9 +54,8 @@ def checkid3(filename):
                      'genre': genre}
         except KeyError:
             msg = "%s : %s is not in the list." % (str(sys.exc_type),
-                                                    sys.exc_value)
-            log = Logs.objects.create(filename=filename,
-                                      message=msg)
+                                                   sys.exc_value)
+            Logs.objects.create(filename=filename, message=msg)
 
     return datas
 
