@@ -68,8 +68,22 @@ class ContextProcessorsTests(TestCase):  # pylint: disable-msg=R0904
         from django.http import HttpRequest
 
         request = HttpRequest()
-        request.GET = {'q': 'foobar' }
+        request.GET = {'q': 'foobar'}
 
         results = searchq(request)
 
         self.assertEqual(results['SEARCHQ'], 'foobar')
+
+    def test_searchq_empty(self):
+        """
+        Check that searchq() return a dict containing enempty string
+        """
+
+        from django.http import HttpRequest
+
+        request = HttpRequest()
+        request.GET = {}
+
+        results = searchq(request)
+
+        self.assertEqual(results['SEARCHQ'], None)
