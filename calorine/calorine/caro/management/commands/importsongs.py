@@ -47,6 +47,7 @@ class Command(BaseCommand):
                         self._updatesong(exsong[0], fpath)
                         update += 1
                     else:
+                        self.stdout.write("[.] %s\n" % exsong[0].title)
                         exists += 1
                 else:
                     self._createsong(tags, sig, fpath)
@@ -61,7 +62,7 @@ class Command(BaseCommand):
         """
         song.filename = fpath
         song.save()
-        self.stdout.write("%s updated in db\n" % song.title)
+        self.stdout.write("[U] %s\n" % song.title)
 
     def _createsong(self, tags, sig, fpath):
         """Create a new song in db
@@ -76,4 +77,4 @@ class Command(BaseCommand):
                                    global_score=0,
                                    filename=fpath)
         song.save()
-        self.stdout.write("%s added in db\n" % song.title)
+        self.stdout.write("[I] %s\n" % song.title)
