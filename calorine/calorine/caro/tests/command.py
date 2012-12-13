@@ -139,20 +139,20 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
     #     self.assertEqual(before, 0)
     #     self.assertTrue(after > 0)
 
-    # def test_importsongs(self):
-    #     """
-    #     importsongs
-    #     """
-    #     Song.objects.all().delete()
-    #     dpath = path.join(path.dirname(__file__), 'samples', 'first')
+    def test_importsongs(self):
+        """
+        importsongs
+        """
+        Song.objects.all().delete()
+        dpath = path.join(path.dirname(__file__), 'samples', 'first')
 
-    #     call_command('importsongs', dpath)
+        call_command('importsongs', dpath)
 
-    #     genre = Song.objects.filter(genre='Sample').count()
-    #     artist = Song.objects.filter(artist='Foobar').count()
+        genre = Song.objects.filter(genre='Sample').count()
+        artist = Song.objects.filter(artist='Foobar').count()
 
-    #     self.assertEqual(genre, 1)
-    #     self.assertEqual(artist, 1)
+        self.assertEqual(genre, 1)
+        self.assertEqual(artist, 1)
 
     # def test_importsongs_samefile(self):
     #     """
