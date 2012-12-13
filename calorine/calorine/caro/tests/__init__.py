@@ -5,7 +5,7 @@ from calorine.caro.tests.vote import VoteTests
 from calorine.caro.tests.song import SongTests
 from calorine.caro.tests.stream import StreamTests
 from calorine.caro.tests.cache import CachesTests
-#from calorine.caro.tests.command import CommandTests
+from calorine.caro.tests.command import CommandTests
 from calorine.caro.tests.context_processors import ContextProcessorsTests
 from calorine.caro.tests.search import SearchTests
 from calorine.caro.tests.utils import UtilsTests

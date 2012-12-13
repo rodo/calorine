@@ -33,28 +33,33 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         if len(args) > 0:
-            qry_str = args[0]
+            self.lookup(args[0])
 
+    def lookup(self, qry_str):
+        """lookup
+        """
+        try:
             srchqry = SearchQuerySet().filter(
                 content__contains=qry_str).models(Song)
             results = [r.pk for r in srchqry]
-
             count = Song.objects.filter(pk__in=results).count()
+        except:
+            count = 0
 
-            if count > 1:
-                rand_id = sample(xrange(1, count), 1)[0]
-            else:
-                rand_id = 0
+        if count > 1:
+            rand_id = sample(xrange(1, count), 1)[0]
+        else:
+            rand_id = 0
 
-            if count > 0:
-                song = Song.objects.filter(pk__in=results)[rand_id]
-                PlaylistEntry.objects.create(
-                    song=song,
-                    date_add=datetime.utcnow().replace(tzinfo=utc),
-                    score=0)
-                msg = '%s - %s - %s est dans playlist\n' % (song.artist,
-                                                            song.title,
-                                                            song.album)
-                self.stdout.write(msg)
-            else:
-                self.stdout.write('On a rien trouvé')
+        if count > 0:
+            song = Song.objects.filter(pk__in=results)[rand_id]
+            PlaylistEntry.objects.create(
+                song=song,
+                date_add=datetime.utcnow().replace(tzinfo=utc),
+                score=0)
+            msg = '%s - %s - %s est dans playlist\n' % (song.artist,
+                                                        song.title,
+                                                        song.album)
+            self.stdout.write(msg)
+        else:
+            self.stdout.write('On a rien trouvé')
