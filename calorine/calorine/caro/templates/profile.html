@@ -1,37 +1,81 @@
 {% load i18n %}
 {% include "header.html" %}
 {% include "navbar.html" %}
-<div class="container">
-    <div class="row">
-      <div class="span12">
-	<div>
-	  Salut {{user.first_name}}
-	</div>
+<div id="container" class="container">
 
-	<h4>Prochains titres</h4>
+  <div class="row">
+    <div class="span6">
+      <div>
+	Salut {{user.first_name}}
+      </div>
+    </div>
+    <div class="span6">
+      <h4>Streams</h4>
+      
+      <table class="table table-striped">
+	<thead>
+	  <tr>
+	    <th>URL</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  {% for stream in streams %}
+	  <tr>
+	    <td>{{stream.url}}</td>
+	  </tr>
+	  {% endfor %}
+	</tbody>
+      </table>
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="span12">
+      
+      <h4>Derniers imports</h4>
+      
+      <table class="table table-striped">
+	<thead>
+	  <tr>
+	    <th>Titre</th>
+	    <th>Artiste</th>
+	    <th>Album</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  {% for song in songs %}
+	  <tr>
+	    <td>{{song.title}}</td>
+	    <td>{{song.album}}</td>
+	    <td>{{song.artist}}</td>
+	  </tr>
+	  {% endfor %}
+	</tbody>
+      </table>
 
+      <h4>Prochains titres de la playlist</h4>
 
-	<table class="table table-striped">
-	  <thead>
-	    <tr>
-	      <th>Titre</th>
-	      <th>Artiste</th>
-	      <th>Album</th>
-	    </tr>
-	  </thead>
-	  <tbody>
-	    {% for song in songs %}
-	    <tr>
-	      <td>{{song.song.title}}</td>
-	      <td>{{song.song.album}}</td>
-	      <td>{{song.song.artist}}</td>
-	    </tr>
-	    {% endfor %}
-	  </tbody>
-	</table>
-
-      </div><!--/row-->
+      <table class="table table-striped">
+	<thead>
+	  <tr>
+	    <th>Titre</th>
+	    <th>Artiste</th>
+	    <th>Album</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  {% for song in songs %}
+	  <tr>
+	    <td>{{song.song.title}}</td>
+	    <td>{{song.song.album}}</td>
+	    <td>{{song.song.artist}}</td>
+	  </tr>
+	  {% endfor %}
+	</tbody>
+      </table>
+          
     </div><!--/row-->
+  </div><!--/row-->
 
 </div><!--/.container-->
 {% include "footer.html" %}

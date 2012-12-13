@@ -106,3 +106,10 @@ class Vote(models.Model):
     song = models.ForeignKey(Song)
     user = models.ForeignKey(User)
     date_vote = models.DateTimeField(auto_now_add=True)
+
+
+class Stream(models.Model):
+    """
+    Streams
+    """
+    url = models.URLField()

@@ -27,6 +27,7 @@ from calorine.caro.models import Logs
 from calorine.caro.models import PlaylistEntry
 from calorine.caro.models import HistoryEntry
 from calorine.caro.models import Vote
+from calorine.caro.models import Stream
 from datetime import datetime
 from django.views.generic import ListView
 from django.core.cache import cache
@@ -84,17 +85,27 @@ class PlayList(ListView):
         return context
 
 
-class Profile(ListView):
-    queryset = PlaylistEntry.objects.all().order_by('-pk', 'date_add')[:4]
-    template_name = 'profile.html'
-    context_object_name = "songs"
-
-
 class LogList(ListView):
     queryset = Logs.objects.all().order_by('-date_import')
     template_name = 'errors.html'
     context_object_name = 'errors'
     paginate_by = 17
+
+
+def profile(request):
+    """The profile wiew
+    """
+    ples = PlaylistEntry.objects.all().order_by('-pk', 'date_add')[:4]
+    songs = Song.objects.all().order_by('-pk')[:4]
+    streams = Stream.objects.all()
+    template_name = 'profile.html'
+
+    return render(request,
+                  template_name,
+                  {'songs': songs,
+                   'ples': ples,
+                   'streams': streams
+                   })
 
 
 def pladd(request, song_id):
