@@ -21,6 +21,8 @@ Unit tests for profil in caro
 """
 from django.test import TestCase
 from django.conf import settings
+from django.core.cache import cache
+import memcache
 
 
 class CachesTests(TestCase):  # pylint: disable-msg=R0904
@@ -32,9 +34,6 @@ class CachesTests(TestCase):  # pylint: disable-msg=R0904
     def test_cache(self):
         """Debug cache use
         """
-        import memcache
-        from django.core.cache import cache
-
         key = "onair_title_foo"
         value = "from"
         prefix = settings.CACHES['default']['KEY_PREFIX']

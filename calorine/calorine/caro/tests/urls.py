@@ -22,6 +22,7 @@ Unit tests for urls in caro
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from calorine.caro.models import Song
+from django.core.cache import cache
 
 
 class UrlsTests(TestCase):  # pylint: disable-msg=R0904
@@ -82,6 +83,18 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
         response = client.get('/accounts/profile/')
         self.assertContains(response, self.user.username, status_code=200)
 
+    def test_onair(self):
+        """
+        History url
+        """
+        cache.set('onair_artist', 'footist')
+
+        client = Client()
+        client.login(username='admin_search', password='admintest')
+        response = client.get('/onair.json')
+        self.assertContains(response, 'footist', status_code=200)
+
+
     def test_playlistadd(self):
         """
         History url
@@ -110,6 +123,7 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
                                    score=0,
                                    family=0,
                                    global_score=0)
+        song.save()
 
         client = Client()
         client.login(username='admin_search', password='admintest')

@@ -25,7 +25,7 @@ import mutagen
 from calorine.caro.models import Logs
 
 
-def checkID3(filename):
+def checkid3(filename):
     """
     Create a new song in database
     """

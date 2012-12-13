@@ -20,7 +20,7 @@ Lookup for a song and to playlist
 """
 from django.core.management.base import BaseCommand
 from calorine.caro.models import Song
-from calorine.caro.utils import importdir, checkID3, sigfile
+from calorine.caro.utils import importdir, checkid3, sigfile
 
 
 class Command(BaseCommand):
@@ -38,7 +38,7 @@ class Command(BaseCommand):
             return "missing path, please add path to lookup\n"
 
         for fpath in importdir(dirpath):
-            tags = checkID3(fpath)
+            tags = checkid3(fpath)
             if tags is not None:
                 sig = sigfile(fpath)
 
