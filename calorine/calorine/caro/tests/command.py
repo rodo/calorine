@@ -160,30 +160,80 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
 
         self.assertEqual(Song.objects.all().count(), 0)
 
-    # def test_lookup_add_playlist(self):
-    #     """
-    #     Management command lookup_add_playlist
+    def test_playlistrandomsong(self):
+        """
+        Add a random song in playlist
+        """
+        Song.objects.create(artist='Van Morrison',
+                            album='The Healing Game',
+                            title='Sometimes We Cry',
+                            genre='Blues',
+                            score=0,
+                            family=0,
+                            global_score=0)
 
-    #     Lookup for a song and add them in playlist if found
-    #     """
-    #     PlaylistEntry.objects.all().delete()
+        Song.objects.create(artist='Fatoumata Diawara',
+                            album='Kanou',
+                            title='Nayan',
+                            genre='Folk Wassoulou',
+                            score=0,
+                            family=0,
+                            global_score=0)
 
-    #     Song.objects.create(artist='Fatoumata Diawara',
-    #                         album='Kanou',
-    #                         title='Nayan',
-    #                         genre='Folk Wassoulou',
-    #                         score=0,
-    #                         family=0,
-    #                         global_score=0)
+        before = PlaylistEntry.objects.all().count()
 
-    #     before = PlaylistEntry.objects.all().count()
+        call_command('playlist_random_song')
 
-    #     call_command('lookup_add_playlist', 'Nayan')
+        after = PlaylistEntry.objects.all().count()
 
-    #     after = PlaylistEntry.objects.all().count()
+        self.assertEqual(before, 0)
+        self.assertTrue(after > 0)
 
-    #     self.assertEqual(before, 0)
-    #     self.assertEqual(after, 1)
+    def test_playlistrandomsong1(self):
+        """
+        Add a random song in playlist, with only 1 one in DB
+        """
+        Song.objects.create(artist='Fatoumata Diawara',
+                            album='Kanou',
+                            title='Nayan',
+                            genre='Folk Wassoulou',
+                            score=0,
+                            family=0,
+                            global_score=0)
+
+        before = PlaylistEntry.objects.all().count()
+
+        call_command('playlist_random_song')
+
+        after = PlaylistEntry.objects.all().count()
+
+        self.assertEqual(before, 0)
+        self.assertTrue(after > 0)
+
+    def test_lookup_add_playlist(self):
+        """
+        Management command lookup_add_playlist
+
+        Lookup for a song and add them in playlist if found
+        """
+        PlaylistEntry.objects.all().delete()
+
+        Song.objects.create(artist='Fatoumata Diawara',
+                            album='Kanou',
+                            title='Nayan',
+                            genre='Folk Wassoulou',
+                            score=0,
+                            family=0,
+                            global_score=0)
+
+        before = PlaylistEntry.objects.all().count()
+
+        call_command('lookup_add_playlist', 'Nayan')
+
+        after = PlaylistEntry.objects.all().count()
+
+        self.assertEqual(before, 0)
+        self.assertEqual(after, 1)
 
     # def test_lookup_add_playlist2songsmatch(self):
     #     """
@@ -267,53 +317,3 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
 
     #     self.assertEqual(before, 0)
     #     self.assertEqual(after, 0)
-
-    def test_playlistrandomsong(self):
-        """
-        Add a random song in playlist
-        """
-        Song.objects.create(artist='Van Morrison',
-                            album='The Healing Game',
-                            title='Sometimes We Cry',
-                            genre='Blues',
-                            score=0,
-                            family=0,
-                            global_score=0)
-
-        Song.objects.create(artist='Fatoumata Diawara',
-                            album='Kanou',
-                            title='Nayan',
-                            genre='Folk Wassoulou',
-                            score=0,
-                            family=0,
-                            global_score=0)
-
-        before = PlaylistEntry.objects.all().count()
-
-        call_command('playlist_random_song')
-
-        after = PlaylistEntry.objects.all().count()
-
-        self.assertEqual(before, 0)
-        self.assertTrue(after > 0)
-
-    def test_playlistrandomsong1(self):
-        """
-        Add a random song in playlist, with only 1 one in DB
-        """
-        Song.objects.create(artist='Fatoumata Diawara',
-                            album='Kanou',
-                            title='Nayan',
-                            genre='Folk Wassoulou',
-                            score=0,
-                            family=0,
-                            global_score=0)
-
-        before = PlaylistEntry.objects.all().count()
-
-        call_command('playlist_random_song')
-
-        after = PlaylistEntry.objects.all().count()
-
-        self.assertEqual(before, 0)
-        self.assertTrue(after > 0)
