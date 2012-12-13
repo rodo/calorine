@@ -9,5 +9,5 @@ from calorine.caro.tests.urls import UrlsTests
 from calorine.caro.tests.stream import StreamTests
 from calorine.caro.tests.command import CommandTests
 from calorine.caro.tests.context_processors import ContextProcessorsTests
-from calorine.caro.tests.search import SearchTests
+#from calorine.caro.tests.search import SearchTests
 from calorine.caro.tests.utils import UtilsTests
