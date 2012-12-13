@@ -29,7 +29,7 @@
 	    <td>{{song.song.title}}</td>
 	    <td>{{song.song.artist}}</td>
 	    <td>{{song.song.album}}</td>
-	    <td>{{song.date_played}}</td>
+	    <td>{{song.date_played|date:"H:m d/b"}}</td>
 	  </tr>
 	  {% endfor %}
 	</tbody>
