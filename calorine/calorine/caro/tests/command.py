@@ -144,8 +144,34 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         importsongs
         """
         Song.objects.all().delete()
-        dpath = path.join(path.dirname(__file__), 'samples')
+        dpath = path.join(path.dirname(__file__), 'samples', 'first')
 
+        call_command('importsongs', dpath)
+
+        genre = Song.objects.filter(genre='Sample').count()
+        artist = Song.objects.filter(artist='Foobar').count()
+
+        self.assertEqual(genre, 1)
+        self.assertEqual(artist, 1)
+
+    def test_importsongs_samefile(self):
+        """
+        importsongs twice to test update path
+
+        The same file is in the twice dir
+        """
+        Song.objects.all().delete()
+        first = path.join(path.dirname(__file__),
+                          'samples',
+                          'first')
+
+        dpath = path.join(path.dirname(__file__),
+                          'samples',
+                          'second')
+
+
+
+        call_command('importsongs', first)
         call_command('importsongs', dpath)
 
         genre = Song.objects.filter(genre='Sample').count()
@@ -169,7 +195,7 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
                             score=0,
                             family=0,
                             global_score=0)
-        
+
         before = PlaylistEntry.objects.all().count()
 
         call_command('lookup_add_playlist', 'Nayan')
@@ -202,7 +228,7 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
                             score=0,
                             family=0,
                             global_score=0)
-        
+
         before = PlaylistEntry.objects.all().count()
 
         call_command('lookup_add_playlist', 'Fatoumata')
