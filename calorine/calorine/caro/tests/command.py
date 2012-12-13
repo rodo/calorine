@@ -63,31 +63,31 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         self.assertTrue(before > 0)
         self.assertEqual(after, 0)
 
-    # def test_emptyplaylist(self):
-    #     """
-    #     cleansongs manage command
-    #     """
-    #     song = Song.objects.create(artist='Van Morrison',
-    #                                album='The Healing Game',
-    #                                title='Sometimes We Cry',
-    #                                genre='Blues',
-    #                                score=-1000,
-    #                                family=0,
-    #                                global_score=0)
+    def test_emptyplaylist(self):
+        """
+        cleansongs manage command
+        """
+        song = Song.objects.create(artist='Van Morrison',
+                                   album='The Healing Game',
+                                   title='Sometimes We Cry',
+                                   genre='Blues',
+                                   score=-1000,
+                                   family=0,
+                                   global_score=0)
 
-    #     PlaylistEntry.objects.create(
-    #         song=song,
-    #         date_add=datetime.utcnow().replace(tzinfo=utc),
-    #         score=0)
+        PlaylistEntry.objects.create(
+            song=song,
+            date_add=datetime.utcnow().replace(tzinfo=utc),
+            score=0)
 
-    #     before = PlaylistEntry.objects.all().count()
+        before = PlaylistEntry.objects.all().count()
 
-    #     call_command('empty_playlist')
+        call_command('empty_playlist')
 
-    #     after = PlaylistEntry.objects.all().count()
+        after = PlaylistEntry.objects.all().count()
 
-    #     self.assertTrue(before > 0)
-    #     self.assertEqual(after, 0)
+        self.assertTrue(before > 0)
+        self.assertEqual(after, 0)
 
     # def test_playlistrandomsong(self):
     #     """
