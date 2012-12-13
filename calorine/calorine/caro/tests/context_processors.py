@@ -59,6 +59,21 @@ class ContextProcessorsTests(TestCase):  # pylint: disable-msg=R0904
 
         self.assertEqual(results['ONAIR_FULL'], value)
 
+    def test_onair_nokey(self):
+        """
+        Check that onair() return a dict containing right key
+        """
+
+        key = "onair_full"
+        prefix = settings.CACHES['default']['KEY_PREFIX']
+
+        mmc = memcache.Client([self.memc_addr], debug=0)
+        mmc.delete("%s:1:%s" % (prefix, key))
+
+        results = onair(None)
+
+        self.assertEqual(results['ONAIR_FULL'], '')
+
     def test_searchq(self):
         """
         Check that searchq() return a dict containing teh param 'q' present in
