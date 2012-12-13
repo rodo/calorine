@@ -29,16 +29,6 @@ class CachesTests(TestCase):  # pylint: disable-msg=R0904
 
     """
 
-    def SetUp(self):  # pylint: disable-msg=C0103
-        """setUp the tests
-        """
-        mmb = 'django.core.cache.backends.memcached.MemcachedCache'
-        settings.CACHES = {
-            'default': {
-                'BACKEND': mmb,
-                'LOCATION': '127.0.0.1:11211',
-                'KEY_PREFIX': 'calo_tests_'}}
-
     def test_cache(self):
         """Debug cache use
         """
