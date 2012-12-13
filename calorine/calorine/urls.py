@@ -2,13 +2,13 @@ from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from calorine.caro.views import LogList, HistoryList
-from calorine.caro.views import SongList, PlayList, Profile
+from calorine.caro.views import SongList, PlayList, profile
 from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
                        url(r'^accounts/', include('registration.urls')),
-                       url(r'^accounts/profile/$', Profile.as_view()),
+                       url(r'^accounts/profile/$', 'calorine.caro.views.profile'),
                        url(r'^songs/$', login_required(SongList.as_view())),
                        url(r'^logs/$', login_required(LogList.as_view())),
                        url(r'^history/', login_required(HistoryList.as_view())),
