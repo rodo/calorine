@@ -7,9 +7,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         count = Song.objects.filter(score=-1000).count()
-        try:
-            Song.objects.filter(score=-1000).delete()
-        except Song.DoesNotExist:
-            raise CommandError('Unable to remove song from db')
+        Song.objects.filter(score=-1000).delete()
         msg = 'Successfully remove %d songs from database\n' % count
         self.stdout.write(msg)
