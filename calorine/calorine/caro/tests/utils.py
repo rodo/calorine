@@ -91,7 +91,7 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
                 path.join(rtpath, 'samples', 'second', 'test2.ogg'),
                 path.join(rtpath, 'samples', 'first', 'test.ogg'),]
 
-        self.assertEqual(datas, atnd)
+        self.assertEqual(datas.sort(), atnd.sort())
 
     def test_importdir_notexists(self):
         """
