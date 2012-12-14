@@ -77,20 +77,9 @@ def sigfile(fpath):
 def onair_datas():
     """Read onair datas from cache
     """
-    try:
-        artist = cache.get('onair_artist')
-    except:
-        artist = ''
-
-    try:
-        title = cache.get('onair_title')
-    except:
-        title = ''
-
-    try:
-        album = cache.get('onair_album')
-    except:
-        album = ''
+    artist = cache.get('onair_artist')
+    title = cache.get('onair_title')
+    album = cache.get('onair_album')
 
     datas = {'artist': artist,
              'title': title,
