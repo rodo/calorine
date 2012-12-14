@@ -172,16 +172,18 @@ def inc_desc(sign, request, pk):
         cache.set(key, True)
         cache.set(song_key, True)
 
-    if sign == "plus":
-        ple.score += 1
-    else:
-        ple.score -= 1
-    ple.save()
-
     song = get_object_or_404(Song, pk=ple.song.id)
 
-    vote = Vote(song=song, user=request.user)
-    vote.save()
+    if sign == "plus":
+        ple.score += 1
+        song.global_score += 1
+    else:
+        ple.score -= 1
+        song.global_score -= 1
+    ple.save()
+    song.save()
+
+    vote = Vote.objects.create(song=song, user=request.user)
 
     resp = {'score': ple.score, 'id': ple.pk}
     return HttpResponse(
