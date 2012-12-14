@@ -98,6 +98,21 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         self.assertEqual(genre, 1)
         self.assertEqual(artist, 2)
 
+    def test_importsongs_pathdoesnotexists(self):
+        """
+        importsongs with a non existent path on arg 
+        """
+        Song.objects.all().delete()
+        dpath = path.join(path.dirname(__file__), 'this_path_does_not_exists')
+
+        before = Song.objects.all().count()
+
+        call_command('importsongs', dpath)
+
+        after = Song.objects.all().count()
+
+        self.assertEqual(before, after)
+
     def test_importsongs_samefile(self):
         """
         importsongs twice to test update path
