@@ -33,6 +33,7 @@ from calorine.caro.models import HistoryEntry
 from calorine.caro.models import Vote
 from calorine.caro.models import Stream
 from calorine.caro.utils import onair_datas
+from django.contrib.auth.decorators import login_required
 
 
 class SongList(ListView):
@@ -93,6 +94,7 @@ class LogList(ListView):
     paginate_by = 17
 
 
+@login_required
 def profile(request):
     """The profile wiew
     """
@@ -109,6 +111,7 @@ def profile(request):
                    })
 
 
+@login_required
 def onair(request):
     """The onair view
     """
@@ -122,6 +125,7 @@ def onair(request):
     return response
 
 
+@login_required
 def pladd(request, song_id):
     """
     The songs in databases
@@ -143,6 +147,7 @@ def pldislike(request, pk):
     return inc_desc("less", request, pk)
 
 
+@login_required
 def pllike(request, pk):
     """
     Like a song
