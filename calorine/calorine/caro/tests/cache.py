@@ -19,10 +19,16 @@
 Unit tests for profil in caro
 
 """
+from django.contrib.auth.models import User
 from django.test import TestCase
+from django.test import Client
 from django.conf import settings
 from django.core.cache import cache
 import memcache
+from datetime import datetime
+from django.utils.timezone import utc
+from calorine.caro.models import Song
+from calorine.caro.models import PlaylistEntry
 
 
 class CachesTests(TestCase):  # pylint: disable-msg=R0904
@@ -30,6 +36,13 @@ class CachesTests(TestCase):  # pylint: disable-msg=R0904
     The logs object
 
     """
+    def setUp(self):  # pylint: disable-msg=C0103
+        """
+        Init
+        """
+        self.user = User.objects.create_user('admin_search',
+                                             'admin_search@bar.com',
+                                             'admintest')
 
     def test_cache(self):
         """Debug cache use
@@ -42,3 +55,34 @@ class CachesTests(TestCase):  # pylint: disable-msg=R0904
         mmc.set("%s:1:%s" % (prefix, key), value)
 
         self.assertEqual(cache.get(key), value)
+
+    def test_voteafteradd(self):
+        """
+        After adding a song 2 keys must be present in cache
+        """
+        prefix = settings.CACHES['default']['KEY_PREFIX']
+        PlaylistEntry.objects.all().delete()
+        song = Song.objects.create(artist='Alexis HK',
+                                   album='Belleville',
+                                   title='Diable attend',
+                                   genre=u'''Chanson française''',
+                                   score=0,
+                                   family=0,
+                                   global_score=0)
+
+        client = Client()
+        client.login(username='admin_search', password='admintest')
+        response = client.get('/playlist/add/%d' % song.id)
+
+        ple = PlaylistEntry.objects.all()[0]
+
+        key = 'ple_{}_{}'.format(self.user.id, ple.pk)
+        song_key = 'song_{}'.format(ple.song.pk)
+
+        mmc = memcache.Client(['127.0.0.1:11211'], debug=0)
+        
+        value = mmc.get("%s:1:%s" % (prefix, key))
+        song_value = mmc.get("%s:1:%s" % (prefix, song_key))
+
+        self.assertEqual(value, True)
+        self.assertEqual(song_value, True)

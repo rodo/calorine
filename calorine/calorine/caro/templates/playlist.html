@@ -30,7 +30,9 @@
 	    <td>{{song.song.title}}</td>
 	    <td>{{song.song.artist}}</td>
 	    <td>{{song.song.album}}</td>
-	    <td><span class="badge badge-info span_{{song.pk}}">{{song.score}}</span></td>
+	    <td>
+	      <span class="badge badge-info span_{{song.pk}} cl_vote_{{song.score}}">{{song.score}}</span>
+	    </td>
 	  </tr>
 	  
 	  {% endfor %}

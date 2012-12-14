@@ -195,6 +195,7 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
         """
         Twice vote is forbidden
         """
+        PlaylistEntry.objects.all().delete()
         Song.objects.create(artist='Portishead',
                             album='Dummy',
                             title='Mysterons',
@@ -207,12 +208,14 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
         call_command('playlist_random_song')
 
         ple = PlaylistEntry.objects.all()
+        key = 'ple_{}_{}'.format(self.user.id, ple[0].id)
+        cache.delete(key)
 
         client = Client()
         client.login(username='admin_search', password='admintest')
-        client.get('/playlist/dec/%d' % ple[0].id)
+        client.get('/playlist/inc/%d' % ple[0].id)
         # vote twice
-        response = client.get('/playlist/dec/%d' % ple[0].id)
+        response = client.get('/playlist/inc/%d' % ple[0].id)
 
         self.assertContains(response, 'message', status_code=200)
         self.assertNotContains(response, 'score', status_code=200)
@@ -236,7 +239,32 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
         client = Client()
         client.login(username='admin_search', password='admintest')
         # make a vote
-        client.get('/playlist/dec/%d' % ple[0].id)
+        client.get('/playlist/inc/%d' % ple[0].id)
 
         response = client.get('/')
         self.assertContains(response, 'A voté', status_code=200)
+
+    def test_playlist_voteafteradd(self):
+        """
+        After adding a song the vote must be 1
+        """
+        PlaylistEntry.objects.all().delete()
+        song = Song.objects.create(artist='Alexis HK',
+                                   album='Belleville',
+                                   title='Diable attend',
+                                   genre=u'''Chanson française''',
+                                   score=0,
+                                   family=0,
+                                   global_score=0)
+
+        client = Client()
+        client.login(username='admin_search', password='admintest')
+        response = client.get('/playlist/add/%d' % song.id)
+
+        self.assertContains(response, 'ok', status_code=200)
+
+        response = client.get('/')
+
+        self.assertNotContains(response, 'cl_vote_2', status_code=200)
+        self.assertContains(response, 'cl_vote_1', status_code=200)
+

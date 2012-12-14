@@ -133,7 +133,7 @@ def pladd(request, song_id):
     song = get_object_or_404(Song, pk=song_id)
 
     ple = PlaylistEntry(song=song,
-                        score=1,
+                        score=0,
                         date_add=datetime.today())
     ple.save()
     pllike(request, ple.pk)
@@ -160,12 +160,8 @@ def inc_desc(sign, request, pk):
     Need doc
     """
     ple = get_object_or_404(PlaylistEntry, pk=pk)
-    key = 'ple_{}_{}'.format(request.user.id, ple.song.pk, ple.pk)
+    key = 'ple_{}_{}'.format(request.user.id, ple.pk)
     song_key = 'song_{}'.format(ple.song.pk)
-    song = get_object_or_404(Song, pk=ple.song.id)
-
-    vote = Vote(song=song, user=request.user)
-    vote.save()
 
     if cache.get(key):
         return HttpResponse(
@@ -180,6 +176,13 @@ def inc_desc(sign, request, pk):
     else:
         ple.score -= 1
     ple.save()
+
+    song = get_object_or_404(Song, pk=ple.song.id)
+
+    vote = Vote(song=song, user=request.user)
+    vote.save()
+
+
     resp = {'score': ple.score, 'id': ple.pk}
     return HttpResponse(
         json.dumps({'entry': resp}),
