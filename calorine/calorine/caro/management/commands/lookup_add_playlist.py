@@ -32,16 +32,13 @@ class Command(BaseCommand):
         if len(args) > 0:
             self.lookup(args[0])
 
-    def lookup(self, qry_str):
+    def lookup(self, qry):
         """lookup
         """
-        try:
-            srchqry = SearchQuerySet().filter(
-                content__contains=qry_str).models(Song)
-            results = [r.pk for r in srchqry]
-            count = Song.objects.filter(pk__in=results).count()
-        except:
-            count = 0
+        srchqry = SearchQuerySet().filter(content__contains=qry).models(Song)
+        results = [r.pk for r in srchqry]
+
+        count = Song.objects.filter(pk__in=results).count()
 
         if count > 1:
             rand_id = sample(xrange(1, count), 1)[0]
