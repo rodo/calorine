@@ -56,4 +56,4 @@ class Command(BaseCommand):
                                                         song.album)
             self.stdout.write(msg)
         else:
-            self.stdout.write('On a rien trouvé')
+            self.stdout.write('Nothing found')
