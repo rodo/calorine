@@ -81,7 +81,9 @@ class ContextProcessorsTests(TestCase):  # pylint: disable-msg=R0904
 
     def test_searchq_empty(self):
         """
-        Check that searchq() return a dict containing enempty string
+        Check that searchq() return a dict containing empty string
+
+        If q is not present in request, return None
         """
 
         from django.http import HttpRequest

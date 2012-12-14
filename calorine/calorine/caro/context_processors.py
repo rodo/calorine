@@ -37,9 +37,6 @@ def searchq(request):
     """
     The search string
     """
-    try:
-        qry_str = request.GET.get('q')
-    except NameError:
-        qry_str = ''
+    qry_str = request.GET.get('q')
 
     return {'SEARCHQ': qry_str}
