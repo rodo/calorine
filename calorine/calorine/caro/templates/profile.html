@@ -45,6 +45,13 @@
 	<tbody>
 	  {% for song in songs %}
 	  <tr>
+	    <td>
+	      {% if song.vote %}
+	      <a class="btn btn-mini disabled btn_{{song.id}}" href="#">Playlist</a>
+	      {% else %}
+	      <a class="btn btn-mini btn-primary btn_{{song.id}}" href="#" onclick="add_to_playlist({{song.id}})">Playlist</a>
+	      {% endif %}
+	    </td>
 	    <td>{{song.title}}</td>
 	    <td>{{song.album}}</td>
 	    <td>{{song.artist}}</td>
@@ -66,6 +73,13 @@
 	<tbody>
 	  {% for song in ples %}
 	  <tr>
+	    <td>
+	      {% if song.song.vote %}
+	      <a class="btn btn-mini disabled btn_{{song.song.id}}" href="#">Playlist</a>
+	      {% else %}
+	      <a class="btn btn-mini btn-primary btn_{{song.song.id}}" href="#" onclick="add_to_playlist({{song.song.id}})">Playlist</a>
+	      {% endif %}
+	    </td>
 	    <td>{{song.song.title}}</td>
 	    <td>{{song.song.album}}</td>
 	    <td>{{song.song.artist}}</td>
