@@ -23,6 +23,7 @@ import sys
 import hashlib
 import mutagen
 from calorine.caro.models import Logs
+from django.core.cache import cache
 
 
 def checkid3(filename):
@@ -67,10 +68,35 @@ def sigfile(fpath):
     sigsha = hashlib.sha1()
     fbj = open(fpath, 'rb')
     try:
-        sigsha.update(fbj.read())
+        sigsha.update(fbj.read())  # pylint: disable-msg=E1101
     finally:
         fbj.close()
     return sigsha.hexdigest()
+
+
+def onair_datas():
+    """Read onair datas from cache
+    """
+    try:
+        artist = cache.get('onair_artist')
+    except:
+        artist = ''
+
+    try:
+        title = cache.get('onair_title')
+    except:
+        title = ''
+
+    try:
+        album = cache.get('onair_album')
+    except:
+        album = ''
+
+    datas = {'artist': artist,
+             'title': title,
+             'album': album}
+
+    return datas
 
 
 def importdir(path):

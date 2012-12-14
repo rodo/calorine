@@ -22,7 +22,9 @@ Unit tests for urls in caro
 from django.contrib.auth.models import User
 from django.test import TestCase
 from calorine.caro.utils import importdir, checkid3, sigfile
+from calorine.caro.utils import onair_datas
 from os import path
+from django.core.cache import cache
 
 
 class UtilsTests(TestCase):  # pylint: disable-msg=R0904
@@ -119,3 +121,39 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
         datas = importdir(first)
 
         self.assertEqual(datas, [])
+
+    def test_onair(self):
+        """
+        Datas are present in cache
+        """
+        artist = 'U2'
+        title = 'All I want is you'
+        album = 'Rattle and Hum'
+
+        cache.set('onair_artist', artist)
+        cache.set('onair_album', album)
+        cache.set('onair_title', title)
+
+        datas = onair_datas()
+
+        attends = {'artist': artist,
+                   'title': title,
+                   'album': album}
+
+        self.assertEqual(datas, attends)
+
+    def test_onair_nodatas(self):
+        """
+        Datas are not present in cache
+        """
+        cache.delete('onair_artist')
+        cache.delete('onair_album')
+        cache.delete('onair_title')
+
+        datas = onair_datas()
+
+        attends = {'artist': None,
+                   'title': None,
+                   'album': None}
+
+        self.assertEqual(datas, attends)

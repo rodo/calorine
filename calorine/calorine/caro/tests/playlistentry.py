@@ -21,6 +21,7 @@ Unit tests for PlaylistEntry
 """
 from django.contrib.auth.models import User
 from django.test import TestCase
+from django.test import Client
 from calorine.caro.models import PlaylistEntry
 from calorine.caro.models import Song
 from datetime import datetime
@@ -58,14 +59,37 @@ class PlaylistEntryTests(TestCase):  # pylint: disable-msg=R0904
 
         self.assertGreater(ple.id, 0)
 
-    def test_playlistEntry_unicode(self):
+    def test_playlistEntry_getnonempty(self):
         """
-        Check the unicode() function
+        Check playlist page display right information
         """
         song = Song.objects.create(artist='Van Morrison',
                                    album='The Healing Game',
                                    title='Sometimes We Cry',
                                    genre='Blues',
+                                   score=0,
+                                   global_score=0)
+
+        ple = PlaylistEntry.objects.create(
+            song=song,
+            date_add=datetime.utcnow().replace(tzinfo=utc),
+            score=0)
+
+        client = Client()
+        client.login(username='admin_search', password='admintest')
+        response = client.get('/')
+        self.assertContains(response, song.artist, status_code=200)
+        self.assertContains(response, song.album, status_code=200)
+        self.assertContains(response, song.title, status_code=200)
+
+    def test_playlistEntry_unicode(self):
+        """
+        Check the unicode() function
+        """
+        song = Song.objects.create(artist='The Fugees',
+                                   album='The Score',
+                                   title='Cowboys',
+                                   genre='Funk',
                                    score=0,
                                    global_score=0)
 

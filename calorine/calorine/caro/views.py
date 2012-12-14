@@ -22,17 +22,17 @@ import json
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.shortcuts import render
+from datetime import datetime
+from django.views.generic import ListView
+from django.core.cache import cache
+from haystack.query import SearchQuerySet
 from calorine.caro.models import Song
 from calorine.caro.models import Logs
 from calorine.caro.models import PlaylistEntry
 from calorine.caro.models import HistoryEntry
 from calorine.caro.models import Vote
 from calorine.caro.models import Stream
-from datetime import datetime
-from django.views.generic import ListView
-from django.core.cache import cache
-from haystack.query import SearchQuerySet
-
+from calorine.caro.utils import onair_datas
 
 class SongList(ListView):
     paginate_by = 17
@@ -40,10 +40,11 @@ class SongList(ListView):
     context_object_name = "songs"
 
     def get_queryset(self):
-        try:
-            qry_str = self.request.GET.get('q')
-        except NameError:
-            qry_str = None
+        """
+        Use the same class for search en listview
+        """
+        qry_str = self.request.GET.get('q')
+
 
         if qry_str is not None:
             srchqry = SearchQuerySet().filter(
@@ -109,26 +110,9 @@ def profile(request):
 
 
 def onair(request):
-    """The onair
+    """The onair view
     """
-    try:
-        artist = cache.get('onair_artist')
-    except:
-        artist = ''
-
-    try:
-        title = cache.get('onair_title')
-    except:
-        title = ''
-
-    try:
-        album = cache.get('onair_album')
-    except:
-        album = ''
-
-    datas = {'artist': artist,
-             'title': title,
-             'album': album}
+    datas = onair_datas()
 
     response = HttpResponse(mimetype='application/json; charset=utf-8')
 
