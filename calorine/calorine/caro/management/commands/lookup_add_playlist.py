@@ -56,7 +56,7 @@ class Command(BaseCommand):
             PlaylistEntry.objects.create(
                 song=song,
                 date_add=datetime.utcnow().replace(tzinfo=utc),
-                score=0)
+                score=1)
             msg = '%s - %s - %s est dans playlist\n' % (song.artist,
                                                         song.title,
                                                         song.album)
