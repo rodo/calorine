@@ -133,7 +133,7 @@ class Song():
         """
         Fetch song from playlist
         """
-        query = """SELECT s.id, s.filename, s.score FROM caro_playlistentry AS p, caro_song as s WHERE s.id = p.song_id AND s.score >= 0 ORDER BY s.score DESC, date_add ASC LIMIT 1"""
+        query = """SELECT s.id, s.filename, s.score FROM caro_playlistentry AS p, caro_song as s WHERE s.id = p.song_id AND s.score >= 0 ORDER BY p.score DESC, p.date_add ASC LIMIT 1"""
         rows = self.fetchfile(query)
         return rows
 
