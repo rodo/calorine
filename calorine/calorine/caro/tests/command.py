@@ -273,31 +273,6 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         self.assertEqual(before, 0)
         self.assertEqual(after, 1)
 
-    def test_lookup_add_playlist0songsmatch(self):
-        """
-        Management command lookup_add_playlist
-
-        Lookup for a song, no song will match
-        """
-        PlaylistEntry.objects.all().delete()
-
-        Song.objects.create(artist='Lou Reed',
-                            album='Transformer',
-                            title='''Andy's Chest''',
-                            genre='Glam rock',
-                            score=0,
-                            family=0,
-                            global_score=0)
-
-        before = PlaylistEntry.objects.all().count()
-
-        call_command('lookup_add_playlist', 'Ali Farka Toure')
-
-        after = PlaylistEntry.objects.all().count()
-
-        self.assertEqual(before, 0)
-        self.assertEqual(after, 0)
-
     def test_lookupaddplaylist_missingargs(self):
         """
         Management command lookup_add_playlist
@@ -317,6 +292,31 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         before = PlaylistEntry.objects.all().count()
 
         call_command('lookup_add_playlist')
+
+        after = PlaylistEntry.objects.all().count()
+
+        self.assertEqual(before, 0)
+        self.assertEqual(after, 0)
+
+    def test_lookup_add_playlist0songsmatch(self):
+        """
+        Management command lookup_add_playlist
+
+        Lookup for a song, no song will match
+        """
+        PlaylistEntry.objects.all().delete()
+
+        Song.objects.create(artist='Lou Reed',
+                            album='Transformer',
+                            title='''Andy's Chest''',
+                            genre='Glam rock',
+                            score=0,
+                            family=0,
+                            global_score=0)
+
+        before = PlaylistEntry.objects.all().count()
+
+        call_command('lookup_add_playlist', 'Farka')
 
         after = PlaylistEntry.objects.all().count()
 
