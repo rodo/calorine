@@ -23,7 +23,6 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from calorine.caro.models import Song
 from haystack.query import SearchQuerySet
-from django.test.utils import override_settings
 
 
 class SearchTests(TestCase):  # pylint: disable-msg=R0904
@@ -39,11 +38,6 @@ class SearchTests(TestCase):  # pylint: disable-msg=R0904
                                              'admin_search@bar.com',
                                              'admintest')
 
-
-    @override_settings(HAYSTACK_CONNECTIONS = {
-            'default': {
-                'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-                'PATH': '/tmp/whoosh_index'}})
     def test_bycontent(self):
         """
         Use haystack search on content
@@ -75,10 +69,9 @@ class SearchTests(TestCase):  # pylint: disable-msg=R0904
                             family=0,
                             global_score=0)
 
-        nbr = len(SearchQuerySet().filter(
-                title__contains='caribou').models(Song))
+        sqr = SearchQuerySet().filter(title__contains='caribou').models(Song)
 
-        self.assertEqual(nbr, 1)
+        self.assertEqual(len(sqr), 1)
 
     def test_byartist(self):
         """
@@ -93,7 +86,6 @@ class SearchTests(TestCase):  # pylint: disable-msg=R0904
                             family=0,
                             global_score=0)
 
-        nbr = len(SearchQuerySet().filter(
-                artist__contains='popa').models(Song))
+        sqr = SearchQuerySet().filter(artist__contains='popa').models(Song)
 
-        self.assertEqual(nbr, 1)
+        self.assertEqual(len(sqr), 1)
