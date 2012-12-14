@@ -57,7 +57,7 @@ class Command(BaseCommand):
         PlaylistEntry.objects.create(
             song=song,
             date_add=datetime.utcnow().replace(tzinfo=utc),
-            score=0)
+            score=1)
 
         self.stdout.write('Add %s %s %s to playlist\n' % (song.artist,
                                                           song.title,
