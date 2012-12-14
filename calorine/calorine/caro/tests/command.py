@@ -298,27 +298,27 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
     #     self.assertEqual(before, 0)
     #     self.assertEqual(after, 0)
 
-    # def test_lookupaddplaylist_missingargs(self):
-    #     """
-    #     Management command lookup_add_playlist
+    def test_lookupaddplaylist_missingargs(self):
+        """
+        Management command lookup_add_playlist
 
-    #     Lookup for a song and add them in playlist if found
-    #     """
-    #     PlaylistEntry.objects.all().delete()
+        Lookup for a song and add them in playlist if found
+        """
+        PlaylistEntry.objects.all().delete()
 
-    #     Song.objects.create(artist='Fatoumata Diawara',
-    #                         album='Kanou',
-    #                         title='Nayan',
-    #                         genre='Folk Wassoulou',
-    #                         score=0,
-    #                         family=0,
-    #                         global_score=0)
+        Song.objects.create(artist='Fatoumata Diawara',
+                            album='Kanou',
+                            title='Nayan',
+                            genre='Folk Wassoulou',
+                            score=0,
+                            family=0,
+                            global_score=0)
 
-    #     before = PlaylistEntry.objects.all().count()
+        before = PlaylistEntry.objects.all().count()
 
-    #     call_command('lookup_add_playlist')
+        call_command('lookup_add_playlist')
 
-    #     after = PlaylistEntry.objects.all().count()
+        after = PlaylistEntry.objects.all().count()
 
-    #     self.assertEqual(before, 0)
-    #     self.assertEqual(after, 0)
+        self.assertEqual(before, 0)
+        self.assertEqual(after, 0)
