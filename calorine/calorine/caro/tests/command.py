@@ -185,7 +185,7 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
 
     def test_playlistrandomsong1(self):
         """
-        Add a random song in playlist, with only 1 one in DB
+        Add a random song in playlist, with only 1 one song present in DB
         """
         Song.objects.create(artist='Fatoumata Diawara',
                             album='Kanou',
@@ -206,7 +206,7 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
 
     def test_playlistrandomsong_nosong(self):
         """
-        With no song in db
+        Run management command 'playlist_random_song'with no song in db
         """
         Song.objects.all().delete()
         PlaylistEntry.objects.all().delete()
