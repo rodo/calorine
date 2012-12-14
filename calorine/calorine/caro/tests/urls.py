@@ -26,6 +26,7 @@ from datetime import datetime
 from django.utils.timezone import utc
 from calorine.caro.models import Song
 from calorine.caro.models import PlaylistEntry
+from django.core.management import call_command
 
 
 class UrlsTests(TestCase):  # pylint: disable-msg=R0904
@@ -167,13 +168,24 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
                                    family=0,
                                    global_score=0)
 
-        ple = PlaylistEntry.objects.create(
-            song=song,
-            date_add=datetime.utcnow().replace(tzinfo=utc),
-            score=0)
+        port = Song.objects.create(artist='Portishead',
+                                   album='Dummy',
+                                   title='Mysterons',
+                                   genre='Rock',
+                                   score=0,
+                                   family=0,
+                                   global_score=0)
+
+        call_command('playlist_random_song')
+        call_command('playlist_random_song')
+
+        ple = PlaylistEntry.objects.all()
+
+        self.assertEqual(len(ple), 2)
 
         client = Client()
         client.login(username='admin_search', password='admintest')
-        response = client.get('/playlist/dec/%d' % ple.id)
+        response = client.get('/playlist/dec/%d' % ple[0].id)
 
-        self.assertContains(response, '{', status_code=200)
+        self.assertContains(response, 'score', status_code=200)
+        self.assertContains(response, ple[0].id, status_code=200)
