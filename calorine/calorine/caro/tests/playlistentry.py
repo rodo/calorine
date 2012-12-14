@@ -25,7 +25,6 @@ from django.test import Client
 from calorine.caro.models import PlaylistEntry
 from calorine.caro.models import Song
 from datetime import datetime
-from django.utils.timezone import utc
 
 
 class PlaylistEntryTests(TestCase):  # pylint: disable-msg=R0904
@@ -54,7 +53,7 @@ class PlaylistEntryTests(TestCase):  # pylint: disable-msg=R0904
 
         ple = PlaylistEntry.objects.create(
             song=song,
-            date_add=datetime.utcnow().replace(tzinfo=utc),
+            date_add=datetime.now(),
             score=0)
 
         self.assertGreater(ple.id, 0)
@@ -72,7 +71,7 @@ class PlaylistEntryTests(TestCase):  # pylint: disable-msg=R0904
 
         ple = PlaylistEntry.objects.create(
             song=song,
-            date_add=datetime.utcnow().replace(tzinfo=utc),
+            date_add=datetime.now(),
             score=0)
 
         client = Client()
@@ -95,7 +94,7 @@ class PlaylistEntryTests(TestCase):  # pylint: disable-msg=R0904
 
         ple = PlaylistEntry.objects.create(
             song=song,
-            date_add=datetime.utcnow().replace(tzinfo=utc),
+            date_add=datetime.now(),
             score=0)
 
         self.assertEqual("{}".format(ple), song.title)

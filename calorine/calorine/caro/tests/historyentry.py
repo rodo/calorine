@@ -24,7 +24,6 @@ from django.test import TestCase
 from calorine.caro.models import HistoryEntry
 from calorine.caro.models import Song
 from datetime import datetime
-from django.utils.timezone import utc
 
 
 class HistoryEntryTests(TestCase):  # pylint: disable-msg=R0904
@@ -53,6 +52,6 @@ class HistoryEntryTests(TestCase):  # pylint: disable-msg=R0904
 
         hist = HistoryEntry.objects.create(
             song=song,
-            date_played=datetime.utcnow().replace(tzinfo=utc))
+            date_played=datetime.now())
 
         self.assertGreater(hist.id, 0)
