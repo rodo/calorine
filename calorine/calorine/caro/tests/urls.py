@@ -34,7 +34,7 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
     The url view
 
     """
-    def setUp(self):
+    def setUp(self):  # pylint: disable-msg=C0103
         """
         Init
         """
@@ -160,21 +160,21 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
         """
         Negative vote in playlist
         """
-        song = Song.objects.create(artist='Van Morrison',
-                                   album='The Healing Game',
-                                   title='Sometimes We Cry',
-                                   genre='Blues',
-                                   score=0,
-                                   family=0,
-                                   global_score=0)
+        Song.objects.create(artist='Van Morrison',
+                            album='The Healing Game',
+                            title='Sometimes We Cry',
+                            genre='Blues',
+                            score=0,
+                            family=0,
+                            global_score=0)
 
-        port = Song.objects.create(artist='Portishead',
-                                   album='Dummy',
-                                   title='Mysterons',
-                                   genre='Rock',
-                                   score=0,
-                                   family=0,
-                                   global_score=0)
+        Song.objects.create(artist='Portishead',
+                            album='Dummy',
+                            title='Mysterons',
+                            genre='Rock',
+                            score=0,
+                            family=0,
+                            global_score=0)
 
         call_command('playlist_random_song')
         call_command('playlist_random_song')
@@ -189,3 +189,29 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
 
         self.assertContains(response, 'score', status_code=200)
         self.assertContains(response, ple[0].id, status_code=200)
+
+    def test_playlist_votetwice(self):
+        """
+        Twice vote is forbidden
+        """
+        Song.objects.create(artist='Portishead',
+                            album='Dummy',
+                            title='Mysterons',
+                            genre='Rock',
+                            score=0,
+                            family=0,
+                            global_score=0)
+
+
+        call_command('playlist_random_song')
+
+        ple = PlaylistEntry.objects.all()
+
+        client = Client()
+        client.login(username='admin_search', password='admintest')
+        client.get('/playlist/dec/%d' % ple[0].id)
+        # vote twice
+        response = client.get('/playlist/dec/%d' % ple[0].id)
+
+        self.assertContains(response, 'message', status_code=200)
+        self.assertNotContains(response, 'score', status_code=200)
