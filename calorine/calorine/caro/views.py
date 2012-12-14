@@ -34,6 +34,7 @@ from calorine.caro.models import Vote
 from calorine.caro.models import Stream
 from calorine.caro.utils import onair_datas
 
+
 class SongList(ListView):
     paginate_by = 17
     template_name = "songs.html"
@@ -44,7 +45,6 @@ class SongList(ListView):
         Use the same class for search en listview
         """
         qry_str = self.request.GET.get('q')
-
 
         if qry_str is not None:
             srchqry = SearchQuerySet().filter(
