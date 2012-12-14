@@ -74,6 +74,7 @@ class Song(models.Model):
             date_add=datetime.now(),
             score=1)
 
+
 class PlaylistEntry(models.Model):
     """
     An entry in a playlist

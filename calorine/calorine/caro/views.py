@@ -136,7 +136,7 @@ def pladd(request, song_id):
                                        score=0,
                                        date_add=datetime.today())
 
-    clean_cache(request.user.id, song.id, ple.id)    
+    clean_cache(request.user.id, song.id, ple.id)
     pllike(request, ple.pk)
     return render(request, 'playlist_add.html')
 
@@ -182,7 +182,6 @@ def inc_desc(sign, request, pk):
 
     vote = Vote(song=song, user=request.user)
     vote.save()
-
 
     resp = {'score': ple.score, 'id': ple.pk}
     return HttpResponse(

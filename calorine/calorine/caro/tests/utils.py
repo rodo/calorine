@@ -90,7 +90,6 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
         datas = checkid3(beta)
         self.assertEqual(datas, None)
 
-
     def test_sigfile(self):
         """
         Sigfile

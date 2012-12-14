@@ -25,8 +25,6 @@ from django.test import Client
 from django.conf import settings
 from django.core.cache import cache
 import memcache
-from datetime import datetime
-from django.utils.timezone import utc
 from calorine.caro.models import Song
 from calorine.caro.models import PlaylistEntry
 
@@ -72,7 +70,7 @@ class CachesTests(TestCase):  # pylint: disable-msg=R0904
 
         client = Client()
         client.login(username='admin_search', password='admintest')
-        response = client.get('/playlist/add/%d' % song.id)
+        client.get('/playlist/add/%d' % song.id)
 
         ple = PlaylistEntry.objects.all()[0]
 
@@ -80,7 +78,7 @@ class CachesTests(TestCase):  # pylint: disable-msg=R0904
         song_key = 'song_{}'.format(ple.song.pk)
 
         mmc = memcache.Client(['127.0.0.1:11211'], debug=0)
-        
+
         value = mmc.get("%s:1:%s" % (prefix, key))
         song_value = mmc.get("%s:1:%s" % (prefix, song_key))
 
