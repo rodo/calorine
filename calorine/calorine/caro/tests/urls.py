@@ -268,3 +268,58 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
         self.assertNotContains(response, 'cl_vote_2', status_code=200)
         self.assertContains(response, 'cl_vote_1', status_code=200)
 
+    def test_songs_emptycache(self):
+        """
+        The cache was clear
+        """
+        Song.objects.all().delete()
+        PlaylistEntry.objects.all().delete()
+
+        song = Song.objects.create(artist='Miossec',
+                            album='''L'etreinte''',
+                            title='Bonhomme',
+                            genre='Rock',
+                            score=0,
+                            family=0,
+                            global_score=0)
+
+        song.add_to_playlist()
+        ple = PlaylistEntry.objects.all()[0]
+
+        # clear cache after all action as a memcached restart
+        clean_cache(self.user.id, ple.song.id, ple.id)
+
+        client = Client()
+        client.login(username='admin_search', password='admintest')
+
+        response = client.get('/songs/')
+
+        self.assertNotContains(response, 'voted', status_code=200)
+
+    def test_playlist_emptycache(self):
+        """
+        The cache was clear
+        """
+        Song.objects.all().delete()
+        PlaylistEntry.objects.all().delete()
+
+        song = Song.objects.create(artist='Miossec',
+                            album='''L'etreinte''',
+                            title='Bonhomme',
+                            genre='Rock',
+                            score=0,
+                            family=0,
+                            global_score=0)
+
+        song.add_to_playlist()
+        ple = PlaylistEntry.objects.all()[0]
+
+        # clear cache after all action as a memcached restart
+        clean_cache(self.user.id, ple.song.id, ple.id)
+
+        client = Client()
+        client.login(username='admin_search', password='admintest')
+
+        response = client.get('/')
+        self.assertContains(response, 'cl_vote_1', status_code=200)
+        self.assertNotContains(response, 'voted', status_code=200)
