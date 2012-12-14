@@ -210,6 +210,17 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         self.assertEqual(before, 0)
         self.assertTrue(after > 0)
 
+    def test_playlistrandomsong_nosong(self):
+        """
+        With no song in db
+        """
+        Song.objects.all().delete()
+        PlaylistEntry.objects.all().delete()
+
+        call_command('playlist_random_song')
+
+        self.assertEqual(PlaylistEntry.objects.all().count(), 0)
+
     def test_lookup_add_playlist(self):
         """
         Management command lookup_add_playlist

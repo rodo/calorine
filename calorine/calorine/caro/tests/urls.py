@@ -160,6 +160,7 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
         """
         Negative vote in playlist
         """
+        PlaylistEntry.objects.all().delete()
         Song.objects.create(artist='Van Morrison',
                             album='The Healing Game',
                             title='Sometimes We Cry',
@@ -179,7 +180,7 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
         call_command('playlist_random_song')
         call_command('playlist_random_song')
 
-        ple = PlaylistEntry.objects.all()
+        ple = PlaylistEntry.objects.all().order_by('-pk')
 
         self.assertEqual(len(ple), 2)
 
@@ -215,3 +216,27 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
 
         self.assertContains(response, 'message', status_code=200)
         self.assertNotContains(response, 'score', status_code=200)
+
+    def test_playlistwithvote(self):
+        """
+        Songs url
+        """
+        Song.objects.create(artist='Miossec',
+                            album='''L'etreinte''',
+                            title='Bonhomme',
+                            genre='Rock',
+                            score=0,
+                            family=0,
+                            global_score=0)
+
+        call_command('playlist_random_song')
+
+        ple = PlaylistEntry.objects.all()
+
+        client = Client()
+        client.login(username='admin_search', password='admintest')
+        # make a vote
+        client.get('/playlist/dec/%d' % ple[0].id)
+
+        response = client.get('/')
+        self.assertContains(response, 'A voté', status_code=200)

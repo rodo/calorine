@@ -106,8 +106,8 @@ class BotCalorine(ircbot.SingleServerIRCBot):
 
         hello = ["salut", "coucou", "bonjour",
                  "yo", "bisous", "kiss",
-                 "salut", "Big smack pour", "hi",
-                 "yo"]
+                 "ça fait plaisir de te voir", "Big smack pour", "hi",
+                 "ah bah te v'la"]
         rand = int(random() * 10)
         if auteur != self.nick:
             self.speak("%s %s" % (hello[rand], auteur))
