@@ -24,7 +24,6 @@ from django.test import TestCase
 from calorine.caro.models import Song
 from calorine.caro.models import PlaylistEntry
 from django.core.management import call_command
-from datetime import datetime
 from os import path
 
 
