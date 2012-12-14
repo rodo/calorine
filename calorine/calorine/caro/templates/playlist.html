@@ -21,7 +21,7 @@
 	  <tr>
 	    <td class="{{song.pk}}">
               {% if song.vote %}
-              <span class="label label-info">A voté !</span>
+              <span class="label label-info voted">A voté !</span>
 	      {% else %}
 	      <a class="btn-mini btn-success {{song.pk}}" onclick="inc_playlist({{song.id}}); return false" href="#">Encore</a>
 	      <a class="btn-mini btn-danger {{song.pk}}" onclick="dec_playlist({{song.id}}); return false" href="#">Stop</a>

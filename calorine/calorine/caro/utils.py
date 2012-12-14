@@ -26,6 +26,18 @@ from calorine.caro.models import Logs
 from django.core.cache import cache
 
 
+def clean_cache(user_id, song_id, ple_id):
+    """Remove data in cache
+    """
+
+    key = 'ple_{}_{}'.format(user_id, ple_id)
+    song_key = 'song_{}'.format(song_id)
+
+    cache.delete(key)
+    cache.delete(song_key)
+    return 0
+
+
 def checkid3(filename):
     """
     Create a new song in database

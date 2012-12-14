@@ -33,6 +33,7 @@ from calorine.caro.models import HistoryEntry
 from calorine.caro.models import Vote
 from calorine.caro.models import Stream
 from calorine.caro.utils import onair_datas
+from calorine.caro.utils import clean_cache
 from django.contrib.auth.decorators import login_required
 
 
@@ -81,7 +82,6 @@ class PlayList(ListView):
         context = super(PlayList, self).get_context_data(**kwargs)
         for ple in context['songs']:
             if cache.get('ple_{}_{}'.format(self.request.user.id,
-                                            ple.song.pk,
                                             ple.pk)):
                 ple.vote = True
         return context
@@ -132,10 +132,11 @@ def pladd(request, song_id):
     """
     song = get_object_or_404(Song, pk=song_id)
 
-    ple = PlaylistEntry(song=song,
-                        score=0,
-                        date_add=datetime.today())
-    ple.save()
+    ple = PlaylistEntry.objects.create(song=song,
+                                       score=0,
+                                       date_add=datetime.today())
+
+    clean_cache(request.user.id, song.id, ple.id)    
     pllike(request, ple.pk)
     return render(request, 'playlist_add.html')
 

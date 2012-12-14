@@ -27,6 +27,7 @@ from django.utils.timezone import utc
 from calorine.caro.models import Song
 from calorine.caro.models import PlaylistEntry
 from django.core.management import call_command
+from calorine.caro.utils import clean_cache
 
 
 class UrlsTests(TestCase):  # pylint: disable-msg=R0904
@@ -149,7 +150,7 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
             song=song,
             date_add=datetime.utcnow().replace(tzinfo=utc),
             score=0)
-
+        clean_cache(self.user.id, ple.song.id, ple.id)
         client = Client()
         client.login(username='admin_search', password='admintest')
         response = client.get('/playlist/inc/%d' % ple.id)
@@ -181,7 +182,7 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
         call_command('playlist_random_song')
 
         ple = PlaylistEntry.objects.all().order_by('-pk')
-
+        clean_cache(self.user.id, ple[0].song.id, ple[0].id)
         self.assertEqual(len(ple), 2)
 
         client = Client()
@@ -242,7 +243,7 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
         client.get('/playlist/inc/%d' % ple[0].id)
 
         response = client.get('/')
-        self.assertContains(response, 'A voté', status_code=200)
+        self.assertContains(response, 'voted', status_code=200)
 
     def test_playlist_voteafteradd(self):
         """
