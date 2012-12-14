@@ -8,11 +8,11 @@
       <table class="table table-striped">
 	<thead>
 	  <tr>
-	    <th class="span2"><span class="result"></span></th>
-	    <th class="span4">Titre</th>
+	    <th class="span1"><span class="result"></span></th>
+	    <th class="span3">Titre</th>
 	    <th class="span3">Artiste</th>
-	    <th class="span4">Album</th>
-	    <th>P</th>
+	    <th class="span3">Album</th>
+	    <th class="span1">P / S</th>
 	  </tr>
 	</thead>
 	<tbody>
@@ -28,7 +28,10 @@
 	    <td>{{song.title}}</td>
 	    <td>{{song.artist}}</td>
 	    <td>{{song.album}}</td>
-	    <td>{{song.played}}</td>
+	    <td>
+	      <span class="badge">{{song.played}}</span> 
+	      <span class="badge badge-success">{{song.global_score}}</span>
+	    </td>
 	  </tr>
 	  {% endfor %}
 	</tbody>

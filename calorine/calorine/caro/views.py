@@ -72,6 +72,13 @@ class HistoryList(ListView):
     context_object_name = "songs"
 
 
+class PopsList(ListView):
+    queryset = Song.objects.all().order_by("-global_score")
+    paginate_by = 17
+    template_name = 'songs.html'
+    context_object_name = "songs"
+
+
 class PlayList(ListView):
     queryset = PlaylistEntry.objects.all().order_by('-score', 'date_add')
     paginate_by = 17
@@ -182,8 +189,8 @@ def inc_desc(sign, request, pk):
         song.global_score -= 1
     ple.save()
     song.save()
-
-    vote = Vote.objects.create(song=song, user=request.user)
+    # create a vote for this song
+    Vote.objects.create(song=song, user=request.user)
 
     resp = {'score': ple.score, 'id': ple.pk}
     return HttpResponse(

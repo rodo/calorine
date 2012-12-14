@@ -77,7 +77,8 @@ class SearchTests(TestCase):  # pylint: disable-msg=R0904
         """
         Use haystack search on artist
         """
-
+        for song in Song.objects.all():
+            song.delete()
         Song.objects.create(artist='Popa Chubby',
                             album='''How'd a White Boy Get the Blues?''',
                             title='No Comfort',
