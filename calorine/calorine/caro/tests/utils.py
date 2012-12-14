@@ -56,11 +56,27 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
         """
         Good id3
         """
-        notag = path.join(path.dirname(__file__),
-                          'samples',
-                          'notag.ogg')
-        datas = checkid3(notag)
+        datas = checkid3(path.join(path.dirname(__file__),
+                                   'samples',
+                                   'notag.ogg'))
+        self.assertEqual(datas, None)
 
+    def test_checkid3_genremissing(self):
+        """
+        genre id3 is missing
+        """
+        datas = checkid3(path.join(path.dirname(__file__),
+                                   'samples',
+                                   'missing-genre.ogg'))
+        self.assertNotEqual(datas, None)
+
+    def test_checkid3_albummissing(self):
+        """
+        album id3 is missing
+        """
+        datas = checkid3(path.join(path.dirname(__file__),
+                                   'samples',
+                                   'missing-album.ogg'))
         self.assertEqual(datas, None)
 
     def test_sigfile(self):
