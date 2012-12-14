@@ -105,7 +105,7 @@ class LogList(ListView):
 def profile(request):
     """The profile wiew
     """
-    ples = PlaylistEntry.objects.all().order_by('-pk', 'date_add')[:4]
+    ples = PlaylistEntry.objects.all().order_by('-score', 'date_add')[:4]
     songs = Song.objects.all().order_by('-pk')[:4]
     streams = Stream.objects.all()
     template_name = 'profile.html'
