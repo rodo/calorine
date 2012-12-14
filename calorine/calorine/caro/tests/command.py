@@ -305,6 +305,7 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         Lookup for a song, no song will match
         """
         PlaylistEntry.objects.all().delete()
+        Song.objects.all().delete()
 
         Song.objects.create(artist='Lou Reed',
                             album='Transformer',
