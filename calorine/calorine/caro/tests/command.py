@@ -298,28 +298,28 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         self.assertEqual(before, 0)
         self.assertEqual(after, 0)
 
-    # def test_lookup_add_playlist0songsmatch(self):
-    #     """
-    #     Management command lookup_add_playlist
+    def test_nosongsmatch(self):
+        """
+        Management command lookup_add_playlist
 
-    #     Lookup for a song, no song will match
-    #     """
-    #     PlaylistEntry.objects.all().delete()
-    #     Song.objects.all().delete()
+        Lookup for a song, no song will match
+        """
+        PlaylistEntry.objects.all().delete()
+        Song.objects.all().delete()
 
-    #     Song.objects.create(artist='Lou Reed',
-    #                         album='Transformer',
-    #                         title='''Andy's Chest''',
-    #                         genre='Glam rock',
-    #                         score=0,
-    #                         family=0,
-    #                         global_score=0)
+        Song.objects.create(artist='Lou Reed',
+                            album='Transformer',
+                            title='''Andy's Chest''',
+                            genre='Glam rock',
+                            score=0,
+                            family=0,
+                            global_score=0)
 
-    #     before = PlaylistEntry.objects.all().count()
+        before = PlaylistEntry.objects.all().count()
 
-    #     call_command('lookup_add_playlist', 'Farka')
+        call_command('lookup_add_playlist', 'Farka')
 
-    #     after = PlaylistEntry.objects.all().count()
+        after = PlaylistEntry.objects.all().count()
 
-    #     self.assertEqual(before, 0)
-    #     self.assertEqual(after, 0)
+        self.assertEqual(before, 0)
+        self.assertEqual(after, 0)
