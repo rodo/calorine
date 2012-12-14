@@ -69,10 +69,7 @@ class PlaylistEntryTests(TestCase):  # pylint: disable-msg=R0904
                                    score=0,
                                    global_score=0)
 
-        ple = PlaylistEntry.objects.create(
-            song=song,
-            date_add=datetime.now(),
-            score=0)
+        song.add_to_playlist()
 
         client = Client()
         client.login(username='admin_search', password='admintest')
