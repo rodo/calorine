@@ -52,7 +52,9 @@ class Command(BaseCommand):
                         self._updatesong(exsong[0], fpath)
                         update += 1
                     else:
-                        self.stdout.write("[.] %s\n" % exsong[0].title)
+                        self.stdout.write("[.] %s - %s - %s\n" % (exsong[0].artist,
+                                                                  exsong[0].album,
+                                                                  exsong[0].title))
                         exists += 1
                 else:
                     self._createsong(tags, sig, fpath)
