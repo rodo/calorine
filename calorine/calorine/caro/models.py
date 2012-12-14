@@ -21,6 +21,7 @@ Models definition for caro app
 
 from django.contrib.auth.models import User
 from django.db import models
+from datetime import datetime
 
 
 class Song(models.Model):
@@ -64,6 +65,14 @@ class Song(models.Model):
         """
         return self.title
 
+    def add_to_playlist(self):
+        """
+        Add the song to playlist
+        """
+        PlaylistEntry.objects.create(
+            song=self,
+            date_add=datetime.now(),
+            score=1)
 
 class PlaylistEntry(models.Model):
     """

@@ -73,11 +73,7 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
                                    score=-1000,
                                    family=0,
                                    global_score=0)
-
-        PlaylistEntry.objects.create(
-            song=song,
-            date_add=datetime.now(),
-            score=0)
+        song.add_to_playlist()
 
         before = PlaylistEntry.objects.all().count()
 

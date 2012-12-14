@@ -19,7 +19,6 @@
 Lookup for a song and to playlist
 """
 from django.core.management.base import BaseCommand
-from django.utils.timezone import utc
 from haystack.query import SearchQuerySet
 from datetime import datetime
 from random import sample
@@ -53,10 +52,7 @@ class Command(BaseCommand):
 
         if count > 0:
             song = Song.objects.filter(pk__in=results)[rand_id]
-            PlaylistEntry.objects.create(
-                song=song,
-                date_add=datetime.utcnow().replace(tzinfo=utc),
-                score=1)
+            song.add_to_playlist()
             msg = '%s - %s - %s est dans playlist\n' % (song.artist,
                                                         song.title,
                                                         song.album)

@@ -19,7 +19,6 @@
 Add a random song to the playlist
 """
 from django.core.management.base import BaseCommand
-from django.utils.timezone import utc
 from datetime import datetime
 from random import sample
 from calorine.caro.models import PlaylistEntry
@@ -53,11 +52,7 @@ class Command(BaseCommand):
         """
         Add a song to the playlist
         """
-
-        PlaylistEntry.objects.create(
-            song=song,
-            date_add=datetime.utcnow().replace(tzinfo=utc),
-            score=1)
+        song.add_to_playlist()
 
         self.stdout.write('Add %s %s %s to playlist\n' % (song.artist,
                                                           song.title,
