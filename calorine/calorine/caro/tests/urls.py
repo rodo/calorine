@@ -204,7 +204,6 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
                             family=0,
                             global_score=0)
 
-
         call_command('playlist_random_song')
 
         ple = PlaylistEntry.objects.all()
@@ -276,12 +275,12 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
         PlaylistEntry.objects.all().delete()
 
         song = Song.objects.create(artist='Miossec',
-                            album='''L'etreinte''',
-                            title='Bonhomme',
-                            genre='Rock',
-                            score=0,
-                            family=0,
-                            global_score=0)
+                                   album='''L'etreinte''',
+                                   title='Bonhomme',
+                                   genre='Rock',
+                                   score=0,
+                                   family=0,
+                                   global_score=0)
 
         song.add_to_playlist()
         ple = PlaylistEntry.objects.all()[0]
@@ -304,12 +303,12 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
         PlaylistEntry.objects.all().delete()
 
         song = Song.objects.create(artist='Miossec',
-                            album='''L'etreinte''',
-                            title='Bonhomme',
-                            genre='Rock',
-                            score=0,
-                            family=0,
-                            global_score=0)
+                                   album='''L'etreinte''',
+                                   title='Bonhomme',
+                                   genre='Rock',
+                                   score=0,
+                                   family=0,
+                                   global_score=0)
 
         song.add_to_playlist()
         ple = PlaylistEntry.objects.all()[0]
