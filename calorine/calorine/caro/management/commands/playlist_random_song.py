@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-  pylint: disable-msg=R0801
+# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2012 Rodolphe Quiédeville <rodolphe@quiedeville.org>
 #
@@ -19,9 +19,7 @@
 Add a random song to the playlist
 """
 from django.core.management.base import BaseCommand
-from datetime import datetime
 from random import sample
-from calorine.caro.models import PlaylistEntry
 from calorine.caro.models import Song
 
 

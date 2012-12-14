@@ -20,9 +20,7 @@ Lookup for a song and to playlist
 """
 from django.core.management.base import BaseCommand
 from haystack.query import SearchQuerySet
-from datetime import datetime
 from random import sample
-from calorine.caro.models import PlaylistEntry
 from calorine.caro.models import Song
 
 
