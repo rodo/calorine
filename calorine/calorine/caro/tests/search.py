@@ -48,6 +48,7 @@ class SearchTests(TestCase):  # pylint: disable-msg=R0904
         """
         Use haystack search on content
         """
+        Song.objects.all().delete()
         song = Song.objects.create(artist='Van Morrison',
                                    album='The Healing Game',
                                    title='Sometimes We Cry',
@@ -65,6 +66,7 @@ class SearchTests(TestCase):  # pylint: disable-msg=R0904
         """
         Use haystack search on title
         """
+        Song.objects.all().delete()
         Song.objects.create(artist='Pixies',
                             album='Death to the Pixies',
                             title='Caribou',
