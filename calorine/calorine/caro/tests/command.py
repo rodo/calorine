@@ -25,7 +25,6 @@ from calorine.caro.models import Song
 from calorine.caro.models import PlaylistEntry
 from django.core.management import call_command
 from datetime import datetime
-from django.utils.timezone import utc
 from os import path
 
 
@@ -77,7 +76,7 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
 
         PlaylistEntry.objects.create(
             song=song,
-            date_add=datetime.utcnow().replace(tzinfo=utc),
+            date_add=datetime.now(),
             score=0)
 
         before = PlaylistEntry.objects.all().count()

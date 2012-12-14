@@ -23,7 +23,6 @@ from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from django.core.cache import cache
 from datetime import datetime
-from django.utils.timezone import utc
 from calorine.caro.models import Song
 from calorine.caro.models import PlaylistEntry
 from django.core.management import call_command
@@ -148,7 +147,7 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
 
         ple = PlaylistEntry.objects.create(
             song=song,
-            date_add=datetime.utcnow().replace(tzinfo=utc),
+            date_add=datetime.now(),
             score=0)
         clean_cache(self.user.id, ple.song.id, ple.id)
         client = Client()
