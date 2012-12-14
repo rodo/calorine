@@ -16,9 +16,9 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 """
-Add a random song in playlist
+Add a random song to the playlist
 """
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.utils.timezone import utc
 from datetime import datetime
 from random import sample
@@ -27,25 +27,38 @@ from calorine.caro.models import Song
 
 
 class Command(BaseCommand):
-    help = 'Add a random song to playlist'
+    help = 'Add a random song to the playlist'
 
     def handle(self, *args, **options):
-        rand_id = -1
-
+        """Handle the command
+        """
         count = Song.objects.filter(family=0).count()
+
+        if count > 0:
+            song = self.getrandomsong(count)
+            self.addsong(song)
+
+    def getrandomsong(self, count):
+        """
+        Get a random song
+        """
         if count > 1:
             rand_id = sample(xrange(1, count), 1)[0]
         else:
             rand_id = 0
 
+        return Song.objects.filter(family=0)[rand_id]
 
-        if rand_id >= 0:
-            song = Song.objects.filter(family=0)[rand_id]
-            PlaylistEntry.objects.create(
-                song=song,
-                date_add=datetime.utcnow().replace(tzinfo=utc),
-                score=0)
+    def addsong(self, song):
+        """
+        Add a song to the playlist
+        """
 
-            self.stdout.write('Add %s %s %s to playlist\n' % (song.artist,
-                                                              song.title,
-                                                              song.album))
+        PlaylistEntry.objects.create(
+            song=song,
+            date_add=datetime.utcnow().replace(tzinfo=utc),
+            score=0)
+
+        self.stdout.write('Add %s %s %s to playlist\n' % (song.artist,
+                                                          song.title,
+                                                          song.album))
