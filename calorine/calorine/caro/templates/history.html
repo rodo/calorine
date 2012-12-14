@@ -21,7 +21,7 @@
 	  <tr>
 	    <td>
 	      {% if song.song.vote %}
-	      <a class="btn btn-mini disabled btn_{{song.song.id}}" href="#" onclick="add_to_playlist({{song.song.id}})">Playlist</a>
+	      <a class="btn btn-mini disabled btn_{{song.song.id}}" href="#">Playlist</a>
 	      {% else %}
 	      <a class="btn btn-mini btn-primary btn_{{song.song.id}}" href="#" onclick="add_to_playlist({{song.song.id}})">Playlist</a>
 	      {% endif %}
