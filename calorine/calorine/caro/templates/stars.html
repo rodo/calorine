@@ -1,0 +1,26 @@
+{% load i18n %}
+{% include "header.html" %}
+{% include "navbar.html" %}
+<div id="container" class="container">
+  <div class="row">
+    <div class="span12">
+      {% include "pager.html" %}
+      <table class="table table-striped">
+	<tbody>
+	  {% for star in stars %}
+	  <tr>
+	    <td colspan="3">{{star.ouser.username}}</td>
+	    <td colspan="4">
+	      <div class="progress progress-info">
+		<div class="bar" style="width: {{star.dcount}}%"></div>
+	      </div>
+	    </td>
+	  </tr>
+	  {% endfor %}
+	</tbody>
+      </table>
+            
+    </div><!--/row-->
+  </div><!--/row-->
+</div><!--/.container-->
+{% include "footer.html" %}

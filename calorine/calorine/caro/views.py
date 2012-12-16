@@ -19,9 +19,11 @@
 The django views
 """
 import json
+from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.db.models import Count
 from datetime import datetime
 from django.views.generic import ListView
 from django.core.cache import cache
@@ -77,6 +79,21 @@ class PopsList(ListView):
     paginate_by = 17
     template_name = 'songs.html'
     context_object_name = "songs"
+
+
+class StarList(ListView):
+    queryset = Vote.objects.values('user').annotate(dcount=Count('user'))
+    paginate_by = 17
+    template_name = 'stars.html'
+    context_object_name = "stars"
+
+    def get_context_data(self, **kwargs):
+        context = super(StarList, self).get_context_data(**kwargs)
+        for star in context['stars']:            
+            print star
+            star['ouser'] = get_object_or_404(User, pk=star['user'])
+        return context
+
 
 
 class PlayList(ListView):

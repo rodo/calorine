@@ -4,6 +4,7 @@ from django.shortcuts import redirect
 from calorine.caro.views import LogList, HistoryList
 from calorine.caro.views import SongList, PlayList, profile
 from calorine.caro.views import PopsList
+from calorine.caro.views import StarList
 from django.contrib import admin
 admin.autodiscover()
 
@@ -12,6 +13,7 @@ urlpatterns = patterns('',
                        url(r'^accounts/profile/$', 'calorine.caro.views.profile'),
                        url(r'^onair.json$', 'calorine.caro.views.onair'),
                        url(r'^songs/$', login_required(SongList.as_view())),
+                       url(r'^stars/$', login_required(StarList.as_view())),
                        url(r'^songs/pops/$', login_required(PopsList.as_view())),
                        url(r'^logs/$', login_required(LogList.as_view())),
                        url(r'^history/', login_required(HistoryList.as_view())),
