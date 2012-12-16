@@ -10,9 +10,10 @@
 	  {% for star in stars %}
 	  <tr>
 	    <td colspan="3">{{star.ouser.username}}</td>
+	    <td>{{star.dcount}}</td>
 	    <td colspan="4">
 	      <div class="progress progress-info">
-		<div class="bar" style="width: {{star.dcount}}%"></div>
+		<div class="bar" style="width: {{star.percent}}%"></div>
 	      </div>
 	    </td>
 	  </tr>

@@ -82,16 +82,19 @@ class PopsList(ListView):
 
 
 class StarList(ListView):
-    queryset = Vote.objects.values('user').annotate(dcount=Count('user'))
+    queryset = Vote.objects.values('user').annotate(dcount=Count('user')).order_by('-dcount')
     paginate_by = 17
     template_name = 'stars.html'
     context_object_name = "stars"
 
     def get_context_data(self, **kwargs):
         context = super(StarList, self).get_context_data(**kwargs)
-        for star in context['stars']:            
-            print star
+        total = 0
+        for star in context['stars']:
+            total = total + star['dcount']
+        for star in context['stars']:
             star['ouser'] = get_object_or_404(User, pk=star['user'])
+            star['percent'] = int(100.00 * float(star['dcount']) / float(total))
         return context
 
 
