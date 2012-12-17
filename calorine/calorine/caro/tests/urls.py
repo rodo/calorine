@@ -60,6 +60,24 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
         response = client.get('/songs/')
         self.assertContains(response, self.user.username, status_code=200)
 
+    def test_songs_neverplayed(self):
+        """
+        Songs never played url 
+        """
+        client = Client()
+        client.login(username='admin_search', password='admintest')
+        response = client.get('/songs/never-played/')
+        self.assertContains(response, self.user.username, status_code=200)
+
+    def test_songs_neverplayed(self):
+        """
+        Popular songs url 
+        """
+        client = Client()
+        client.login(username='admin_search', password='admintest')
+        response = client.get('/songs/pops/')
+        self.assertContains(response, self.user.username, status_code=200)
+
     def test_main(self):
         """
         Songs url

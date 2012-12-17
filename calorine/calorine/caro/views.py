@@ -81,6 +81,13 @@ class PopsList(ListView):
     context_object_name = "songs"
 
 
+class NeverList(ListView):
+    queryset = Song.objects.filter(played=0)
+    paginate_by = 17
+    template_name = 'songs.html'
+    context_object_name = "songs"
+
+
 class StarList(ListView):
     queryset = Vote.objects.values('user').annotate(dcount=Count('user')).order_by('-dcount')
     paginate_by = 17

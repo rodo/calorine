@@ -5,6 +5,7 @@ from calorine.caro.views import LogList, HistoryList
 from calorine.caro.views import SongList, PlayList, profile
 from calorine.caro.views import PopsList
 from calorine.caro.views import StarList
+from calorine.caro.views import NeverList
 from django.contrib import admin
 admin.autodiscover()
 
@@ -15,6 +16,7 @@ urlpatterns = patterns('',
                        url(r'^songs/$', login_required(SongList.as_view())),
                        url(r'^stars/$', login_required(StarList.as_view())),
                        url(r'^songs/pops/$', login_required(PopsList.as_view())),
+                       url(r'^songs/never-played/$', login_required(NeverList.as_view())),
                        url(r'^logs/$', login_required(LogList.as_view())),
                        url(r'^history/', login_required(HistoryList.as_view())),
                        url(r'^playlist/add/(?P<song_id>\d+)$', 'calorine.caro.views.pladd'),
