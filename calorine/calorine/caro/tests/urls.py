@@ -62,16 +62,16 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
 
     def test_songs_neverplayed(self):
         """
-        Songs never played url 
+        Songs never played url
         """
         client = Client()
         client.login(username='admin_search', password='admintest')
         response = client.get('/songs/never-played/')
         self.assertContains(response, self.user.username, status_code=200)
 
-    def test_songs_neverplayed(self):
+    def test_songs_pops(self):
         """
-        Popular songs url 
+        Popular songs url
         """
         client = Client()
         client.login(username='admin_search', password='admintest')
