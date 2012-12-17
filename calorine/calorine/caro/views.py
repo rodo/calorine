@@ -89,21 +89,21 @@ class NeverList(ListView):
 
 
 class StarList(ListView):
-    queryset = Vote.objects.values('user').annotate(dcount=Count('user')).order_by('-dcount')
+    queryset = Vote.objects.values('user').annotate(
+        dcount=Count('user')).order_by('-dcount')
     paginate_by = 17
     template_name = 'stars.html'
     context_object_name = "stars"
 
     def get_context_data(self, **kwargs):
         context = super(StarList, self).get_context_data(**kwargs)
-        total = 0
+        total = 0.0
         for star in context['stars']:
-            total = total + star['dcount']
+            total = total + float(star['dcount'])
         for star in context['stars']:
             star['ouser'] = get_object_or_404(User, pk=star['user'])
-            star['percent'] = int(100.00 * float(star['dcount']) / float(total))
+            star['percent'] = int(100.0 * float(star['dcount']) / total)
         return context
-
 
 
 class PlayList(ListView):
