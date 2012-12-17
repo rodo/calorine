@@ -24,6 +24,7 @@ from django.test import TestCase, Client
 from django.core.cache import cache
 from datetime import datetime
 from calorine.caro.models import Song
+from calorine.caro.models import Vote
 from calorine.caro.models import PlaylistEntry
 from django.core.management import call_command
 from calorine.caro.utils import clean_cache
@@ -340,3 +341,42 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
         response = client.get('/')
         self.assertContains(response, 'cl_vote_1', status_code=200)
         self.assertNotContains(response, 'voted', status_code=200)
+
+    def test_stars(self):
+        """
+        The stars
+        """
+        Song.objects.all().delete()
+        Vote.objects.all().delete()
+
+        song = Song.objects.create(artist='Miossec',
+                                   album='''L'etreinte''',
+                                   title='Bonhomme',
+                                   genre='Rock',
+                                   score=0,
+                                   family=0,
+                                   global_score=0)
+
+        vote = Vote.objects.create(song=song,
+                                   user=self.user)
+
+        song = Song.objects.create(artist='Van Morrison',
+                                   album='The Healing Game',
+                                   title='Sometimes We Cry',
+                                   genre='Blues',
+                                   score=0,
+                                   family=0,
+                                   global_score=0)
+
+        vote = Vote.objects.create(song=song,
+                                   user=self.user)
+
+        client = Client()
+        client.login(username='admin_search', password='admintest')
+
+        response = client.get('/stars/')
+        self.assertContains(response, 2, status_code=200)
+        self.assertContains(response, self.user.username, status_code=200)
+
+
+
