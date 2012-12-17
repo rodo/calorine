@@ -4,19 +4,19 @@
 <div id="container" class="container">
   <div class="row">
     <div class="span12">
-      {% include "pager.html" %}
+      {% include 'menu_stats.html' %}
       <table class="table table-striped">
 	<thead>
 	  <th>Qui</th>
 	  <th>Vote</th>
-	  <th>Ratio</th>
+	  <th class="span6">Ratio</th>
 	</thead>
 	<tbody>
 	  {% for star in stars %}
 	  <tr>
-	    <td colspan="3">{{star.ouser.username}}</td>
+	    <td>{{star.ouser.username}}</td>
 	    <td>{{star.dcount}}</td>
-	    <td colspan="4">
+	    <td>
 	      <div class="progress progress-info">
 		<div class="bar" style="width: {{star.percent}}%"></div>
 	      </div>
