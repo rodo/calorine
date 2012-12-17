@@ -52,9 +52,7 @@ class Command(BaseCommand):
                         self._updatesong(exsong[0], fpath)
                         update += 1
                     else:
-                        self.stdout.write("[.] %s - %s - %s\n" % (exsong[0].artist,
-                                                                  exsong[0].album,
-                                                                  exsong[0].title))
+                        self._donothing(exsong[0])
                         exists += 1
                 else:
                     self._createsong(tags, sig, fpath)
@@ -63,6 +61,13 @@ class Command(BaseCommand):
         self.stdout.write("%d songs already present db\n" % exists)
         self.stdout.write("%d songs path updated in db\n" % update)
         self.stdout.write("%d songs inserted in db\n" % insert)
+
+    def _donothing(self, song):
+        """Do nothing but report
+        """
+        self.stdout.write("[.] %s - %s - %s\n" % (song.artist,
+                                                  song.album,
+                                                  song.title))
 
     def _updatesong(self, song, fpath):
         """Update the path if file moved
