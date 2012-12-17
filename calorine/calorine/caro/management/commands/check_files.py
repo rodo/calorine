@@ -30,7 +30,7 @@ class Command(BaseCommand):
         missing = 0
         for song in Song.objects.all().order_by('filename'):
             if not isfile(song.filename):
-                song.vote = -1000
+                song.score = -1000
                 song.save()
                 missing += 1
                 self.stdout.write("%s is missing\n" % song.filename)
