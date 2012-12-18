@@ -25,10 +25,6 @@ def get_tags(artist, track):
     resp = json.loads(requests.get(endpoint, params=params).content)
     response = []
     try:
-        image = resp['track']['album']['image']
-        for img in image:
-            if img['size'] == "small":
-                print img['#text']
         for elem in resp['track']['toptags']['tag']:
             response.append(elem['name'])
         return response
