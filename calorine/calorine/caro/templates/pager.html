@@ -5,7 +5,7 @@
       {% if SEARCHQ %}
       <a href="?q={{ SEARCHQ }}&amp;page={{songs.previous_page_number}}">&larr; Recule</a>
       {% else %}
-      <a href="?page={{songs.previous_page_number}}">&larr; Recule</a>
+      <a href="?page={{page_obj.previous_page_number}}">&larr; Recule</a>
       {% endif %}
     </li>
     {% endif %}
