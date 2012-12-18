@@ -40,7 +40,7 @@ class VoteTests(TestCase):  # pylint: disable-msg=R0904
 
     def test_create_vote(self):
         """
-        View owner votes
+        Create a positive vote
         """
         song = Song.objects.create(artist='Van Morrison',
                                    album='The Healing Game',
@@ -51,7 +51,25 @@ class VoteTests(TestCase):  # pylint: disable-msg=R0904
                                    global_score=0)
 
         vote = Vote.objects.create(song=song,
-                                   user=self.user)
-        vote.save()
+                                   user=self.user,
+                                   vote=1)
+
+        self.assertTrue(vote.id > 0)
+
+    def test_create_vote_neg(self):
+        """
+        Create a negative vote
+        """
+        song = Song.objects.create(artist='Van Morrison',
+                                   album='The Healing Game',
+                                   title='Sometimes We Cry',
+                                   genre='Blues',
+                                   score=0,
+                                   family=0,
+                                   global_score=0)
+
+        vote = Vote.objects.create(song=song,
+                                   user=self.user,
+                                   vote=-1)
 
         self.assertTrue(vote.id > 0)
