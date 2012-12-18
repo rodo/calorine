@@ -24,6 +24,7 @@ from calorine.caro.utils import importdir, checkid3, sigfile
 from os.path import abspath, isdir
 from calorine.utils.lastfm import get_tags
 
+
 class Command(BaseCommand):
     help = 'Import recursively all ogg file in a directory'
 
@@ -95,5 +96,13 @@ class Command(BaseCommand):
                                    uniq=sig,
                                    global_score=0,
                                    filename=fpath)
+        if hasattr(song, 'title') and song.title is not None:
+            try:
+                song.genre += ','.join(get_tags
+                                       (song.artist,
+                                        song.title)
+                                       )
+            except:
+                pass
         song.save()
         self.stdout.write("[I] %s\n" % song.title)
