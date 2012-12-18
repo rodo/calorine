@@ -34,6 +34,7 @@ from calorine.caro.models import Logs
 from calorine.caro.models import PlaylistEntry
 from calorine.caro.models import HistoryEntry
 from calorine.caro.models import Vote
+from calorine.caro.models import ArtistVote
 from calorine.caro.models import Stream
 from calorine.caro.utils import onair_datas
 from calorine.caro.utils import clean_cache
@@ -90,10 +91,7 @@ class NeverList(ListView):
 
 
 class ArtistList(ListView):
-    #qry = """select c.artist, count(c.artist) from caro_song as c, caro_vote as v where v.song_id = c.id group by c.artist;"""
-
-    queryset = Song.objects.annotate(artist_count=Count('artist')).order_by('artist_count')
-    print queryset.query
+    queryset = ArtistVote.objects.filter(vote=1).annotate(artist_count=Count('artist')).order_by('-artist_count')
     paginate_by = 17
     template_name = 'stats.html'
     context_object_name = "songs"

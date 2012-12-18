@@ -1,0 +1,31 @@
+{% load i18n %}
+{% include "header.html" %}
+{% include "navbar.html" %}
+<div id="container" class="container">
+  <div class="row">
+    <div class="span12">
+      {% include 'menu_stats.html' %}
+      
+      <table class="table table-striped">
+	<thead>
+	  <tr>
+	    <th class="span3">Artiste</th>
+	    <th class="span1">Votes</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  {% for song in songs %}
+	  <tr>
+	    <td>{{song.artist}}</td>
+	    <td>
+	      <span class="badge badge-success">{{song.artist_count}}</span>
+	    </td>
+	  </tr>
+	  {% endfor %}
+	</tbody>
+      </table>
+            
+    </div><!--/row-->
+  </div><!--/row-->
+</div><!--/.container-->
+{% include "footer.html" %}
