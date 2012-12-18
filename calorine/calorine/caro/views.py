@@ -229,13 +229,15 @@ def inc_desc(sign, request, pk):
     if sign == "plus":
         ple.score += 1
         song.global_score += 1
+        vte = +1
     else:
         ple.score -= 1
         song.global_score -= 1
+        vte = -1
     ple.save()
     song.save()
     # create a vote for this song
-    Vote.objects.create(song=song, user=request.user)
+    Vote.objects.create(song=song, user=request.user, vote=vte)
 
     resp = {'score': ple.score, 'id': ple.pk}
     return HttpResponse(
