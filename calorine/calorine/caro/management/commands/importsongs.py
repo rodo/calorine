@@ -22,7 +22,7 @@ from django.core.management.base import BaseCommand
 from calorine.caro.models import Song
 from calorine.caro.utils import importdir, checkid3, sigfile
 from os.path import abspath, isdir
-
+from calorine.utils.lastfm import get_tags
 
 class Command(BaseCommand):
     help = 'Import recursively all ogg file in a directory'
@@ -65,6 +65,13 @@ class Command(BaseCommand):
     def _donothing(self, song):
         """Do nothing but report
         """
+        if song.genre == "":
+            try:
+                song.genre = ','.join(get_tags(song.artist, song.title))
+                song.save()
+            except TypeError:
+                pass
+
         self.stdout.write("[.] %s - %s - %s\n" % (song.artist,
                                                   song.album,
                                                   song.title))
