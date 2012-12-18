@@ -30,3 +30,8 @@ Require
 -------
 
 See requirements.txt
+
+Debian
+------
+
+ * python-requests
