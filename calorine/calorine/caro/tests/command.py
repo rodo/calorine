@@ -25,6 +25,7 @@ from calorine.caro.models import Song
 from calorine.caro.models import PlaylistEntry
 from django.core.management import call_command
 from os import path
+from StringIO import StringIO 
 
 
 class CommandTests(TestCase):  # pylint: disable-msg=R0904
@@ -338,3 +339,28 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
 
         self.assertEqual(before, 0)
         self.assertEqual(after, 0)
+
+    def test_checkfiles(self):
+        """
+        Management command that check existent files or not
+
+        """
+        PlaylistEntry.objects.all().delete()
+        Song.objects.all().delete()
+
+        Song.objects.create(artist='Lou Reed',
+                            album='Transformer',
+                            title='''Andy's Chest''',
+                            genre='Glam rock',
+                            score=0,
+                            family=0,
+                            global_score=0,
+                            filename='/tmp/this_file_does_not_exists')
+
+        attend = u'/tmp/this_file_does_not_exists is missing\n1 songs are missing\n'
+
+        content = StringIO()
+        call_command('check_files', stdout=content)
+        content.seek(0)
+        
+        self.assertEqual(content.read(), attend)
