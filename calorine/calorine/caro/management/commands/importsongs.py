@@ -22,6 +22,7 @@ from django.core.management.base import BaseCommand
 from calorine.caro.models import Song
 from calorine.caro.utils import importdir, checkid3, sigfile
 from os.path import abspath, isdir
+from calorine.utils.lastfm import get_tags
 
 
 class Command(BaseCommand):
@@ -65,6 +66,13 @@ class Command(BaseCommand):
     def _donothing(self, song):
         """Do nothing but report
         """
+        if song.genre == "":
+            try:
+                song.genre = ','.join(get_tags(song.artist, song.title))
+                song.save()
+            except TypeError:
+                pass
+
         self.stdout.write("[.] %s - %s - %s\n" % (song.artist,
                                                   song.album,
                                                   song.title))
@@ -88,5 +96,13 @@ class Command(BaseCommand):
                                    uniq=sig,
                                    global_score=0,
                                    filename=fpath)
+        if hasattr(song, 'title') and song.title is not None:
+            try:
+                song.genre += ','.join(get_tags
+                                       (song.artist,
+                                        song.title)
+                                       )
+            except:
+                pass
         song.save()
         self.stdout.write("[I] %s\n" % song.title)
