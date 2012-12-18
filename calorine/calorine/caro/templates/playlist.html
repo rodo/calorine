@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n lastfm %}
 {% include "header.html" %}
 {% include "navbar.html" %}
 <div id="container" class="container">
@@ -27,7 +27,7 @@
 	      <a class="btn-mini btn-danger {{song.pk}}" onclick="dec_playlist({{song.id}}); return false" href="#">Stop</a>
               {% endif %}
 	    </td>
-	    <td>{{song.song.title}}</td>
+	    <td>{% picture song.song %}{{song.song.title}} </td>
 	    <td>{{song.song.artist}}</td>
 	    <td>{{song.song.album}}</td>
 	    <td>
