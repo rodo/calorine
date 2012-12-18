@@ -23,7 +23,8 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.db.models import Count
+from django.db.models import Count, Sum
+from django.db.models import Q
 from datetime import datetime
 from django.views.generic import ListView
 from django.core.cache import cache
@@ -88,6 +89,16 @@ class NeverList(ListView):
     context_object_name = "songs"
 
 
+class ArtistList(ListView):
+    #qry = """select c.artist, count(c.artist) from caro_song as c, caro_vote as v where v.song_id = c.id group by c.artist;"""
+
+    queryset = Song.objects.annotate(artist_count=Count('artist')).order_by('artist_count')
+    print queryset.query
+    paginate_by = 17
+    template_name = 'stats.html'
+    context_object_name = "songs"
+
+
 class StarList(ListView):
     queryset = Vote.objects.values('user').annotate(
         dcount=Count('user')).order_by('-dcount')
@@ -125,6 +136,13 @@ class LogList(ListView):
     queryset = Logs.objects.all().order_by('-date_import')
     template_name = 'errors.html'
     context_object_name = 'errors'
+    paginate_by = 17
+
+
+class UglyList(ListView):
+    queryset = Song.objects.filter(Q(artist='') | Q(album='') | Q(genre=''))
+    template_name = 'ugly.html'
+    context_object_name = 'songs'
     paginate_by = 17
 
 

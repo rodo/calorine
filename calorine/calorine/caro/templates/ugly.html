@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block content %}
+
+      <div class="pager">
+	<ul>
+	  {% if page_obj.has_previous %}
+	  <li class="previous">
+	    {% if SEARCHQ %}
+	    <a href="?q={{ SEARCHQ }}&amp;page={{songs.previous_page_number}}">&larr; Recule</a>
+	    {% else %}
+	    <a href="?page={{songs.previous_page_number}}">&larr; Recule</a>
+	    {% endif %}
+	  </li>
+	  {% endif %}
+
+	  {% if page_obj.has_next %}
+	  <li class="next">
+	    {% if SEARCHQ %}
+	    <a href="?q={{SEARCHQ}}&amp;page={{page_obj.next_page_number}}">Avance &rarr;</a>
+	    {% else %}
+	    <a href="?page={{page_obj.next_page_number}}">Avance &rarr;</a>
+	    {% endif %}
+	  </li>
+	  {% endif %}
+	</ul>
+      </div>
+      
+      <table class="table table-striped">
+	<thead>
+	  <tr>
+	    <th class="span1">Titre</th>
+	    <th class="span1">Artiste</th>
+	    <th class="span1">Album</th>
+	    <th class="span9">Fichier</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  {% for song in songs %}
+	  <tr>
+	    <td>{{song.title}}</td>
+	    <td>{{song.artist}}</td>
+	    <td>{{song.album}}</td>
+	    <td>{{song.filename}}</td>
+	  </tr>
+	  {% endfor %}
+	</tbody>
+      </table>
+            
+{% endblock %}
