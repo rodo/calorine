@@ -108,6 +108,18 @@ class Logs(models.Model):
     date_import = models.DateTimeField(auto_now_add=True)
 
 
+class ArtistVote(models.Model):
+    """
+    A vote for an artist
+
+    Each vote create an entry in this table with the artists's name
+
+    """
+    artist = models.CharField(max_length=300,
+                              verbose_name='artiste name')
+    date_vote = models.DateTimeField(auto_now_add=True)
+    vote = models.IntegerField()
+
 class Vote(models.Model):
     """
     En entry in history
@@ -116,6 +128,17 @@ class Vote(models.Model):
     song = models.ForeignKey(Song)
     user = models.ForeignKey(User)
     date_vote = models.DateTimeField(auto_now_add=True)
+    vote = models.IntegerField()
+
+    def save(self, *args, **kwargs):
+        """
+        Save method
+
+        Create an artist vote
+        """
+        if self.song.artist != '':
+            ArtistVote.objects.create(artist=self.song.artist, vote=self.vote)
+        super(Vote, self).save(*args, **kwargs)
 
 
 class Stream(models.Model):
