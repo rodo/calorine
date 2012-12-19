@@ -25,7 +25,7 @@ from calorine.caro.models import Song
 from calorine.caro.models import PlaylistEntry
 from django.core.management import call_command
 from os import path
-from StringIO import StringIO 
+from StringIO import StringIO
 
 
 class CommandTests(TestCase):  # pylint: disable-msg=R0904
@@ -362,5 +362,5 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         content = StringIO()
         call_command('check_files', stdout=content)
         content.seek(0)
-        
+
         self.assertEqual(content.read(), attend)
