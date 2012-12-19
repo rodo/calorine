@@ -22,7 +22,11 @@ DATABASES = {
 #
 # Your last.fm api key
 # This one does not work
-LASTFM_API_KEY = "a5446d9f4a6890dd512b4ac03afee400"
+LASTFM_API_KEY = 'a5446d9f4a6890dd512b4ac03afee400'
+#
+# last.fm endpoint 
+#
+LASTFM_ENDPOINT = 'http://ws.audioscrobbler.com/2.0/'
 #
 #
 #

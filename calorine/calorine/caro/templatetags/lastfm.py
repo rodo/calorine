@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-  pylint: disable-msg=R0801
 #
-# Copyright (c) 2012 Rodolphe Quiédeville <rodolphe@quiedeville.org>
 # Copyright (c) 2012 Yohann Gabory <yohann@gabory.fr>
+# Copyright (c) 2012 Rodolphe Quiédeville <rodolphe@quiedeville.org>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
