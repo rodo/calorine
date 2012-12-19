@@ -19,6 +19,8 @@
 import requests
 import json
 from django.conf import settings
+from django.core.cache import cache
+
 
 format = "json"
 
@@ -26,10 +28,21 @@ params = {"api_key": settings.LASTFM_API_KEY,
           "format": format}
 
 
-def get_similar(artist, endpoint=settings.LASTFM_ENDPOINT):
+def get_datas(endpoint=settings.LASTFM_ENDPOINT):
+    """Get datas on remote website
+    """
+    datas = '{}'
+    if not cache.get('lastfm_broken'):
+        try:
+            datas = requests.get(endpoint, params=params).content
+        except Timeout:
+            cache.set('lastfm_broken', True, 300)
+    return datas
+
+def get_similar(artist):
     params['method'] = "artist.getSimilar"
     params['artist'] = artist
-    resp = json.loads(requests.get(endpoint, params=params).content)
+    resp = json.loads(get_datas())
     response = []
     for elem in resp['similarartists']['artist']:
         response.append(elem['name'])
@@ -40,7 +53,7 @@ def get_tags(artist, track, endpoint=settings.LASTFM_ENDPOINT):
     params['method'] = "track.getInfo"
     params['artist'] = artist
     params['track'] = track
-    resp = json.loads(requests.get(endpoint, params=params).content)
+    resp = json.loads(get_datas())
     response = []
     try:
         for elem in resp['track']['toptags']['tag']:
@@ -54,7 +67,7 @@ def get_picture(artist, track, size="small", endpoint=settings.LASTFM_ENDPOINT):
     params['method'] = "track.getInfo"
     params['artist'] = artist
     params['track'] = track
-    resp = json.loads(requests.get(endpoint, params=params).content)
+    resp = json.loads(get_datas())
     try:
         image = resp['track']['album']['image']
         for img in image:
