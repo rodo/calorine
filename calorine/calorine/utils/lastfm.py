@@ -34,8 +34,8 @@ def get_datas(endpoint=settings.LASTFM_ENDPOINT):
     datas = '{}'
     if not cache.get('lastfm_broken'):
         try:
-            datas = requests.get(endpoint, params=params).content
-        except Timeout:
+            datas = requests.get(endpoint, params=params, timeout=1).content
+        except requests.exceptions.Timeout:
             cache.set('lastfm_broken', True, 300)
     return datas
 
