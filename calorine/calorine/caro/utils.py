@@ -24,6 +24,22 @@ import hashlib
 import mutagen
 from calorine.caro.models import Logs
 from django.core.cache import cache
+from PIL import Image
+from requests import get
+from StringIO import StringIO
+from django.template.defaultfilters import slugify
+
+
+def store_image(url):
+    """Store image in cache
+    """
+    key = slugify(url)
+    raw = get(url, timeout=5)
+    img = Image.open(StringIO(raw.content))
+    cache.set("%s_data" % key, img.tostring())
+    cache.set("%s_mode" % key, img.mode)
+    cache.set("%s_size" % key, img.size)
+    return key
 
 
 def clean_cache(user_id, song_id, ple_id):
