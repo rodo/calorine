@@ -89,3 +89,16 @@ class SongTests(TestCase):  # pylint: disable-msg=R0904
                                    global_score=0)
 
         self.assertEqual("{}".format(song), song.title)
+
+    def test_cover(self):
+        """
+        Check default cover
+        """
+        song = Song.objects.create(artist='Van Morrison',
+                                   album='The Healing Game',
+                                   title='Sometimes We Cry',
+                                   genre='Blues',
+                                   score=0,
+                                   global_score=0)
+
+        self.assertEqual(song.cover, '')
