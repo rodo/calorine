@@ -29,16 +29,21 @@ def picture(song):
     """
     key = 'song_image_{}_{}'.format(slugify(song.artist),
                                     slugify(song.title))
-    if cache.get(key):
-        pict = cache.get(key)
-    else:
-        pict = get_picture(song.artist, song.title)
-        if pict:
-            cache.set(key, pict)
+    if song.cover == '':
+        if cache.get(key):
+            pict = cache.get(key)
         else:
-            cache.set(key, "no pic")
-    return {
-        'picture': pict
-    }
+            pict = get_picture(song.artist, song.title)
+            if pict:
+                cache.set(key, pict)
+                song.cover = pict
+                song.save()
+            else:
+                cache.set(key, "no pic")
+        return {
+            'picture': pict
+            }
+    else:
+        return { 'picture': song.cover }
 
 register.inclusion_tag('picture.html')(picture)

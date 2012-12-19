@@ -59,6 +59,8 @@ class Song(models.Model):
                                  default=0)
     uniq = models.CharField(max_length=40, blank=True)
 
+    cover = models.URLField(blank=True)
+
     def __unicode__(self):
         """
         The unicode method
