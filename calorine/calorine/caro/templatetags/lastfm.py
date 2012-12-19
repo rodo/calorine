@@ -13,15 +13,15 @@ def picture(song):
     key = 'song_image_{}_{}'.format(slugify(song.artist),
                                     slugify(song.title))
     if cache.get(key):
-        picture = cache.get(key)
+        pict = cache.get(key)
     else:
-        picture = get_picture(song.artist, song.title)
-        if picture:
-            cache.set(key, picture)
+        pict = get_picture(song.artist, song.title)
+        if pict:
+            cache.set(key, pict)
         else:
-            cache.set(key, "picture")
+            cache.set(key, "no pic")
     return {
-        'picture': picture
+        'picture': pict
     }
 
-register.inclusion_tag('picture.html')(picture)
+register.inclusion_tag('picture.html')(pict)

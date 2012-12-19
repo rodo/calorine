@@ -120,6 +120,7 @@ class ArtistVote(models.Model):
     date_vote = models.DateTimeField(auto_now_add=True)
     vote = models.IntegerField()
 
+
 class Vote(models.Model):
     """
     En entry in history
@@ -136,8 +137,9 @@ class Vote(models.Model):
 
         Create an artist vote
         """
-        if self.song.artist != '':
-            ArtistVote.objects.create(artist=self.song.artist, vote=self.vote)
+        artist = self.song.artist  # pylint: disable-msg=E1101
+        if artist != '':
+            ArtistVote.objects.create(artist=artist, vote=self.vote)
         super(Vote, self).save(*args, **kwargs)
 
 

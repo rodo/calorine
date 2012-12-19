@@ -23,7 +23,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.db.models import Count, Sum
+from django.db.models import Count
 from django.db.models import Q
 from datetime import datetime
 from django.views.generic import ListView

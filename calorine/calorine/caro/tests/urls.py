@@ -357,9 +357,9 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
                                    family=0,
                                    global_score=0)
 
-        vote = Vote.objects.create(song=song,
-                                   user=self.user,
-                                   vote=1)
+        Vote.objects.create(song=song,
+                            user=self.user,
+                            vote=1)
 
         song = Song.objects.create(artist='Van Morrison',
                                    album='The Healing Game',
@@ -369,9 +369,9 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
                                    family=0,
                                    global_score=0)
 
-        vote = Vote.objects.create(song=song,
-                                   user=self.user,
-                                   vote=1)
+        Vote.objects.create(song=song,
+                            user=self.user,
+                            vote=1)
 
         client = Client()
         client.login(username='admin_search', password='admintest')
@@ -379,6 +379,3 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
         response = client.get('/stars/')
         self.assertContains(response, 2, status_code=200)
         self.assertContains(response, self.user.username, status_code=200)
-
-
-
