@@ -29,7 +29,7 @@ def picture(song):
     """
     key = 'song_image_{}_{}'.format(slugify(song.artist),
                                     slugify(song.title))
-    if song.cover == '':
+    if song.cover == '' or song.cover is None:
         if cache.get(key):
             pict = cache.get(key)
         else:
