@@ -19,7 +19,13 @@ DATABASES = {
         'PORT': '5432',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
-
+#
+# Your last.fm api key
+# This one does not work
+LASTFM_API_KEY = "a5446d9f4a6890dd512b4ac03afee400"
+#
+#
+#
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
