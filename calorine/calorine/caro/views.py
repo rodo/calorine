@@ -94,7 +94,6 @@ class ArtistList(ListView):
     queryset = ArtistVote.objects.values(
         'artist').filter(vote=1).annotate(
         artist_count=Count('artist')).order_by('-artist_count')
-    print queryset.query
     paginate_by = 17
     template_name = 'stats.html'
     context_object_name = "songs"
