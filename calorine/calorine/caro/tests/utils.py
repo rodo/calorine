@@ -20,11 +20,14 @@ Unit tests for urls in caro
 
 """
 from django.contrib.auth.models import User
+from django.conf import settings
 from django.test import TestCase
 from calorine.caro.utils import importdir, checkid3, sigfile
 from calorine.caro.utils import onair_datas
+from calorine.caro.utils import store_image
 from os import path
 from django.core.cache import cache
+import memcache
 
 
 class UtilsTests(TestCase):  # pylint: disable-msg=R0904
@@ -166,3 +169,19 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
                    'album': None}
 
         self.assertEqual(datas, attends)
+
+
+    def test_store_image(self):
+        """Store image in memcache
+        """
+        datas = None
+        prefix = settings.CACHES['default']['KEY_PREFIX']
+        prefix="calorine_"
+
+        key = store_image("http://lorempixel.com/40/20/")
+
+        mmc = memcache.Client(['127.0.0.1:11211'], debug=0)
+        datas = mmc.get("%s:1:%s_data" % (prefix, key.encode('ISO8859-1')))
+
+        self.assertEqual(key, "httplorempixelcom4020")
+        self.assertNotEqual(datas, None)

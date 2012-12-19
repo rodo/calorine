@@ -16,7 +16,7 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 """
-fill.py is used to fill the database with music files
+Utils for calorine.caro
 """
 import os
 import sys

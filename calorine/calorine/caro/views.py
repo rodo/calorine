@@ -164,6 +164,22 @@ def profile(request):
 
 
 @login_required
+def cover(request, cover):
+    """The profile wiew
+    """
+    from PIL import Image
+    from StringIO import StringIO
+    
+    data = cache.get("%s_data" % cover)
+    mode = cache.get("%s_mode" % cover)
+    size = cache.get("%s_size" % cover)
+
+    response = HttpResponse(mimetype='image/jpeg')
+    response.write(data)
+
+    return response
+
+@login_required
 def onair(request):
     """The onair view
     """

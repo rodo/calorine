@@ -2,18 +2,20 @@ from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from calorine.caro.views import LogList, HistoryList
-from calorine.caro.views import SongList, PlayList, profile
+from calorine.caro.views import SongList, PlayList
 from calorine.caro.views import PopsList
 from calorine.caro.views import StarList
 from calorine.caro.views import NeverList
 from calorine.caro.views import ArtistList
 from calorine.caro.views import UglyList
+from calorine.caro.views import profile, cover
 from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
                        url(r'^accounts/', include('registration.urls')),
                        url(r'^accounts/profile/$', 'calorine.caro.views.profile'),
+                       url(r'^cover/(?P<cover>.*)$', 'calorine.caro.views.cover'),
                        url(r'^onair.json$', 'calorine.caro.views.onair'),
                        url(r'^songs/$', login_required(SongList.as_view())),
                        url(r'^stars/$', login_required(StarList.as_view())),
