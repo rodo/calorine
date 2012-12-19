@@ -42,3 +42,4 @@ Debian
 ------
 
  * python-requests
+ * python-imaging
