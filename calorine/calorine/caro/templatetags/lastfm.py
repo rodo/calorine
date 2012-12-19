@@ -18,6 +18,7 @@
 #
 from django import template
 from calorine.utils.lastfm import get_picture
+from calorine.caro.utils import store_image
 from django.core.cache import cache
 from django.template.defaultfilters import slugify
 register = template.Library()
@@ -27,19 +28,22 @@ def picture(song):
     """
     Return a picture of the album containing this song
     """
-    key = 'song_image_{}_{}'.format(slugify(song.artist),
-                                    slugify(song.title))
     if song.cover == '' or song.cover is None:
+
+        key = 'song_image_{}_{}'.format(slugify(song.artist),
+                                        slugify(song.title))
+
         if cache.get(key):
             pict = cache.get(key)
         else:
             pict = get_picture(song.artist, song.title)
-            if pict:
-                cache.set(key, pict)
+            if pict:                
                 song.cover = pict
                 song.save()
+                #store_image(pict)
             else:
-                cache.set(key, "no pic")
+                pict = "http://lorempixel.com/64/64/animals/"
+        cache.set(key, pict)
         return {
             'picture': pict
             }
