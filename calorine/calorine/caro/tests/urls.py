@@ -65,10 +65,19 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
         """
         Songs never played url
         """
+        song = Song.objects.create(artist='Van Morrison',
+                                   album='The Healing Game',
+                                   title='Sometimes We Cry',
+                                   genre='Blues',
+                                   score=0,
+                                   played=0,
+                                   family=0,
+                                   global_score=0)
+
         client = Client()
         client.login(username='admin_search', password='admintest')
         response = client.get('/songs/never-played/')
-        self.assertContains(response, self.user.username, status_code=200)
+        self.assertContains(response, song.title, status_code=200)
 
     def test_songs_pops(self):
         """
@@ -163,7 +172,6 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
                                    score=0,
                                    family=0,
                                    global_score=0)
-        song.save()
 
         client = Client()
         client.login(username='admin_search', password='admintest')
