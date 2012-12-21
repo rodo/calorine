@@ -40,14 +40,12 @@ def picture(song):
             if pict:                
                 song.cover = pict
                 song.save()
-                #store_image(pict)
+                store_image(pict)
             else:
                 pict = "http://lorempixel.com/64/64/animals/"
-        cache.set(key, pict)
-        return {
-            'picture': pict
-            }
+            cache.set(key, pict)
+        return {'picture': pict}
     else:
-        return { 'picture': song.cover }
+        return {'picture': song.cover}
 
 register.inclusion_tag('picture.html')(picture)
