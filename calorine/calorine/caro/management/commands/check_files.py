@@ -36,4 +36,3 @@ class Command(BaseCommand):
                 self.stdout.write("%s is missing\n" % song.filename)
 
         self.stdout.write("%d songs are missing\n" % missing)
-
