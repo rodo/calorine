@@ -152,6 +152,24 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
         response = client.get('/songs/?q=van')
         self.assertContains(response, song.artist, status_code=200)
 
+    def test_search_artist(self):
+        """
+        Search a song by artist
+        """
+        song = Song.objects.create(artist='Van Morrison',
+                                   album='The Healing Game',
+                                   title='Sometimes We Cry',
+                                   genre='Blues',
+                                   score=0,
+                                   family=0,
+                                   global_score=0)
+        song.save()
+
+        client = Client()
+        client.login(username='admin_search', password='admintest')
+        response = client.get('/songs/?q=artist:van')
+        self.assertContains(response, song.artist, status_code=200)
+
     def test_playlist_inc(self):
         """
         Positive vote in playlist
