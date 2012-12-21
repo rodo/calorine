@@ -8,6 +8,7 @@ python-memcached
 whoosh
 mutagen
 requests
+Pillow
 #PIL : PIL failed on Debian to find jpeg libs
 # use python-imaging package or fix PIL
 #
