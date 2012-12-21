@@ -357,6 +357,17 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
                             global_score=0,
                             filename='/tmp/file_does_not_exists')
 
+        Song.objects.create(artist='File',
+                            album='Exists',
+                            title='''Andy's Chest''',
+                            genre='Glam rock',
+                            score=0,
+                            family=0,
+                            global_score=0,
+                            filename=path.join(path.dirname(__file__),
+                                               'samples',
+                                               'notagg.ogg'))
+
         attend = u'/tmp/file_does_not_exists is missing\n1 songs are missing\n'
 
         content = StringIO()
