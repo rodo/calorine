@@ -20,11 +20,8 @@ from django.core.cache import cache
 from requests import get
 from StringIO import StringIO
 from django.template.defaultfilters import slugify
+from PIL import Image
 
-try:
-    from PIL import Image
-except:
-    from Pillow import Image
 
 def store_image(url):
     """Store image in cache
