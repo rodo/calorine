@@ -355,9 +355,9 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
                             score=0,
                             family=0,
                             global_score=0,
-                            filename='/tmp/this_file_does_not_exists')
+                            filename='/tmp/file_does_not_exists')
 
-        attend = u'/tmp/this_file_does_not_exists is missing\n1 songs are missing\n'
+        attend = u'/tmp/file_does_not_exists is missing\n1 songs are missing\n'
 
         content = StringIO()
         call_command('check_files', stdout=content)
