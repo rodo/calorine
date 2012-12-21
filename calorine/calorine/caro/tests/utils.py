@@ -171,7 +171,6 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
 
         self.assertEqual(datas, attends)
 
-
     def test_store_image(self):
         """Store image in memcache
         """
