@@ -364,3 +364,27 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         content.seek(0)
 
         self.assertEqual(content.read(), attend)
+
+    def test_munin(self):
+        """
+        Management command for munin
+
+        """
+        Song.objects.all().delete()
+
+        Song.objects.create(artist='Lou Reed',
+                            album='Transformer',
+                            title='''Andy's Chest''',
+                            genre='Glam rock',
+                            score=0,
+                            family=0,
+                            global_score=0,
+                            filename='/tmp/this_file_does_not_exists')
+
+        attend = u'songs.value 1\nnotfound.value 0\nneverplayed.value 1\n'
+
+        content = StringIO()
+        call_command('munin', stdout=content)
+        content.seek(0)
+
+        self.assertEqual(content.read(), attend)
