@@ -98,6 +98,13 @@ class NeverList(ListView):
     template_name = 'songs.html'
     context_object_name = "songs"
 
+    def get_context_data(self, **kwargs):
+        context = super(NeverList, self).get_context_data(**kwargs)
+        for song in context['songs']:
+            if cache.get('song_{}'.format(song.pk)):
+                song.vote = True
+        return context
+
 
 class ArtistList(ListView):
     queryset = ArtistVote.objects.values(
