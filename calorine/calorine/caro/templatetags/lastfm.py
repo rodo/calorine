@@ -18,7 +18,7 @@
 #
 from django import template
 from calorine.utils.lastfm import get_picture
-from calorine.caro.utils import store_image
+from calorine.utils.store_image import store_image
 from django.core.cache import cache
 from django.template.defaultfilters import slugify
 register = template.Library()

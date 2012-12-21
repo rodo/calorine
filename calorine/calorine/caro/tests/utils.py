@@ -24,7 +24,8 @@ from django.conf import settings
 from django.test import TestCase
 from calorine.caro.utils import importdir, checkid3, sigfile
 from calorine.caro.utils import onair_datas
-from calorine.caro.utils import store_image
+#from calorine.caro.utils import store_image
+from calorine.utils.store_image import store_image
 from os import path
 from django.core.cache import cache
 import memcache
@@ -176,7 +177,6 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
         """
         datas = None
         prefix = settings.CACHES['default']['KEY_PREFIX']
-        prefix="calorine_"
 
         key = store_image("http://lorempixel.com/40/20/")
 
