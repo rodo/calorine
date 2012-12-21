@@ -22,6 +22,7 @@ Unit tests for Vote
 from django.contrib.auth.models import User
 from django.test import TestCase
 from calorine.caro.models import Vote
+from calorine.caro.models import ArtistVote
 from calorine.caro.models import Song
 
 
@@ -73,3 +74,23 @@ class VoteTests(TestCase):  # pylint: disable-msg=R0904
                                    vote=-1)
 
         self.assertTrue(vote.id > 0)
+
+    def test_create_artistempty(self):
+        """
+        Create a vote with a song with empty artist must
+        not create an ArtistVote
+        """
+        ArtistVote.objects.all().delete()
+        song = Song.objects.create(artist='',
+                                   album='The Healing Game',
+                                   title='Sometimes We Cry',
+                                   genre='Blues',
+                                   score=0,
+                                   family=0,
+                                   global_score=0)
+
+        Vote.objects.create(song=song,
+                            user=self.user,
+                            vote=1)
+
+        self.assertEqual(ArtistVote.objects.all().count(), 0)
