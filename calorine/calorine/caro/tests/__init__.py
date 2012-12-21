@@ -11,3 +11,4 @@ from calorine.caro.tests.search import SearchTests
 from calorine.caro.tests.utils import UtilsTests
 from calorine.caro.tests.urls import UrlsTests
 from calorine.caro.tests.profile import ProfileTests
+from calorine.caro.tests.views import ViewsTests
