@@ -37,7 +37,7 @@ def picture(song):
             pict = cache.get(key)
         else:
             pict = get_picture(song.artist, song.title)
-            if pict:                
+            if pict:
                 song.cover = pict
                 song.save()
                 #store_image(pict)
