@@ -8,6 +8,7 @@ python-memcached
 whoosh
 mutagen
 requests
+PIL
 #
 #  following package are for running tests
 #
