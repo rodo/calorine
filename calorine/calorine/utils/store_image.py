@@ -16,7 +16,7 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-from django.core.cache import cache=
+from django.core.cache import cache
 from requests import get
 from StringIO import StringIO
 from django.template.defaultfilters import slugify
