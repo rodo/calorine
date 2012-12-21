@@ -41,6 +41,16 @@ from calorine.caro.utils import clean_cache
 from django.contrib.auth.decorators import login_required
 
 
+def build_search_query(query):
+    """Buil the search query
+    """
+    if query.startswith('artist:'):
+        sqs = SearchQuerySet().filter(artist__contains=query[7:]).models(Song)
+    else:
+        sqs = SearchQuerySet().filter(content__contains=query).models(Song)
+    return sqs
+
+
 class SongList(ListView):
     paginate_by = 17
     template_name = "songs.html"
@@ -53,8 +63,7 @@ class SongList(ListView):
         qry_str = self.request.GET.get('q')
 
         if qry_str is not None:
-            srchqry = SearchQuerySet().filter(
-                content__contains=qry_str).models(Song)
+            srchqry = build_search_query(qry_str)
             results = [r.pk for r in srchqry]
             queryset = Song.objects.filter(pk__in=results)
         else:
@@ -167,7 +176,7 @@ def profile(request):
 def cover(request, cover):
     """The profile wiew
     """
-    
+
     data = cache.get("%s_data" % cover)
     mode = cache.get("%s_mode" % cover)
     size = cache.get("%s_size" % cover)
