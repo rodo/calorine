@@ -12,7 +12,7 @@ from calorine.caro.views import profile, cover
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = patterns('',                       
                        url(r'^accounts/', include('registration.urls')),
                        url(r'^accounts/profile/$', 'calorine.caro.views.profile'),
                        url(r'^cover/(?P<cover>.*)$', 'calorine.caro.views.cover'),
