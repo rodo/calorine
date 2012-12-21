@@ -167,8 +167,6 @@ def profile(request):
 def cover(request, cover):
     """The profile wiew
     """
-    from PIL import Image
-    from StringIO import StringIO
     
     data = cache.get("%s_data" % cover)
     mode = cache.get("%s_mode" % cover)

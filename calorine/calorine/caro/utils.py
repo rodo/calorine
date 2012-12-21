@@ -24,10 +24,6 @@ import hashlib
 import mutagen
 from calorine.caro.models import Logs
 from django.core.cache import cache
-from PIL import Image
-from requests import get
-from StringIO import StringIO
-from django.template.defaultfilters import slugify
 
 
 def clean_cache(user_id, song_id, ple_id):
