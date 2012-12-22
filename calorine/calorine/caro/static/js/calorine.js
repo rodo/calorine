@@ -16,7 +16,9 @@ function onair() {
 
               text = text + " " + data.artist;
               text = text + " - " + data.title;
-              text = text + " - " + data.album;
+	      if (data.album) {
+		  text = text + " - " + data.album;		  
+	      }
 
 	      $("#onair").html(text);
 	  });
