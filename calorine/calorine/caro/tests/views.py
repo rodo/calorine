@@ -21,13 +21,7 @@ Unit tests for urls in caro
 """
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
-from django.core.cache import cache
-from datetime import datetime
 from calorine.caro.models import Song
-from calorine.caro.models import Vote
-from calorine.caro.models import PlaylistEntry
-from django.core.management import call_command
-from calorine.caro.utils import clean_cache
 
 
 class ViewsTests(TestCase):  # pylint: disable-msg=R0904
