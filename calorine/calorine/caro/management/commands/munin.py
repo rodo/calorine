@@ -29,7 +29,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         notfound = Song.objects.filter(score=-1000).count()
         neverplayed = Song.objects.filter(played=0).count()
-        total = Song.objects.all().count()
-        self.stdout.write("songs.value %s\n" % total)
+        playedone = Song.objects.filter(played=1).count()
+        playedmore = Song.objects.filter(played__gt=1).count()
         self.stdout.write("notfound.value %s\n" % notfound)
         self.stdout.write("neverplayed.value %s\n" % neverplayed)
+        self.stdout.write("playedone.value %s\n" % playedone)
+        self.stdout.write("playedmore.value %s\n" % playedmore)
