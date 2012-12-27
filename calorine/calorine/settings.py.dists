@@ -39,6 +39,10 @@ CACHES = {
     }
 }
 
+import djcelery
+djcelery.setup_loader()
+#
+BROKER_URL = 'amqp://guest:guest@localhost:5672/'
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -149,6 +153,7 @@ INSTALLED_APPS = (
     'django.contrib.flatpages',
     'registration',
     'haystack',
+    'djcelery',
     'calorine.caro',
 )
 
