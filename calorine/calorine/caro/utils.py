@@ -23,6 +23,7 @@ import sys
 import hashlib
 import mutagen
 from calorine.caro.models import Logs
+from django.conf import settings
 from django.core.cache import cache
 from calorine.caro.models import Song
 from os import path, fchmod
@@ -190,7 +191,7 @@ def createsong(tags, sig, fpath):
 def move_file(path_from, filename):
     """Move file from upload_dir to final dest
     """
-    finaldir = '/tmp/final'
+    finaldir = settings['UPLOAD_DEST_DIR']
 
     path_to = path.join(finaldir, filename)
 
