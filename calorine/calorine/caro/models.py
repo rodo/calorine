@@ -150,3 +150,15 @@ class Stream(models.Model):
     Streams
     """
     url = models.URLField()
+
+
+class Upload(models.Model):
+    """
+    A file uploaded
+
+    """
+    uuid = models.CharField(max_length=64)
+    path = models.CharField(max_length=30)
+    filename = models.CharField(max_length=100)
+    content_type = models.CharField(max_length=30)
+    date_upload = models.DateTimeField(auto_now_add=True)

@@ -23,6 +23,7 @@ from calorine.caro.models import Song
 from calorine.caro.utils import importdir, checkid3, sigfile
 from os.path import abspath, isdir
 from calorine.utils.lastfm import get_tags
+from calorine.caro.utils import importsong
 
 
 class Command(BaseCommand):
@@ -31,6 +32,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         exists = 0
+        errors = 0
         update = 0
         insert = 0
 
@@ -43,25 +45,22 @@ class Command(BaseCommand):
             return "path %s does not exists\n" % dirpath
 
         for fpath in importdir(dirpath):
-            tags = checkid3(fpath)
-            if tags is not None:
-                sig = sigfile(fpath)
-                exsong = Song.objects.filter(uniq=sig)
+            result = importsong(fpath)
+            if result.startswith('[I]'):
+                insert += 1
+            elif result.startswith('[U]'):
+                update += 1
+            elif result.startswith('[X]'):
+                exists += 1
+            else:
+                errors += 1
 
-                if len(exsong) > 0:
-                    if exsong[0].filename != fpath:
-                        self._updatesong(exsong[0], fpath)
-                        update += 1
-                    else:
-                        self._donothing(exsong[0])
-                        exists += 1
-                else:
-                    self._createsong(tags, sig, fpath)
-                    insert += 1
+            self.stdout.write(result)
 
         self.stdout.write("%d songs already present db\n" % exists)
         self.stdout.write("%d songs path updated in db\n" % update)
         self.stdout.write("%d songs inserted in db\n" % insert)
+        self.stdout.write("%d songs in error\n" % errors)
 
     def _donothing(self, song):
         """Do nothing but report
@@ -77,32 +76,3 @@ class Command(BaseCommand):
                                                   song.album,
                                                   song.title))
 
-    def _updatesong(self, song, fpath):
-        """Update the path if file moved
-        """
-        song.filename = fpath
-        song.save()
-        self.stdout.write("[U] %s\n" % song.title)
-
-    def _createsong(self, tags, sig, fpath):
-        """Create a new song in db
-        """
-
-        song = Song.objects.create(artist=tags['artist'],
-                                   album=tags['album'],
-                                   title=tags['title'],
-                                   genre=tags['genre'],
-                                   score=0,
-                                   uniq=sig,
-                                   global_score=0,
-                                   filename=fpath)
-        if hasattr(song, 'title') and song.title is not None:
-            try:
-                song.genre += ','.join(get_tags
-                                       (song.artist,
-                                        song.title)
-                                       )
-            except:
-                pass
-        song.save()
-        self.stdout.write("[I] %s\n" % song.title)

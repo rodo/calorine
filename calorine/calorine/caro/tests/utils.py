@@ -184,3 +184,18 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
 
         self.assertEqual(key, "httplorempixelcom4020")
         self.assertNotEqual(datas, None)
+
+    def test_importsongs(self):
+        """
+        importsongs
+        """
+        fpath = path.join(path.dirname(__file__),
+                          'samples',
+                          'first',
+                          'test.ogg')
+
+        from calorine.caro.utils import importsong
+        result = importsong(fpath)
+
+        self.assertTrue(result.startswith('['))
+

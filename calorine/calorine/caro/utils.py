@@ -24,6 +24,14 @@ import hashlib
 import mutagen
 from calorine.caro.models import Logs
 from django.core.cache import cache
+from calorine.caro.models import Song
+from os import path, fchmod
+import logging
+import shutil
+
+
+# Get an instance of a logger
+logger = logging.getLogger('django')
 
 
 def clean_cache(user_id, song_id, ple_id):
@@ -52,7 +60,8 @@ def checkid3(filename):
     try:
         mdat = mutagen.File(filename, easy=True)
     except:
-        pass
+        msg = "mutagen failed %s" % sys.exc_value
+        Logs.objects.create(filename=filename, message=msg)
 
     if mdat is not None:
         try:
@@ -125,3 +134,67 @@ def importdir(path):
                 paths.append(os.path.join(path, filename.strip()))
 
     return paths
+
+
+def importsong(fpath):
+    """Import a file as a song
+    """
+    result = ""
+    tags = checkid3(fpath)
+    if tags is not None:
+        sig = sigfile(fpath)
+        exsong = Song.objects.filter(uniq=sig)
+
+        if len(exsong) > 0:
+            if exsong[0].filename != fpath:
+                result = updatesong(exsong[0], fpath)
+            else:
+                result = "[X] %s" % exsong[0].title
+        else:
+            result = createsong(tags, sig, fpath)
+    else:
+        logger.error('No tags found in [%s]' % fpath)
+
+    return result
+
+def updatesong(song, fpath):
+    """Update the path if file moved
+    """
+    song.filename = fpath
+    song.save()
+    return "[U] %s\n" % song.title
+
+def createsong(tags, sig, fpath):
+    """Create a new song in db
+    """
+
+    song = Song.objects.create(artist=tags['artist'],
+                               album=tags['album'],
+                               title=tags['title'],
+                               genre=tags['genre'],
+                               score=0,
+                               uniq=sig,
+                               global_score=0,
+                               filename=fpath)
+    if hasattr(song, 'title') and song.title is not None:
+        try:
+            song.genre += ','.join(get_tags
+                                   (song.artist,
+                                    song.title)
+                                   )
+        except:
+            pass
+    song.save()
+    return "[I] %s\n" % song.title
+
+def move_file(path_from, filename):
+    """Move file from upload_dir to final dest
+    """
+    finaldir = '/tmp/final'
+
+    path_to = path.join(finaldir, filename)
+
+    if not path.exists(path_to):
+        shutil.copyfile(path_from, path_to)
+
+    return path_to

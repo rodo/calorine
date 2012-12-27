@@ -15,6 +15,7 @@ admin.autodiscover()
 urlpatterns = patterns('',                       
                        url(r'^accounts/', include('registration.urls')),
                        url(r'^accounts/profile/$', 'calorine.caro.views.profile'),
+                       url(r'^upload/$', 'calorine.caro.views.upload'),
                        url(r'^cover/(?P<cover>.*)$', 'calorine.caro.views.cover'),
                        url(r'^onair.json$', 'calorine.caro.views.onair'),
                        url(r'^songs/$', login_required(SongList.as_view())),

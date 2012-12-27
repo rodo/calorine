@@ -29,15 +29,18 @@ from datetime import datetime
 from django.views.generic import ListView
 from django.core.cache import cache
 from haystack.query import SearchQuerySet
+from uuid import uuid4
 from calorine.caro.models import Song
 from calorine.caro.models import Logs
 from calorine.caro.models import PlaylistEntry
 from calorine.caro.models import HistoryEntry
 from calorine.caro.models import Vote
+from calorine.caro.models import Upload
 from calorine.caro.models import ArtistVote
 from calorine.caro.models import Stream
 from calorine.caro.utils import onair_datas
 from calorine.caro.utils import clean_cache
+from calorine.caro.tasks import import_upload
 from django.contrib.auth.decorators import login_required
 
 
@@ -175,7 +178,33 @@ def profile(request):
                   template_name,
                   {'songs': songs,
                    'ples': ples,
-                   'streams': streams
+                   'streams': streams,
+                   'uuid': str(uuid4()),
+                   })
+
+
+@login_required
+def upload(request):
+    """Upload songs
+    """
+    uploads = Upload.objects.all().order_by('-pk')
+    filename = '%s' % (request.POST['songname.name'])
+    uuid = request.GET['X-Progress-ID']
+    upl = Upload.objects.create(uuid=uuid,
+                                path=request.POST['songname.path'],
+                                filename=filename,
+                                content_type=request.POST['songname.content_type'],
+                                )
+
+    import_upload.delay(uuid)
+
+    return render(request,
+                  'upload.html',                  
+                  {'uploads': uploads,
+                   'path': request.POST['songname.path'],
+                   'filename': request.POST['songname.name'],
+                   'type': request.POST['songname.content_type'],
+                   'uuid': str(uuid4())
                    })
 
 
