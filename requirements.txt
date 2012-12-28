@@ -9,6 +9,7 @@ whoosh
 mutagen
 requests
 Pillow
+django-celery=2.5.3
 #PIL : PIL failed on Debian to find jpeg libs
 # use python-imaging package or fix PIL
 #
