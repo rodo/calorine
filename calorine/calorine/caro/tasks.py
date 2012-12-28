@@ -37,7 +37,7 @@ def import_upload(uuid):
 
     upload = get_object_or_404(Upload, uuid=uuid)
 
-    params = { 'X-Progress-ID': uuid }
+    params = {'X-Progress-ID': uuid}
 
     state = 'starting'
     counter = 1
@@ -46,7 +46,7 @@ def import_upload(uuid):
         counter += 1
         prg = requests.get(url, params=params, timeout=1).content
         datas = json.loads(prg)
-        
+
         syslog.syslog('state: %s for %s' % (datas['state'], uuid))
         if datas['state'] == 'done':
             state = 'done'
@@ -55,4 +55,3 @@ def import_upload(uuid):
         sleep(1)
 
     return datas
-

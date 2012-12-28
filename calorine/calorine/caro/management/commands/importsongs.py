@@ -19,10 +19,8 @@
 Lookup for a song and to playlist
 """
 from django.core.management.base import BaseCommand
-from calorine.caro.models import Song
-from calorine.caro.utils import importdir, checkid3, sigfile
+from calorine.caro.utils import importdir
 from os.path import abspath, isdir
-from calorine.utils.lastfm import get_tags
 from calorine.caro.utils import importsong
 
 
@@ -61,18 +59,3 @@ class Command(BaseCommand):
         self.stdout.write("%d songs path updated in db\n" % update)
         self.stdout.write("%d songs inserted in db\n" % insert)
         self.stdout.write("%d songs in error\n" % errors)
-
-    def _donothing(self, song):
-        """Do nothing but report
-        """
-        if song.genre == "":
-            try:
-                song.genre = ','.join(get_tags(song.artist, song.title))
-                song.save()
-            except TypeError:
-                pass
-
-        self.stdout.write("[.] %s - %s - %s\n" % (song.artist,
-                                                  song.album,
-                                                  song.title))
-

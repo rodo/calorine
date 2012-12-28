@@ -199,7 +199,7 @@ def upload(request):
     import_upload.delay(uuid)
 
     return render(request,
-                  'upload.html',                  
+                  'upload.html',
                   {'uploads': uploads,
                    'path': request.POST['songname.path'],
                    'filename': request.POST['songname.name'],
@@ -212,7 +212,6 @@ def upload(request):
 def cover(request, cover):
     """The profile wiew
     """
-
     data = cache.get("%s_data" % cover)
     mode = cache.get("%s_mode" % cover)
     size = cache.get("%s_size" % cover)
@@ -224,6 +223,7 @@ def cover(request, cover):
     response.write(img)
 
     return response
+
 
 @login_required
 def onair(request):

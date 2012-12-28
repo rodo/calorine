@@ -19,16 +19,17 @@
 Utils for calorine.caro
 """
 import os
+import logging
+import shutil
 import sys
 import hashlib
 import mutagen
-from calorine.caro.models import Logs
 from django.conf import settings
 from django.core.cache import cache
+from calorine.caro.models import Logs
+from calorine.utils.lastfm import get_tags
 from calorine.caro.models import Song
-from os import path, fchmod
-import logging
-import shutil
+
 
 
 # Get an instance of a logger
@@ -158,12 +159,14 @@ def importsong(fpath):
 
     return result
 
+
 def updatesong(song, fpath):
     """Update the path if file moved
     """
     song.filename = fpath
     song.save()
     return "[U] %s\n" % song.title
+
 
 def createsong(tags, sig, fpath):
     """Create a new song in db
@@ -179,21 +182,19 @@ def createsong(tags, sig, fpath):
                                filename=fpath)
     if hasattr(song, 'title') and song.title is not None:
         try:
-            song.genre += ','.join(get_tags
-                                   (song.artist,
-                                    song.title)
-                                   )
+            song.genre += ','.join(get_tags(song.artist, song.title))
         except:
             pass
     song.save()
     return "[I] %s\n" % song.title
+
 
 def move_file(path_from, filename):
     """Move file from upload_dir to final dest
     """
     finaldir = settings['UPLOAD_DEST_DIR']
 
-    path_to = path.join(finaldir, filename)
+    path_to = os.path.join(finaldir, filename)
 
     if not path.exists(path_to):
         shutil.copyfile(path_from, path_to)
