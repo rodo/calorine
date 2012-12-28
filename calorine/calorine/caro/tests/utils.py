@@ -85,15 +85,6 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
                                    'missing-album.ogg'))
         self.assertEqual(datas, None)
 
-    def test_checkid3_wrongunicode(self):
-        """
-        album id3 is missing
-        """
-        alpha = unicode(u"tété")
-        beta = alpha.encode('iso8859-1')
-        datas = checkid3(beta)
-        self.assertEqual(datas, None)
-
     def test_sigfile(self):
         """
         Sigfile
