@@ -10,7 +10,7 @@ mutagen
 requests
 Pillow
 celery<=3.0
-django-celery==2.5.3
+django-celery==2.5.5
 #PIL : PIL failed on Debian to find jpeg libs
 # use python-imaging package or fix PIL
 #
