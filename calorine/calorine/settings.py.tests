@@ -1,3 +1,4 @@
+# -*- mode: python -*-
 # Django settings for calorine project.
 
 DEBUG = True
@@ -25,14 +26,22 @@ LASTFM_API_KEY = "9cf47d9fa4689d0d50db43503a28e48f"
 #
 CACHES = {
     'default': {
-        #'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
         'LOCATION': '127.0.0.1:11211',
 	'KEY_PREFIX': 'calorine_jenkins_',
     }
 }
 
-
+#
+# Celery configuration
+#
+import djcelery
+djcelery.setup_loader()
+#
+BROKER_URL = 'amqp://guest:guest@localhost:5672/'
+#
+#
+#
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -143,6 +152,7 @@ INSTALLED_APPS = (
     'django_nose',
     'registration',
     'haystack',
+    'djcelery',
     'calorine.caro',
 )
 
