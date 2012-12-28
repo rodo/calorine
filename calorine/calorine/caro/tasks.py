@@ -24,6 +24,7 @@ from calorine.caro.utils import move_file
 from django.shortcuts import get_object_or_404
 from time import sleep
 from calorine.caro.utils import importsong
+from calorine.caro.utils import get_tags
 import syslog
 import json
 import requests
@@ -55,3 +56,16 @@ def import_upload(uuid):
         sleep(1)
 
     return datas
+
+
+@task()
+def addgenre(song):
+    """Import uploaded files
+    """
+    try:
+        song.genre += ','.join(get_tags(song.artist, song.title))
+        song.save()
+    except:
+        pass
+
+    return 0
