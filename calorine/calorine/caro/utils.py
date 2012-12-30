@@ -192,7 +192,7 @@ def createsong(tags, sig, fpath):
 def move_file(path_from, filename):
     """Move file from upload_dir to final dest
     """
-    finaldir = settings['UPLOAD_DEST_DIR']
+    finaldir = settings.UPLOAD_DEST_DIR
 
     path_to = os.path.join(finaldir, filename)
 
