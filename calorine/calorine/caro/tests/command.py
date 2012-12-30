@@ -410,3 +410,25 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         content.seek(0)
 
         self.assertEqual(content.read(), attend)
+
+    def test_lastfm(self):
+        """
+        Management command that add genre tag on song by querying lastfm API
+        """
+        Song.objects.all().delete()
+
+        song = Song.objects.create(artist='Lou Reed',
+                                   album='Transformer',
+                                   title='''song title''',
+                                   genre='',
+                                   score=0,
+                                   family=0,
+                                   global_score=0)
+
+        content = StringIO()
+        call_command('lastfm', stdout=content)
+        content.seek(0)
+
+        attend ='1 song title\n'
+
+        self.assertEqual(content.read(), attend)
