@@ -44,7 +44,7 @@ def import_upload(uuid):
     state = 'starting'
     counter = 1
 
-    while (counter < 10) and (state != 'done'):
+    while (counter < 240) and (state != 'done'):
         counter += 1
         prg = requests.get(url, params=params, timeout=1).content
         datas = json.loads(prg)
