@@ -21,6 +21,7 @@ The tasks
 from celery.task import task
 from calorine.caro.models import Upload
 from calorine.caro.utils import move_file
+from calorine.caro.utils import mp3ogg
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from time import sleep
@@ -52,7 +53,11 @@ def import_upload(uuid):
         if datas['state'] == 'done':
             state = 'done'
             newpath = move_file(upload.path, upload.filename)
+            oggname = mp3ogg(fname)
             upload.status = 'uploaded'
+            upload.save()
+            importsong(oggname)
+            upload.status = 'done'
             upload.save()
         sleep(1)
 

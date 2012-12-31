@@ -29,11 +29,9 @@ from django.core.cache import cache
 from calorine.caro.models import Logs
 from calorine.utils.lastfm import get_tags
 from calorine.caro.models import Song
+import subprocess
 
 
-
-# Get an instance of a logger
-logger = logging.getLogger('django')
 
 
 def clean_cache(user_id, song_id, ple_id):
@@ -141,6 +139,9 @@ def importdir(path):
 def importsong(fpath):
     """Import a file as a song
     """
+    # Get an instance of a logger
+    logger = logging.getLogger('django')
+
     result = ""
     tags = checkid3(fpath)
     if tags is not None:
@@ -200,3 +201,51 @@ def move_file(path_from, filename):
         shutil.copyfile(path_from, path_to)
 
     return path_to
+
+
+def readtags(fname):
+    """Read mp3 IDS Tags
+
+    Return array with tags
+    """
+    datas = {}
+    fields = ['album', 'artist', 'title', 'genre', 'date', 'tracknumber', 'year']
+    muts = mutagen.File(fname, easy=True)
+    for fld in fields:
+        if not muts.has_key(fld):
+            datas[fld] = ''
+        else:
+            data = muts[fld]
+            datas[fld] = data[0]
+    return datas
+
+def mp3ogg(fname):
+    """
+    Encode mp3 files to ogg vorbis
+    """
+    __OGGENC__ = "/usr/bin/oggenc"
+    __MPG123__ = "/usr/bin/mpg123"
+
+    oggname = "%s.ogg" % fname[:-4]
+
+    datas = readtags(fname)
+    mpg = subprocess.Popen([__MPG123__,
+                            "-w",
+                            "-",
+                            fname],
+                           stdout=subprocess.PIPE)
+    
+    command = [__OGGENC__,
+               "--artist", datas['artist'],
+               "--title", datas['title'],
+               "--album", datas['album'],
+               "--genre", datas['genre'],
+               "--date", datas['date'],
+               "--tracknum", datas['tracknumber'],
+               "-o", oggname,
+               "-"]
+
+    ogg = subprocess.Popen(command,
+                           stdin=mpg.stdout, stdout=subprocess.PIPE)
+    output = ogg.communicate()[0]
+    return oggname
