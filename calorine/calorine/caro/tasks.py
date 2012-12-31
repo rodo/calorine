@@ -21,6 +21,7 @@ The tasks
 from celery.task import task
 from calorine.caro.models import Upload
 from calorine.caro.utils import move_file
+from django.conf import settings
 from django.shortcuts import get_object_or_404
 from time import sleep
 from calorine.caro.utils import importsong
@@ -34,7 +35,7 @@ def import_upload(uuid):
     """Import uploaded files
     """
 
-    url = 'http://127.0.0.1:81/progress'
+    url = settings.NGINX_PROGRESS_URL
 
     upload = get_object_or_404(Upload, uuid=uuid)
 

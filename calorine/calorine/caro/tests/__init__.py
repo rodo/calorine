@@ -13,3 +13,4 @@ from calorine.caro.tests.urls import UrlsTests
 from calorine.caro.tests.profile import ProfileTests
 from calorine.caro.tests.views import ViewsTests
 from calorine.caro.tests.templatetags import TemplateTagsTests
+from calorine.caro.tests.tasks import TasksTests
