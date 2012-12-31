@@ -54,6 +54,8 @@ def import_upload(uuid):
             state = 'done'
             newpath = move_file(upload.path, upload.filename)
             importsong(newpath)
+            upload.status = 'done'
+            upload.save()
         sleep(1)
 
     return datas
