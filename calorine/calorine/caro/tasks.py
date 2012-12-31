@@ -30,8 +30,37 @@ import syslog
 import json
 import requests
 
+
 @task()
 def import_upload(uuid):
+    """Import uploaded files
+    """
+    url = settings.NGINX_PROGRESS_URL
+    
+    upload = get_object_or_404(Upload, uuid=uuid)
+
+    params = {'X-Progress-ID': uuid}
+
+    state = 'starting'
+    counter = 1
+
+    while (counter < 240) and (state != 'done'):
+        counter += 1
+        prg = requests.get(url, params=params, timeout=1).content
+        datas = json.loads(prg)
+
+        if datas['state'] == 'done':
+            state = 'done'
+            newpath = move_file(upload.path, upload.filename)
+            upload.status = 'uploaded'
+            upload.save()
+        sleep(1)
+
+    return datas
+
+
+@task()
+def store_upload(uuid):
     """Import uploaded files
     """
 
@@ -49,7 +78,6 @@ def import_upload(uuid):
         prg = requests.get(url, params=params, timeout=1).content
         datas = json.loads(prg)
 
-        syslog.syslog('state: %s for %s' % (datas['state'], uuid))
         if datas['state'] == 'done':
             state = 'done'
             newpath = move_file(upload.path, upload.filename)

@@ -41,6 +41,7 @@ from calorine.caro.models import Stream
 from calorine.caro.utils import onair_datas
 from calorine.caro.utils import clean_cache
 from calorine.caro.tasks import import_upload
+from calorine.caro.tasks import store_upload
 from django.contrib.auth.decorators import login_required
 
 
@@ -196,7 +197,11 @@ def upload(request):
                                 content_type=request.POST['songname.content_type'])
 
     if request.POST['songname.content_type'] == 'video/ogg':
+        store_upload.delay(uuid)
+
+    if request.POST['songname.content_type'] == 'audio/mpeg':
         import_upload.delay(uuid)
+
 
     return render(request,
                   'upload.html',
