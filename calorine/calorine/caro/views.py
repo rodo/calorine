@@ -193,10 +193,10 @@ def upload(request):
     upl = Upload.objects.create(uuid=uuid,
                                 path=request.POST['songname.path'],
                                 filename=filename,
-                                content_type=request.POST['songname.content_type'],
-                                )
+                                content_type=request.POST['songname.content_type'])
 
-    import_upload.delay(uuid)
+    if request.POST['songname.content_type'] == 'video/ogg':
+        import_upload.delay(uuid)
 
     return render(request,
                   'upload.html',
