@@ -53,7 +53,7 @@ def import_upload(uuid):
         if datas['state'] == 'done':
             state = 'done'
             newpath = move_file(upload.path, upload.filename)
-            oggname = mp3ogg(fname)
+            oggname = mp3ogg(newpath)
             upload.status = 'uploaded'
             upload.save()
             importsong(oggname)
