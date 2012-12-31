@@ -196,7 +196,7 @@ def move_file(path_from, filename):
 
     path_to = os.path.join(finaldir, filename)
 
-    if not path.exists(path_to):
+    if not os.path.exists(path_to):
         shutil.copyfile(path_from, path_to)
 
     return path_to
