@@ -226,10 +226,9 @@ def mp3ogg(fname):
     """
     Encode mp3 files to ogg vorbis
     """
-    logger = logging.getLogger('calorine')
+    logger = logging.getLogger(__name__)
     oggname = "%s.ogg" % fname[:-4]
-    logger.info("encode %s" % fname)
-    logger.info(" %s" % __name__)
+    logger.info("(mp3ogg) encode [%s]" % fname)
 
     datas = readtags(fname)
     mpg = subprocess.Popen([settings.MPG123,
