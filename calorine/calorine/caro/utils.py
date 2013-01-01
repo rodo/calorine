@@ -190,6 +190,8 @@ def createsong(tags, sig, fpath):
 
 def move_file(path_from, filename):
     """Move file from upload_dir to final dest
+
+    path_from is an nginx datas
     """
     finaldir = settings.UPLOAD_DEST_DIR
 
@@ -225,9 +227,10 @@ def mp3ogg(fname):
     """
     Encode mp3 files to ogg vorbis
     """
-    logger = logging.getLogger(__name__)
+    logger = logging.getLogger('calorine')
     oggname = "%s.ogg" % fname[:-4]
     logger.info("encode %s" % fname)
+    logger.info(" %s" % __name__)
 
     datas = readtags(fname)
     mpg = subprocess.Popen([settings.MPG123,
@@ -268,6 +271,7 @@ def mp4ogg(fname):
     """
     Encode mp4 files to ogg vorbis
     """
+    logger = logging.getLogger('calorine')
     logger.info("(mp4ogg) encode %s" % fname)
     oggname = "%s.oga" % fname[:-4]
 
