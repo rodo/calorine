@@ -225,8 +225,9 @@ def mp3ogg(fname):
     """
     Encode mp3 files to ogg vorbis
     """
-
+    logger = logging.getLogger(__name__)
     oggname = "%s.ogg" % fname[:-4]
+    logger.info("encode %s" % fname)
 
     datas = readtags(fname)
     mpg = subprocess.Popen([settings.MPG123,
@@ -250,11 +251,12 @@ def mp3ogg(fname):
                                stdin=mpg.stdout,
                                stdout=subprocess.PIPE)
         output = ogg.communicate()[0]
-        logger = logging.getLogger(__name__)
-        logger.debug(output)
         result = oggname
     except:
         result = None
+
+    
+    logger.debug(output)
 
     if result:
         os.unlink(fname)
@@ -266,6 +268,7 @@ def mp4ogg(fname):
     """
     Encode mp4 files to ogg vorbis
     """
+    logger.info("(mp4ogg) encode %s" % fname)
     oggname = "%s.oga" % fname[:-4]
 
     try:
