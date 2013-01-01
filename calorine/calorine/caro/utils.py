@@ -32,8 +32,6 @@ from calorine.caro.models import Song
 import subprocess
 
 
-
-
 def clean_cache(user_id, song_id, ple_id):
     """Remove data in cache
     """
@@ -209,15 +207,18 @@ def readtags(fname):
     Return array with tags
     """
     datas = {}
-    fields = ['album', 'artist', 'title', 'genre', 'date', 'tracknumber', 'year']
+    fields = ['album', 'artist', 'title', 'genre', 'date', 'tracknumber',
+              'year']
     muts = mutagen.File(fname, easy=True)
     for fld in fields:
-        if not muts.has_key(fld):
-            datas[fld] = ''
-        else:
+        if fld in muts:
             data = muts[fld]
             datas[fld] = data[0]
+        else:
+            datas[fld] = ''
+
     return datas
+
 
 def mp3ogg(fname):
     """
@@ -234,7 +235,7 @@ def mp3ogg(fname):
                             "-",
                             fname],
                            stdout=subprocess.PIPE)
-    
+
     command = [__OGGENC__,
                "--artist", datas['artist'],
                "--title", datas['title'],
@@ -245,7 +246,48 @@ def mp3ogg(fname):
                "-o", oggname,
                "-"]
 
-    ogg = subprocess.Popen(command,
-                           stdin=mpg.stdout, stdout=subprocess.PIPE)
-    output = ogg.communicate()[0]
-    return oggname
+    try:
+        ogg = subprocess.Popen(command,stdin=mpg.stdout, stdout=subprocess.PIPE)
+        output = ogg.communicate()[0]
+        result = oggname
+    except:
+        result = None
+
+    if result:
+        os.unlink(fname)
+
+    return result
+
+
+def mp4ogg(fname):
+    """
+    Encode mp4 files to ogg vorbis
+    """
+    ffmpeg2theora = '/usr/bin/ffmpeg2theora'
+
+    oggname = "%s.ogg" % fname[:-4]
+
+    try:
+        subprocess.call([ffmpeg2theora, fname])
+        result = oggname
+    except:
+        result = None
+
+    if result:
+        os.unlink(fname)
+
+    return result
+
+
+def recode(fname, content_type):
+    """Recode files
+    """
+    result = None
+
+    if content_type == 'audio/mpeg':
+        result = mp3ogg(fname)
+
+    if content_type == 'audio/mp4':
+        result = mp4ogg(fname)
+
+    return result
