@@ -18,18 +18,18 @@
 """
 The tasks
 """
+from django.conf import settings
+from django.shortcuts import get_object_or_404
+from time import sleep
+import json
+import requests
+import logging
 from celery.task import task
 from calorine.caro.models import Upload
 from calorine.caro.utils import move_file
 from calorine.caro.utils import recode
-from django.conf import settings
-from django.shortcuts import get_object_or_404
-from time import sleep
 from calorine.caro.utils import importsong
 from calorine.caro.utils import get_tags
-import syslog
-import json
-import requests
 
 
 @task()
@@ -45,54 +45,49 @@ def import_upload(uuid):
     state = 'starting'
     counter = 1
 
-    while (counter < 240) and (state != 'done'):
+    while (counter < 480) and (state != 'done'):
         counter += 1
         prg = requests.get(url, params=params, timeout=1).content
         datas = json.loads(prg)
 
         if datas['state'] == 'done':
             state = 'done'
-            newpath = move_file(upload.path, upload.filename)
-            oggname = recode(newpath, upload.content_type)
-            upload.status = 'uploaded'
-            upload.save()
-            importsong(oggname)
-            upload.status = 'done'
-            upload.save()
+            store_upload(upload)
         sleep(1)
 
     return datas
 
 
-@task()
-def store_upload(uuid):
-    """Import uploaded files
+def store_upload(upload):
+    """Store the file uploaded
     """
+    oggname = None
+    newpath = move_file(upload.path, upload.filename)
+    if upload.content_type == 'audio/mpeg':
+        oggname = convert_upload(newpath, upload)
+    elif upload.content_type == 'video/ogg':
+        oggname = newpath
+    else:
+        logger = logging.getLogger(__name__)
+        logger.info("(store_upload) wrong type for %s %s" % (newpath,
+                                                             upload.content_type))
+        upload.status = 'bad format'
+        upload.save()
 
-    url = settings.NGINX_PROGRESS_URL
+    if oggname is not None:
+        importsong(oggname)
+        upload.status = 'done'
+        upload.save()
+    return 0
 
-    upload = get_object_or_404(Upload, uuid=uuid)
 
-    params = {'X-Progress-ID': uuid}
-
-    state = 'starting'
-    counter = 1
-
-    while (counter < 240) and (state != 'done'):
-        counter += 1
-        prg = requests.get(url, params=params, timeout=1).content
-        datas = json.loads(prg)
-
-        if datas['state'] == 'done':
-            state = 'done'
-            newpath = move_file(upload.path, upload.filename)
-            importsong(newpath)
-            upload.status = 'done'
-            upload.save()
-        sleep(1)
-
-    return datas
-
+def convert_upload(newpath, upload):
+    """Convert non ogg files
+    """
+    oggname = recode(newpath, upload.content_type)
+    upload.status = 'uploaded'
+    upload.save()
+    return oggname
 
 @task()
 def addgenre(song):
