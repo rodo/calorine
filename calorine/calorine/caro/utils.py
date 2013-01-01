@@ -138,7 +138,7 @@ def importsong(fpath):
     """Import a file as a song
     """
     # Get an instance of a logger
-    logger = logging.getLogger('django')
+    logger = logging.getLogger(__name__)
 
     result = ""
     tags = checkid3(fpath)
@@ -197,6 +197,7 @@ def move_file(path_from, filename):
 
     if not os.path.exists(path_to):
         shutil.copyfile(path_from, path_to)
+        os.unlink(path_from)
 
     return path_to
 
@@ -245,8 +246,12 @@ def mp3ogg(fname):
                "-"]
 
     try:
-        ogg = subprocess.Popen(command,stdin=mpg.stdout, stdout=subprocess.PIPE)
+        ogg = subprocess.Popen(command,
+                               stdin=mpg.stdout,
+                               stdout=subprocess.PIPE)
         output = ogg.communicate()[0]
+        logger = logging.getLogger(__name__)
+        logger.debug(output)
         result = oggname
     except:
         result = None
