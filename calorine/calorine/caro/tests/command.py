@@ -402,7 +402,6 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
                             global_score=0,
                             filename='/tmp/this_file_does_not_exists')
 
-
         attend = u'notfound.value 0\nneverplayed.value 1\nplayedone.value 1\nplayedmore.value 0\ntotal.value 2\n'
 
         content = StringIO()
@@ -417,18 +416,18 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         """
         Song.objects.all().delete()
 
-        song = Song.objects.create(artist='Lou Reed',
-                                   album='Transformer',
-                                   title='''song title''',
-                                   genre='',
-                                   score=0,
-                                   family=0,
-                                   global_score=0)
+        Song.objects.create(artist='Lou Reed',
+                            album='Transformer',
+                            title='''song title''',
+                            genre='',
+                            score=0,
+                            family=0,
+                            global_score=0)
 
         content = StringIO()
         call_command('lastfm', stdout=content)
         content.seek(0)
 
-        attend ='1 song title\n'
+        attend = '1 song title\n'
 
         self.assertEqual(content.read(), attend)
