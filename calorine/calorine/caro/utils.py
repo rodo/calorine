@@ -254,10 +254,8 @@ def mp3ogg(fname):
         output = ogg.communicate()[0]
         result = oggname
     except:
-        output = 'error inmp3ogg'
+        output = 'error in mp3ogg'
         result = None
-
-    logger.debug(output)
 
     if result:
         os.unlink(fname)

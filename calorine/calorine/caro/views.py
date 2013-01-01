@@ -172,12 +172,14 @@ def profile(request):
     """
     ples = PlaylistEntry.objects.all().order_by('-score', 'date_add')[:4]
     songs = Song.objects.all().order_by('-pk')[:4]
+    uploads = Upload.objects.all().order_by('-pk')[:4]
     streams = Stream.objects.all()
     template_name = 'profile.html'
 
     return render(request,
                   template_name,
                   {'songs': songs,
+                   'uploads': uploads,
                    'ples': ples,
                    'streams': streams,
                    'uuid': str(uuid4()),

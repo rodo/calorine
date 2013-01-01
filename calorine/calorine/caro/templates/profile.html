@@ -70,6 +70,27 @@
 	</tbody>
       </table>
 
+      <h4>Derniers uploads</h4>
+      
+      <table class="table table-striped">
+	<thead>
+	  <tr>
+	    <th>Titre</th>
+	    <th>Artiste</th>
+	    <th>Album</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  {% for upload in uploads %}
+	  <tr>
+	    <td>{{upload.filename}}</td>
+	    <td>{{upload.content_type}}</td>
+	    <td>{{upload.status}}</td>
+	  </tr>
+	  {% endfor %}
+	</tbody>
+      </table>
+
       <h4>Prochains titres de la playlist</h4>
 
       <table class="table table-striped">
