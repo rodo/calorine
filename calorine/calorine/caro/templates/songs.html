@@ -45,9 +45,9 @@
 	  <tr>
 	    <td>
 	      {% if song.vote %}
-	      <a class="btn btn-mini disabled btn_{{song.id}}" href="#">Playlist</a>
+	      <a class="btn btn-mini disabled btn_{{song.id}}" href="#">Play</a>
 	      {% else %}
-	      <a class="btn btn-mini btn-primary btn_{{song.id}}" href="#" onclick="add_to_playlist({{song.id}})">Playlist</a>
+	      <a class="btn btn-mini btn-primary btn_{{song.id}}" href="#" onclick="add_to_playlist({{song.id}})">Play</a>
 	      {% endif %}
 	    </td>
 	    <td>{{song.title}}</td>
