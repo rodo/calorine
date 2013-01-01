@@ -199,7 +199,6 @@ def move_file(path_from, filename):
 
     if not os.path.exists(path_to):
         shutil.copyfile(path_from, path_to)
-        os.unlink(path_from)
 
     return path_to
 
@@ -256,9 +255,9 @@ def mp3ogg(fname):
         output = ogg.communicate()[0]
         result = oggname
     except:
+        output = 'error inmp3ogg'
         result = None
 
-    
     logger.debug(output)
 
     if result:
