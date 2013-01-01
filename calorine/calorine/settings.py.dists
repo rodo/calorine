@@ -1,3 +1,4 @@
+# -*- mode: python -*-
 # Django settings for calorine project.
 
 DEBUG = True
@@ -43,6 +44,12 @@ import djcelery
 djcelery.setup_loader()
 #
 BROKER_URL = 'amqp://guest:guest@localhost:5672/'
+#
+# Binary paths
+#
+OGGENC = '/usr/bin/oggenc'
+MPG123 = '/usr/bin/mpg123'
+FFMPEG2THEORA = '/usr/bin/ffmpeg2theora'
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name

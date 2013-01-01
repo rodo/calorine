@@ -224,19 +224,17 @@ def mp3ogg(fname):
     """
     Encode mp3 files to ogg vorbis
     """
-    __OGGENC__ = "/usr/bin/oggenc"
-    __MPG123__ = "/usr/bin/mpg123"
 
     oggname = "%s.ogg" % fname[:-4]
 
     datas = readtags(fname)
-    mpg = subprocess.Popen([__MPG123__,
+    mpg = subprocess.Popen([settings.MPG123,
                             "-w",
                             "-",
                             fname],
                            stdout=subprocess.PIPE)
 
-    command = [__OGGENC__,
+    command = [settings.OGGENC,
                "--artist", datas['artist'],
                "--title", datas['title'],
                "--album", datas['album'],
@@ -263,12 +261,10 @@ def mp4ogg(fname):
     """
     Encode mp4 files to ogg vorbis
     """
-    ffmpeg2theora = '/usr/bin/ffmpeg2theora'
-
     oggname = "%s.oga" % fname[:-4]
 
     try:
-        subprocess.call([ffmpeg2theora, fname])
+        subprocess.call([settings.FFMPEG2THEORA, fname])
         result = oggname
     except:
         result = None
