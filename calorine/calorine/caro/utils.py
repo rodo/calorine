@@ -265,7 +265,7 @@ def mp4ogg(fname):
     """
     ffmpeg2theora = '/usr/bin/ffmpeg2theora'
 
-    oggname = "%s.ogg" % fname[:-4]
+    oggname = "%s.oga" % fname[:-4]
 
     try:
         subprocess.call([ffmpeg2theora, fname])
@@ -284,10 +284,16 @@ def recode(fname, content_type):
     """
     result = None
 
-    if content_type == 'audio/mpeg':
+    # if content_type == 'audio/mpeg':
+    #     result = mp3ogg(fname)
+
+    # if content_type == 'audio/mp4':
+    #     result = mp4ogg(fname)
+
+    if fname.endswith('.mp3'):
         result = mp3ogg(fname)
 
-    if content_type == 'audio/mp4':
+    if fname.endswith('.m4a'):
         result = mp4ogg(fname)
 
     return result
