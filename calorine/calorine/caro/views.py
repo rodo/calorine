@@ -190,7 +190,7 @@ def profile(request):
 def upload(request):
     """Upload songs
     """
-    uploads = Upload.objects.all().order_by('-pk')
+    uploads = Upload.objects.all().order_by('-pk')[:42]
     filename = '%s' % (request.POST['songname.name'])
     uuid = request.GET['X-Progress-ID']
     upl = Upload.objects.create(uuid=uuid,
@@ -199,7 +199,7 @@ def upload(request):
                                 content_type=request.POST['songname.content_type'])
 
     logger = logging.getLogger(__name__)
-    logger.info("upload %s %s" % (filename, uuid))
+    logger.info("upload [%s] %s" % (filename, uuid))
     # launch a celery task
     import_upload.delay(uuid)
 
