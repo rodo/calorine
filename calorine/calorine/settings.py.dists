@@ -29,7 +29,9 @@ LASTFM_API_KEY = 'a5446d9f4a6890dd512b4ac03afee400'
 #
 LASTFM_ENDPOINT = 'http://ws.audioscrobbler.com/2.0/'
 #
+# Nginx progress url defined as http://wiki.nginx.org/HttpUploadProgressModule
 #
+NGINX_PROGRESS_URL='http://127.0.0.1:81/progress'
 #
 CACHES = {
     'default': {
