@@ -166,6 +166,16 @@ class UglyList(ListView):
     paginate_by = 17
 
 
+
+class UploadList(ListView):
+    """Upload songs
+    """
+    queryset = Upload.objects.all().order_by("-pk")
+    paginate_by = 17
+    template_name = 'uploads.html'
+    context_object_name = "uploads"
+
+
 @login_required
 def profile(request):
     """The profile wiew
@@ -210,18 +220,6 @@ def upload(request):
                    'filename': request.POST['songname.name'],
                    'type': request.POST['songname.content_type'],
                    'uuid': str(uuid4())
-                   })
-
-
-@login_required
-def uploads(request):
-    """Upload songs
-    """
-    uploads = Upload.objects.all().order_by('-pk')[:42]
-
-    return render(request,
-                  'uploads.html',
-                  {'uploads': uploads,
                    })
 
 
