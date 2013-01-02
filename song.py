@@ -144,7 +144,8 @@ class Song():
         Fetch a random song
         """
         query = """SELECT id, filename, score FROM caro_song """
-        query = query + """WHERE score >= 0 """
+        query = query + """WHERE score >= 0 AND ( played = 0 """
+        query = query + """ OR (played > 0 AND global_score > 0 ) )"""
         query = query + """ORDER by played ASC, score DESC, uniq ASC LIMIT 1"""
         rows = self.fetchfile(query)
         return rows
