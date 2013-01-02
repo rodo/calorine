@@ -19,7 +19,7 @@
 Unit tests for urls in caro
 
 """
-from django.test import TestCase, Client
+from django.test import TestCase
 from calorine.caro.models import Song
 from calorine.caro.templatetags.lastfm import picture
 
@@ -29,10 +29,6 @@ class TemplateTagsTests(TestCase):  # pylint: disable-msg=R0904
     TemplateTags
 
     """
-    def get_picture(song, artist):
-        """Redefine get_picture to simulate failed query
-        """
-        return None
 
     def test_picture(self):
         """
