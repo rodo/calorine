@@ -65,6 +65,8 @@ def store_upload(upload):
     newpath = move_file(upload.path, upload.filename)
     if upload.content_type == 'audio/mpeg':
         oggname = convert_upload(newpath, upload)
+    elif upload.content_type == 'audio/mp3':
+        oggname = convert_upload(newpath, upload)
     elif upload.content_type == 'video/ogg':
         oggname = newpath
     else:

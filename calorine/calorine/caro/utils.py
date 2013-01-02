@@ -189,7 +189,7 @@ def createsong(tags, sig, fpath):
 
 
 def move_file(path_from, filename):
-    """Move file from upload_dir to final dest
+    """Move file from nginx upload_store to UPLOAD_DEST_DIR
 
     path_from is an nginx datas
     """
@@ -199,6 +199,12 @@ def move_file(path_from, filename):
 
     if not os.path.exists(path_to):
         shutil.copyfile(path_from, path_to)
+        if settings.REMOVE_UPLOAD_FILES:
+            try:
+                os.unlink(path_from)
+            except:
+                logger = logging.getLogger(__name__)                
+                logger.info("can't delete [%s]" % path_from)
 
     return path_to
 

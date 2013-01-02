@@ -33,6 +33,17 @@ LASTFM_ENDPOINT = 'http://ws.audioscrobbler.com/2.0/'
 #
 NGINX_PROGRESS_URL='http://127.0.0.1:81/progress'
 #
+# Remove files in nginx upload_store, if nginx and django not run with
+# same user an error can occurs. A log entry will appear
+#
+REMOVE_UPLOAD_FILES = True
+#
+# 
+#
+UPLOAD_DEST_DIR='/tmp'
+#
+#
+#
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
