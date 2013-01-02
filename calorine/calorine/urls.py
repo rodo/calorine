@@ -8,6 +8,7 @@ from calorine.caro.views import StarList
 from calorine.caro.views import NeverList
 from calorine.caro.views import ArtistList
 from calorine.caro.views import UglyList
+from calorine.caro.views import UploadList
 from calorine.caro.views import profile, cover
 from django.contrib import admin
 admin.autodiscover()
@@ -16,7 +17,7 @@ urlpatterns = patterns('',
                        url(r'^accounts/', include('registration.urls')),
                        url(r'^accounts/profile/$', 'calorine.caro.views.profile'),
                        url(r'^upload/$', 'calorine.caro.views.upload'),
-                       url(r'^uploads/$', 'calorine.caro.views.uploads'),
+                       url(r'^uploads/$', login_required(UploadList.as_view())),
                        url(r'^cover/(?P<cover>.*)$', 'calorine.caro.views.cover'),
                        url(r'^onair.json$', 'calorine.caro.views.onair'),
                        url(r'^songs/$', login_required(SongList.as_view())),
