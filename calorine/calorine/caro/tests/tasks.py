@@ -19,15 +19,12 @@
 Unit tests for urls in caro
 
 """
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.conf import settings
 from calorine.caro.models import Song
 from calorine.caro.models import Upload
-from calorine.caro.utils import move_file
 from calorine.caro.tasks import addgenre
 from calorine.caro.tasks import import_upload
-from calorine.caro.tasks import store_upload
-from calorine.caro.tasks import convert_upload
 
 
 class TasksTests(TestCase):  # pylint: disable-msg=R0904
@@ -71,7 +68,6 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         result = import_upload.delay(upl.uuid)
 
         self.assertTrue(result.task_id > 0)
-
 
     def test_convert_upload(self):
         """
