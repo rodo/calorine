@@ -276,10 +276,7 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
         if os.path.exists('/tmp/Cocaine.ogg'):
             os.unlink('/tmp/Cocaine.ogg')
 
-        newpath = move_file(fpath, 'Cocaine.mp3')
-        result = mp3ogg('/tmp/Cocaine.mp3')
+        move_file(fpath, 'Cocaine.mp3')
+        mp3ogg('/tmp/Cocaine.mp3')
 
         self.assertTrue(os.path.exists('/tmp/Cocaine.ogg'))
-
-        
-                        
