@@ -260,6 +260,7 @@ def mp3ogg(fname):
         output = ogg.communicate()[0]
         result = oggname
     except:
+        logger.error("(mp3ogg) subprocess failed on [%s]" % fname)
         output = 'error in mp3ogg'
         result = None
 
@@ -281,6 +282,7 @@ def mp4ogg(fname):
         subprocess.call([settings.FFMPEG2THEORA, fname])
         result = oggname
     except:
+        logger.error("(mp4ogg) subprocess failed on [%s]" % fname)
         result = None
 
     if result:

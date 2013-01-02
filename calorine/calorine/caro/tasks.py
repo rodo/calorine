@@ -86,6 +86,10 @@ def store_upload(upload):
 def convert_upload(newpath, upload):
     """Convert non ogg files
     """
+    logger = logging.getLogger(__name__)
+    logger.info("(convert_upload) [%s] as [%s]" % (newpath,
+                                                   upload.content_type))
+
     oggname = recode(newpath, upload.content_type)
     upload.status = 'uploaded'
     upload.save()
