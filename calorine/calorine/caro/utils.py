@@ -203,7 +203,7 @@ def move_file(path_from, filename):
             try:
                 os.unlink(path_from)
             except:
-                logger = logging.getLogger(__name__)                
+                logger = logging.getLogger(__name__)
                 logger.info("can't delete [%s]" % path_from)
 
     return path_to

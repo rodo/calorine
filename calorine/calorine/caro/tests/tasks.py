@@ -20,10 +20,14 @@ Unit tests for urls in caro
 
 """
 from django.test import TestCase, Client
+from django.conf import settings
 from calorine.caro.models import Song
 from calorine.caro.models import Upload
+from calorine.caro.utils import move_file
 from calorine.caro.tasks import addgenre
 from calorine.caro.tasks import import_upload
+from calorine.caro.tasks import store_upload
+from calorine.caro.tasks import convert_upload
 
 
 class TasksTests(TestCase):  # pylint: disable-msg=R0904
@@ -31,6 +35,12 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
     TemplateTags
 
     """
+    def setUp(self):
+        """Configure env for tests
+        """
+        settings.REMOVE_UPLOAD_FILES = False
+        settings.UPLOAD_DEST_DIR = '/tmp/'
+
     def test_addgenre(self):
         """Add genre
         """
@@ -55,6 +65,21 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         Upload.objects.all().delete()
         upl = Upload.objects.create(uuid='123456789',
                                     path='/tmp/123456789',
+                                    filename='The Healing Game.ogg',
+                                    content_type='application/ogg')
+
+        result = import_upload.delay(upl.uuid)
+
+        self.assertTrue(result.task_id > 0)
+
+
+    def test_convert_upload(self):
+        """
+        Test with a picture with cover
+        """
+        Upload.objects.all().delete()
+        upl = Upload.objects.create(uuid='123456789',
+                                    path='/tmp/notimport.mp3',
                                     filename='The Healing Game.ogg',
                                     content_type='application/ogg')
 

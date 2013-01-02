@@ -24,11 +24,15 @@ from django.conf import settings
 from django.test import TestCase
 from calorine.caro.utils import importdir, checkid3, sigfile
 from calorine.caro.utils import onair_datas
+from calorine.caro.utils import move_file
+from calorine.caro.utils import readtags
+from calorine.caro.utils import mp3ogg
 #from calorine.caro.utils import store_image
 from calorine.utils.store_image import store_image
 from os import path
 from django.core.cache import cache
 import memcache
+import os
 
 
 class UtilsTests(TestCase):  # pylint: disable-msg=R0904
@@ -43,6 +47,9 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
         self.user = User.objects.create_user('admin_search',
                                              'admin_search@bar.com',
                                              'admintest')
+
+        if os.path.exists('/tmp/toto.ogg'):
+            os.unlink('/tmp/toto.ogg')
 
     def test_checkid3(self):
         """
@@ -84,6 +91,20 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
                                    'samples',
                                    'missing-album.ogg'))
         self.assertEqual(datas, None)
+
+    def test_readtags(self):
+        """
+        Good id3
+        """
+        first = path.join(path.dirname(__file__),
+                          'samples',
+                          'first',
+                          'test.ogg')
+
+        datas = readtags(first)
+
+        self.assertEqual(datas['genre'], 'Sample')
+        self.assertEqual(datas['album'], 'Lorem')
 
     def test_sigfile(self):
         """
@@ -190,3 +211,75 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
 
         self.assertTrue(result.startswith('['))
 
+    def test_move_file(self):
+        """Copy file to newdir
+        """
+        settings.REMOVE_UPLOAD_FILES = False
+        settings.UPLOAD_DEST_DIR = '/tmp/'
+
+        fpath = path.join(path.dirname(__file__),
+                          'samples',
+                          'first',
+                          'test.ogg')
+
+        move_file(fpath, 'toto.ogg')
+
+        self.assertTrue(os.path.exists('/tmp/toto.ogg'))
+
+    def test_move_file2(self):
+        """Copy file to new dir, with existent file
+        """
+        settings.REMOVE_UPLOAD_FILES = False
+        settings.UPLOAD_DEST_DIR = '/tmp/'
+
+        fpath = path.join(path.dirname(__file__),
+                          'samples',
+                          'first',
+                          'test.ogg')
+
+        move_file(fpath, 'toto.ogg')
+        # redo the same action
+        result = move_file(fpath, 'toto.ogg')
+
+        self.assertEqual(result, '/tmp/toto.ogg')
+        self.assertTrue(os.path.exists('/tmp/toto.ogg'))
+
+    def test_move_file3(self):
+        """Copy file to new dir and remove source
+        """
+        settings.REMOVE_UPLOAD_FILES = False
+        settings.UPLOAD_DEST_DIR = '/tmp/'
+
+        fpath = path.join(path.dirname(__file__),
+                          'samples',
+                          'first',
+                          'test.ogg')
+
+        move_file(fpath, 'toto.ogg')
+
+        settings.REMOVE_UPLOAD_FILES = True
+        result = move_file('/tmp/toto.ogg', 'tata.ogg')
+
+        self.assertEqual(result, '/tmp/tata.ogg')
+        self.assertTrue(os.path.exists('/tmp/tata.ogg'))
+
+    def test_mp3ogg(self):
+        """Copy file to new dir, remove
+        """
+        settings.REMOVE_UPLOAD_FILES = False
+        settings.UPLOAD_DEST_DIR = '/tmp/'
+
+        fpath = path.join(path.dirname(__file__),
+                          'samples',
+                          'Cocaine.mp3')
+
+        if os.path.exists('/tmp/Cocaine.ogg'):
+            os.unlink('/tmp/Cocaine.ogg')
+
+        newpath = move_file(fpath, 'Cocaine.mp3')
+        result = mp3ogg('/tmp/Cocaine.mp3')
+
+        self.assertTrue(os.path.exists('/tmp/Cocaine.ogg'))
+
+        
+                        
