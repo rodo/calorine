@@ -214,6 +214,18 @@ def upload(request):
 
 
 @login_required
+def uploads(request):
+    """Upload songs
+    """
+    uploads = Upload.objects.all().order_by('-pk')[:42]
+
+    return render(request,
+                  'uploads.html',
+                  {'uploads': uploads,
+                   })
+
+
+@login_required
 def cover(request, cover):
     """The profile wiew
     """

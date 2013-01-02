@@ -1,0 +1,26 @@
+{% load i18n %}
+{% include "header.html" %}
+{% include "navbar.html" %}
+<div id="container" class="container">
+
+  <div class="row">
+    <div class="span12">
+      <table class="table table-striped">
+	<tbody>
+	  {% for upload in uploads %}
+	  <tr>
+	    <td>{{upload.id}}</td>
+	    <td>{{upload.filename}}</td>
+	    <td>{{upload.content_type}}</td>
+	    <td>{{upload.status}}</td>
+	    <td>{{upload.path}}</td>
+	  </tr>
+	  {% endfor %}
+	</tbody>
+      </table>
+          
+    </div><!--/row-->
+  </div><!--/row-->
+
+</div><!--/.container-->
+{% include "footer.html" %}
