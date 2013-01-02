@@ -47,9 +47,9 @@
       <table class="table table-striped">
 	<thead>
 	  <tr>
-	    <th>Fichier</th>
-	    <th>Type</th>
-	    <th>Status</th>
+	    <th>Titre</th>
+	    <th>Artiste</th>
+	    <th>Album</th>
 	  </tr>
 	</thead>
 	<tbody>
@@ -63,8 +63,8 @@
 	      {% endif %}
 	    </td>
 	    <td>{{song.title}}</td>
-	    <td>{{song.album}}</td>
 	    <td>{{song.artist}}</td>
+	    <td>{{song.album}}</td>
 	  </tr>
 	  {% endfor %}
 	</tbody>
@@ -75,9 +75,9 @@
       <table class="table table-striped">
 	<thead>
 	  <tr>
-	    <th>Titre</th>
-	    <th>Artiste</th>
-	    <th>Album</th>
+	    <th>Fichier</th>
+	    <th>Type</th>
+	    <th>Status</th>
 	  </tr>
 	</thead>
 	<tbody>
@@ -106,9 +106,9 @@
 	  <tr>
 	    <td>
 	      {% if song.song.vote %}
-	      <a class="btn btn-mini disabled btn_{{song.song.id}}" href="#">Playlist</a>
+	      <a class="btn btn-mini disabled btn_{{song.song.id}}" href="#">Play</a>
 	      {% else %}
-	      <a class="btn btn-mini btn-primary btn_{{song.song.id}}" href="#" onclick="add_to_playlist({{song.song.id}})">Playlist</a>
+	      <a class="btn btn-mini btn-primary btn_{{song.song.id}}" href="#" onclick="add_to_playlist({{song.song.id}})">Play</a>
 	      {% endif %}
 	    </td>
 	    <td>{{song.song.title}}</td>
