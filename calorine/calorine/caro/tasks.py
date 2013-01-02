@@ -37,7 +37,7 @@ def import_upload(uuid):
     """Import uploaded files
     """
     url = settings.NGINX_PROGRESS_URL
-    
+
     upload = get_object_or_404(Upload, uuid=uuid)
 
     params = {'X-Progress-ID': uuid}
@@ -70,9 +70,10 @@ def store_upload(upload):
     elif upload.content_type == 'video/ogg':
         oggname = newpath
     else:
-        logger = logging.getLogger(__name__)
-        logger.info("(store_upload) wrong type for %s %s" % (newpath,
-                                                             upload.content_type))
+        logger = logging.getLogger(__name__)    
+        logger.info("(%s) wrong type for %s %s" % ('store_upload',
+                                                   newpath,
+                                                   upload.content_type)
         upload.status = 'bad format'
         upload.save()
 
@@ -94,6 +95,7 @@ def convert_upload(newpath, upload):
     upload.status = 'uploaded'
     upload.save()
     return oggname
+
 
 @task()
 def addgenre(song):
