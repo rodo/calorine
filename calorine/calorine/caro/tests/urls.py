@@ -25,6 +25,7 @@ from django.core.cache import cache
 from datetime import datetime
 from calorine.caro.models import Song
 from calorine.caro.models import Vote
+from calorine.caro.models import Upload
 from calorine.caro.models import PlaylistEntry
 from django.core.management import call_command
 from calorine.caro.utils import clean_cache
@@ -405,3 +406,20 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
         response = client.get('/stars/')
         self.assertContains(response, 2, status_code=200)
         self.assertContains(response, self.user.username, status_code=200)
+
+    def test_uploads(self):
+        """
+        The stars
+        """
+        Upload.objects.all().delete()
+
+        upl = Upload.objects.create(uuid='123456789',
+                                    path='/tmp/notimport.mp3',
+                                    filename='The Healing Game.ogg',
+                                    content_type='application/ogg')
+
+        client = Client()
+        client.login(username='admin_search', password='admintest')
+
+        response = client.get('/uploads/')
+        self.assertContains(response, upl.filename, status_code=200)
