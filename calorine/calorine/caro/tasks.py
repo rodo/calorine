@@ -73,7 +73,7 @@ def store_upload(upload):
         logger = logging.getLogger(__name__)    
         logger.info("(%s) wrong type for %s %s" % ('store_upload',
                                                    newpath,
-                                                   upload.content_type)
+                                                   upload.content_type))
         upload.status = 'bad format'
         upload.save()
 
