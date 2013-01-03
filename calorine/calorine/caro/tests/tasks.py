@@ -23,8 +23,12 @@ from django.test import TestCase
 from django.conf import settings
 from calorine.caro.models import Song
 from calorine.caro.models import Upload
+from calorine.caro.utils import move_file
 from calorine.caro.tasks import addgenre
 from calorine.caro.tasks import import_upload
+from calorine.caro.tasks import store_upload
+from uuid import uuid4
+import os
 
 
 class TasksTests(TestCase):  # pylint: disable-msg=R0904
@@ -69,16 +73,37 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
 
         self.assertTrue(result.task_id > 0)
 
-    def test_convert_upload(self):
+    def test_store_upload(self):
         """
         Test with a picture with cover
         """
         Upload.objects.all().delete()
+
+        tdir = os.path.join('/tmp', str(uuid4()))
+
+        os.mkdir(tdir)
+
+        settings.REMOVE_UPLOAD_FILES = False
+        settings.UPLOAD_DEST_DIR = tdir
+
+
+        fpath = os.path.join(os.path.dirname(__file__),
+                             'samples',
+                             'first',
+                             'test.ogg')
+        
+        move_file(fpath, 'toto.ogg')
+
         upl = Upload.objects.create(uuid='123456789',
-                                    path='/tmp/notimport.mp3',
+                                    path=os.path.join(tdir, 'toto.ogg'),
                                     filename='The Healing Game.ogg',
-                                    content_type='application/ogg')
+                                    content_type='video/ogg')
 
-        result = import_upload.delay(upl.uuid)
+        result = store_upload(upl)
 
-        self.assertTrue(result.task_id > 0)
+        self.assertEqual(result, 0)
+        # cleaning
+        os.unlink(upl.path)
+        os.unlink(os.path.join(tdir, upl.filename))
+        os.rmdir(tdir)
+                  
