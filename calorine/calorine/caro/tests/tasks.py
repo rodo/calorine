@@ -88,7 +88,7 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
                              'samples',
                              'first',
                              'test.ogg')
-        
+
         move_file(fpath, 'toto.ogg')
 
         upl = Upload.objects.create(uuid='123456789',
@@ -118,7 +118,7 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
                              'samples',
                              'first',
                              'test.ogg')
-        
+
         move_file(fpath, 'toto.ogg')
 
         upl = Upload.objects.create(uuid='123456789',
@@ -133,4 +133,29 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         # cleaning
         os.unlink(upl.path)
         os.unlink(os.path.join(tdir, upl.filename))
+        os.rmdir(tdir)
+
+    def test_store_upload_mp3(self):
+        """
+        Test with a picture with cover
+        """
+        tdir = os.path.join('/tmp', str(uuid4()))
+        os.mkdir(tdir)
+
+        settings.REMOVE_UPLOAD_FILES = False
+        settings.UPLOAD_DEST_DIR = tdir
+
+        fpath = os.path.join(os.path.dirname(__file__),
+                             'samples',
+                             'Cocaine.mp3')
+
+        move_file(fpath, 'Cocaine.mp3')
+
+        upl = Upload.objects.create(uuid='123456789',
+                                    path=os.path.join(tdir, 'Cocaine.mp3'),
+                                    filename='Cocaine.mp3',
+                                    content_type='audio/mp3')
+        self.assertEqual(store_upload(upl), 0)
+        # cleaning
+        os.unlink(os.path.join(tdir, 'Cocaine.ogg'))
         os.rmdir(tdir)

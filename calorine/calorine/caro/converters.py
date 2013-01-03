@@ -23,39 +23,37 @@ import logging
 from calorine.caro.utils import mp3ogg
 from calorine.caro.utils import mp4ogg
 
-def convert_mp3(newpath, upload):
-    """Convert mp3 and mp4 files
+logger = logging.getLogger(__name__)
+
+def convert_mp3(fpath, upload):
+    """Convert mp3 files
     """
-    logger = logging.getLogger(__name__)
-    logger.info("(convert_upload) [%s] as [%s]" % (newpath,
+    logger.info("(convert_upload) [%s] as [%s]" % (fpath,
                                                    upload.content_type))
 
-    oggname = mp3ogg(newpath, upload.content_type)
+    oggname = mp3ogg(fpath)
     upload.status = 'uploaded'
     upload.save()
     return oggname
 
 
-def convert_mp4(newpath, upload):
+def convert_mp4(fpath, upload):
     """Convert mp4 files
     """
-    logger = logging.getLogger(__name__)
-    logger.info("(convert_upload) [%s] as [%s]" % (newpath,
+    logger.info("(convert_upload) [%s] as [%s]" % (fpath,
                                                    upload.content_type))
 
-    oggname = mp4ogg(newpath, upload.content_type)
+    oggname = mp4ogg(fpath)
     upload.status = 'uploaded'
     upload.save()
     return oggname
 
 
-def convert_none(newpath, upload):
+def convert_none(fpath, upload):
     """Do nothing for ogg files
     """
-    logger = logging.getLogger(__name__)
-    logger.info("(convert_none) [%s] as [%s]" % (newpath,
+    logger.info("(convert_none) [%s] as [%s]" % (fpath,
                                                  upload.content_type))
     upload.status = 'uploaded'
     upload.save()
-    return newpath
-
+    return fpath
