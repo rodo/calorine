@@ -26,11 +26,12 @@ import requests
 import logging
 from celery.task import task
 from calorine.caro.models import Upload
+from calorine.caro.models import Mime
+from django.core.exceptions import ObjectDoesNotExist
 from calorine.caro.utils import move_file
-from calorine.caro.utils import recode
 from calorine.caro.utils import importsong
 from calorine.caro.utils import get_tags
-
+import converters
 
 @task()
 def import_upload(uuid):
@@ -63,40 +64,28 @@ def store_upload(upload):
     """
     oggname = None
     newpath = move_file(upload.path, upload.filename)
-    if upload.content_type == 'audio/mpeg':
-        oggname = convert_upload(newpath, upload)
-    elif upload.content_type == 'audio/mp4':
-        oggname = convert_upload(newpath, upload)
-    elif upload.content_type == 'audio/mp3':
-        oggname = convert_upload(newpath, upload)
-    elif upload.content_type == 'video/ogg':
-        oggname = newpath
-    else:
+    try:
+        mime = Mime.objects.get(name=upload.content_type)
         logger = logging.getLogger(__name__)
-        logger.info("(%s) wrong type for %s %s" % ('store_upload',
-                                                   newpath,
-                                                   upload.content_type))
+        logger.info("will use %s() to convert %s" % (mime.function,
+                                                     mime.name))
+    except ObjectDoesNotExist:
+        logger = logging.getLogger(__name__)
+        logger.error("(%s) wrong mime/type for %s %s" % ('store_upload',
+                                                         newpath,
+                                                         upload.content_type))
         upload.status = 'bad format'
         upload.save()
+        return 1
+
+    convert = getattr(converters, mime.function)
+    oggname = convert(newpath, upload)
 
     if oggname is not None:
         importsong(oggname)
         upload.status = 'done'
         upload.save()
     return 0
-
-
-def convert_upload(newpath, upload):
-    """Convert non ogg files
-    """
-    logger = logging.getLogger(__name__)
-    logger.info("(convert_upload) [%s] as [%s]" % (newpath,
-                                                   upload.content_type))
-
-    oggname = recode(newpath, upload.content_type)
-    upload.status = 'uploaded'
-    upload.save()
-    return oggname
 
 
 @task()

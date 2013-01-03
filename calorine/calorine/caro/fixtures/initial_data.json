@@ -10,5 +10,26 @@
 	     "groups": [], "user_permissions": [], 
 	     "password": "sha1$e09a2$3b2e5b2962fd5d327d4366a48e2781b1c6682d36", 
 	     "email": "admin@example.com" }
+   },
+  {"pk": 1, 
+  "model": "caro.mime", 
+  "fields": {"name": "audio/mpeg", 
+  	     "function": "convert_mp3"}
+   },
+  {"pk": 2, 
+  "model": "caro.mime", 
+  "fields": {"name": "audio/mp4", 
+  	     "function": "convert_mp4"}
+   },
+  {"pk": 3, 
+  "model": "caro.mime", 
+  "fields": {"name": "audio/mp3", 
+  	     "function": "convert_mp3"}
+   },
+  {"pk": 4, 
+  "model": "caro.mime", 
+  "fields": {"name": "video/ogg", 
+  	     "function": "convert_none"}
    }
 ]
+

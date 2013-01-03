@@ -291,23 +291,3 @@ def mp4ogg(fname):
         os.unlink(fname)
 
     return result
-
-
-def recode(fname, content_type):
-    """Recode files
-    """
-    result = None
-
-    # if content_type == 'audio/mpeg':
-    #     result = mp3ogg(fname)
-
-    # if content_type == 'audio/mp4':
-    #     result = mp4ogg(fname)
-
-    if fname.endswith('.mp3'):
-        result = mp3ogg(fname)
-
-    if fname.endswith('.m4a'):
-        result = mp4ogg(fname)
-
-    return result

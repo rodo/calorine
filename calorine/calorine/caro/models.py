@@ -165,3 +165,12 @@ class Upload(models.Model):
     status = models.CharField(max_length=32,
                               default='starting',
                               db_index=True)
+
+
+class Mime(models.Model):
+    """
+    Mime type and associate function
+
+    """
+    name = models.CharField(max_length=64)
+    function = models.CharField(max_length=300)

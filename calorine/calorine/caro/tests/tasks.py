@@ -80,12 +80,9 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         Upload.objects.all().delete()
 
         tdir = os.path.join('/tmp', str(uuid4()))
-
         os.mkdir(tdir)
-
         settings.REMOVE_UPLOAD_FILES = False
         settings.UPLOAD_DEST_DIR = tdir
-
 
         fpath = os.path.join(os.path.dirname(__file__),
                              'samples',
@@ -106,4 +103,34 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         os.unlink(upl.path)
         os.unlink(os.path.join(tdir, upl.filename))
         os.rmdir(tdir)
-                  
+
+    def test_store_upload_nonaudio(self):
+        """
+        Test with a picture with cover
+        """
+        tdir = os.path.join('/tmp', str(uuid4()))
+        os.mkdir(tdir)
+
+        settings.REMOVE_UPLOAD_FILES = False
+        settings.UPLOAD_DEST_DIR = tdir
+
+        fpath = os.path.join(os.path.dirname(__file__),
+                             'samples',
+                             'first',
+                             'test.ogg')
+        
+        move_file(fpath, 'toto.ogg')
+
+        upl = Upload.objects.create(uuid='123456789',
+                                    path=os.path.join(tdir, 'toto.ogg'),
+                                    filename='The Healing Game.ogg',
+                                    content_type='image/jpeg')
+
+        result = store_upload(upl)
+
+        self.assertEqual(result, 1)
+
+        # cleaning
+        os.unlink(upl.path)
+        os.unlink(os.path.join(tdir, upl.filename))
+        os.rmdir(tdir)
