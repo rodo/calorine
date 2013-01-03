@@ -70,7 +70,7 @@ def store_upload(upload):
     elif upload.content_type == 'video/ogg':
         oggname = newpath
     else:
-        logger = logging.getLogger(__name__)    
+        logger = logging.getLogger(__name__)
         logger.info("(%s) wrong type for %s %s" % ('store_upload',
                                                    newpath,
                                                    upload.content_type))
