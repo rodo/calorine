@@ -55,9 +55,9 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
                                    global_score=0,
                                    cover='htt://foo.bar/img.png')
 
-        result = addgenre.delay(song)
+        result = addgenre(song)
 
-        self.assertTrue(result.task_id > 0)
+        self.assertEqual(result, 0)
 
     def test_import_upload(self):
         """
