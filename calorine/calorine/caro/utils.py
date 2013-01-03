@@ -255,12 +255,15 @@ def mp3ogg(fname):
 
     try:
         ogg = subprocess.Popen(command,
-                               stdin=mpg.stdout)
-        ogg.communicate()[0]
+                               stdin=mpg.stdout,
+                               stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE)
+        (stdout, stderr) = ogg.communicate()
+        logger.debug(stdout)
+        logger.error(stderr)
         result = oggname
     except:
         logger.error("(mp3ogg) subprocess failed on [%s]" % fname)
-        output = 'error in mp3ogg'
         result = None
 
     if result:
