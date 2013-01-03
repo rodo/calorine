@@ -159,3 +159,28 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         # cleaning
         os.unlink(os.path.join(tdir, 'Cocaine.ogg'))
         os.rmdir(tdir)
+
+    def test_store_upload_wrongfile(self):
+        """
+        Test with a wrong file, text.mp3 contains plaintext
+        """
+        tdir = os.path.join('/tmp', str(uuid4()))
+        os.mkdir(tdir)
+
+        settings.REMOVE_UPLOAD_FILES = False
+        settings.UPLOAD_DEST_DIR = tdir
+
+        fpath = os.path.join(os.path.dirname(__file__),
+                             'samples',
+                             'text.mp3')
+
+        move_file(fpath, 'text.mp3')
+
+        upl = Upload.objects.create(uuid='123456789',
+                                    path=os.path.join(tdir, 'text.mp3'),
+                                    filename='text.mp3',
+                                    content_type='audio/mp3')
+        self.assertEqual(store_upload(upl), 2)
+        # cleaning
+        os.unlink(upl.path)
+        os.rmdir(tdir)

@@ -21,6 +21,7 @@ The converters defined in Mime Model
 
 import logging
 from calorine.caro.utils import mp3ogg
+from calorine.caro.utils import readtags
 from calorine.caro.utils import mp4ogg
 
 logger = logging.getLogger(__name__)
@@ -29,10 +30,13 @@ logger = logging.getLogger(__name__)
 def convert_mp3(fpath, upload):
     """Convert mp3 files
     """
+    oggname = None
     logger.info("(convert_upload) [%s] as [%s]" % (fpath,
                                                    upload.content_type))
 
-    oggname = mp3ogg(fpath)
+    datas = readtags(fpath)
+    if datas != {}:
+        oggname = mp3ogg(fpath, datas)
     upload.status = 'uploaded'
     upload.save()
     return oggname

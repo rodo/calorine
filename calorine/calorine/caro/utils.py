@@ -215,20 +215,27 @@ def readtags(fname):
     Return array with tags
     """
     datas = {}
+    muts = None
     fields = ['album', 'artist', 'title', 'genre', 'date', 'tracknumber',
               'year']
-    muts = mutagen.File(fname, easy=True)
-    for fld in fields:
-        if fld in muts:
-            data = muts[fld]
-            datas[fld] = data[0]
-        else:
-            datas[fld] = ''
+    try:
+        muts = mutagen.File(fname, easy=True)
+    except:
+        logger = logging.getLogger(__name__)
+        logger.error("can't read tags in [%s]" % fname)
+
+    if muts:
+        for fld in fields:
+            if fld in muts:
+                data = muts[fld]
+                datas[fld] = data[0]
+            else:
+                datas[fld] = ''
 
     return datas
 
 
-def mp3ogg(fname):
+def mp3ogg(fname, datas):
     """
     Encode mp3 files to ogg vorbis
     """
@@ -236,7 +243,6 @@ def mp3ogg(fname):
     oggname = "%s.ogg" % fname[:-4]
     logger.info("(mp3ogg) encode [%s]" % fname)
 
-    datas = readtags(fname)
     mpg = subprocess.Popen([settings.MPG123,
                             "-w",
                             "-",

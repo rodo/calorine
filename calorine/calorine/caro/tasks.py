@@ -81,11 +81,13 @@ def store_upload(upload):
     convert = getattr(converters, mime.function)
     oggname = convert(newpath, upload)
 
-    if oggname is not None:
+    if oggname is None:
+        return 2
+    else:
         importsong(oggname)
         upload.status = 'done'
         upload.save()
-    return 0
+        return 0
 
 
 @task()
