@@ -166,7 +166,6 @@ class UglyList(ListView):
     paginate_by = 17
 
 
-
 class UploadList(ListView):
     """Upload songs
     """
