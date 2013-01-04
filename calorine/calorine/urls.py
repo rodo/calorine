@@ -11,12 +11,13 @@ from calorine.caro.views import UglyList
 from calorine.caro.views import UploadList
 from calorine.caro.views import profile, cover
 from django.contrib import admin
+from django.views.generic.simple import redirect_to
 admin.autodiscover()
 
 urlpatterns = patterns('',                       
                        url(r'^accounts/', include('registration.urls')),
                        url(r'^accounts/profile/$', 'calorine.caro.views.profile'),
-                       url(r'^upload/$', 'calorine.caro.views.upload'),
+                       url(r'^upload/$', redirect_to, {'url': '/uploads/'}),
                        url(r'^uploads/$', login_required(UploadList.as_view())),
                        url(r'^cover/(?P<cover>.*)$', 'calorine.caro.views.cover'),
                        url(r'^onair.json$', 'calorine.caro.views.onair'),
