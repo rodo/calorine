@@ -33,6 +33,7 @@ from os import path
 from django.core.cache import cache
 import memcache
 import os
+from uuid import uuid4
 
 
 class UtilsTests(TestCase):  # pylint: disable-msg=R0904
@@ -264,19 +265,18 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
         self.assertTrue(os.path.exists('/tmp/tata.ogg'))
 
     def test_mp3ogg(self):
-        """Copy file to new dir, remove
+        """Convert mp3 in ogg
         """
+        tdir = os.path.join('/tmp', str(uuid4()))
+        os.mkdir(tdir)
         settings.REMOVE_UPLOAD_FILES = False
-        settings.UPLOAD_DEST_DIR = '/tmp/'
+        settings.UPLOAD_DEST_DIR = tdir
 
         fpath = path.join(path.dirname(__file__),
                           'samples',
                           'Cocaine.mp3')
 
-        if os.path.exists('/tmp/Cocaine.ogg'):
-            os.unlink('/tmp/Cocaine.ogg')
-
-        move_file(fpath, 'Cocaine.mp3')
+        newpath = move_file(fpath, 'Cocaine.mp3')
 
         tags = {'artist': 'artist',
                 'title': 'title',
@@ -285,6 +285,6 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
                 'date': 'date',
                 'tracknumber': '1'}
 
-        mp3ogg('/tmp/Cocaine.mp3', tags)
+        oggpath = mp3ogg(newpath, tags)
 
-        self.assertTrue(os.path.exists('/tmp/Cocaine.ogg'))
+        self.assertTrue(os.path.exists(oggpath))
