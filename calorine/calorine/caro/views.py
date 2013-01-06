@@ -24,6 +24,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.shortcuts import redirect
 from django.db.models import Count
 from django.db.models import Q
 from datetime import datetime
@@ -167,12 +168,17 @@ class UglyList(ListView):
 
 
 class UploadList(ListView):
-    """Upload songs
+    """Uploaded songs
     """
     queryset = Upload.objects.all().order_by("-pk")
     paginate_by = 17
     template_name = 'uploads.html'
     context_object_name = "uploads"
+
+    def get_context_data(self, **kwargs):
+        context = super(UploadList, self).get_context_data(**kwargs)
+        context['uuid'] = str(uuid4())
+        return context
 
 
 @login_required
@@ -212,14 +218,7 @@ def upload(request):
     # launch a celery task
     import_upload.delay(uuid)
 
-    return render(request,
-                  'upload.html',
-                  {'uploads': uploads,
-                   'path': request.POST['songname.path'],
-                   'filename': request.POST['songname.name'],
-                   'type': request.POST['songname.content_type'],
-                   'uuid': str(uuid4())
-                   })
+    return redirect('/uploads/')
 
 
 @login_required

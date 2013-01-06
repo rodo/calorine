@@ -263,6 +263,7 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
 
         self.assertEqual(result, '/tmp/tata.ogg')
         self.assertTrue(os.path.exists('/tmp/tata.ogg'))
+        self.assertFalse(os.path.exists('/tmp/toto.ogg'))
 
     def test_mp3ogg(self):
         """Convert mp3 in ogg
