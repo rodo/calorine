@@ -37,8 +37,8 @@ debian package python-irclib
 
 class BotCalorine(ircbot.SingleServerIRCBot):
 
-    pl_prefix = ["je kiffe", "j'aime", "je like", "donne moi du",
-                 "allez balance", "vas-y envoi"]
+    pl_prefix = ["donne moi du", "allez balance", "vas-y envoi", "gimme",
+                 "balance"]
 
     def __init__(self, nick, chan, url):
         """
@@ -104,13 +104,28 @@ class BotCalorine(ircbot.SingleServerIRCBot):
         """
         auteur = irclib.nm_to_n(event.source())
 
-        hello = ["salut", "coucou", "bonjour",
-                 "yo", "bisous", "kiss",
-                 "ça fait plaisir de te voir", "Big smack pour", "hi",
-                 "ah bah te v'la"]
-        rand = int(random() * 10)
+        hello = ["salut %s",
+                 "coucou %s",
+                 "bonjour %s",
+                 "soit le bienvenu parmi nous %s",
+                 "yo mon poto %s",
+                 "bisous mouillé %s", 
+                 "damned voilà %s",
+                 "yo %s", 
+                 "bisous %s", 
+                 "kiss %s", 
+                 "ohoho %s",
+                 "en ce jour bénit voici que %s arrive parmi nous",
+                 "ça fait plaisir de te voir %s", 
+                 "Big smack pour %s", 
+                 "%s hi",
+                 "%s est dans la place \o/",
+                 "ah bah te v'la %s", 
+                 "kikoo %s", 
+                 "te voilà enfin %s"]
+        rand = int(random() * len(hello))
         if auteur != self.nick:
-            self.speak("%s %s" % (hello[rand], auteur))
+            self.speak(hello[rand] % auteur)
 
     def speak(self, message):
         """
@@ -136,6 +151,12 @@ class BotCalorine(ircbot.SingleServerIRCBot):
                 self.asv()
             elif msg.startswith("%s: onair" % self.nick):
                 self.onair()
+            elif msg.startswith("%s: like" % self.nick):
+                self.like()
+            elif msg.startswith("%s: hate" % self.nick):
+                self.hate()
+            elif msg.startswith("%s: help" % self.nick):
+                self.help()
             else:
                 for plp in self.pl_prefix:
                     if msg.startswith("%s: %s" % (self.nick, plp)):
@@ -154,6 +175,25 @@ class BotCalorine(ircbot.SingleServerIRCBot):
             syslog.syslog("error on connecting to memcache %s" % conn)
 
         self.speak(info)
+
+    def hate(self):
+        """Hate a song
+        """
+        self.speak("oh peuchère tu n'aimes pas ma musiqueuh ?")
+
+    def like(self):
+        """Like a song
+        """
+        self.speak("You like the song cool")
+
+    def help(self):
+        """Prints help commands on IRC
+        """
+        self.speak("prefix the folowwing command by 'nick: '")
+        self.speak(" asv : crticial informations")
+        self.speak(" cassos : irc bot quit")
+        self.speak(" like : I like the song")
+        self.speak(" onair : display on air song informations")
 
     def asv(self):
         """asv command
