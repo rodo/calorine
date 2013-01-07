@@ -98,7 +98,6 @@ def addgenre(song):
     try:
         song.genre += ','.join(get_tags(song.artist, song.title))
         song.save()
+        return 0
     except:
-        pass
-
-    return 0
+        return 1

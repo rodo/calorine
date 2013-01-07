@@ -258,7 +258,7 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
 
         move_file(fpath, 'toto.ogg')
 
-        settings.REMOVE_UPLOAD_FILES = True
+        setattr(settings, 'REMOVE_UPLOAD_FILES', True)
         result = move_file('/tmp/toto.ogg', 'tata.ogg')
 
         self.assertEqual(result, '/tmp/tata.ogg')

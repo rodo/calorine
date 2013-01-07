@@ -166,6 +166,12 @@ class Upload(models.Model):
                               default='starting',
                               db_index=True)
 
+    def __unicode__(self):
+        """
+        The unicode method
+        """
+        return self.filename
+
 
 class Mime(models.Model):
     """

@@ -59,6 +59,15 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
 
         self.assertEqual(result, 0)
 
+    def test_addgenre(self):
+        """Add genre with undefined song
+        """
+        song = None
+
+        result = addgenre(song)
+
+        self.assertEqual(result, 1)
+
     def test_import_upload(self):
         """
         Test with a picture with cover
