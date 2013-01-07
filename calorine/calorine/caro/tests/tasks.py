@@ -173,13 +173,11 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         move_file(fpath, 'text.mp3')
 
         upl = Upload.objects.create(uuid='123456789',
-                                    path=os.path.join(tdir, 'text.mp3'),
+                                    path=os.path.join(self.tpath, 'text.mp3'),
                                     filename='text.mp3',
                                     content_type='audio/mp3')
         self.assertEqual(store_upload(upl), 2)
-        # cleaning
-        os.unlink(upl.path)
-        os.rmdir(tdir)
+
 
     def test_importupload_failed(self):
         """

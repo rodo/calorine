@@ -31,7 +31,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from calorine.caro.utils import move_file
 from calorine.caro.utils import importsong
 from calorine.caro.utils import get_tags
-import converters
+import calorine.caro.converters
 
 
 @task()
@@ -96,7 +96,7 @@ def store_upload(upload):
         upload.save()
         return 1
 
-    convert = getattr(converters, mime.function)
+    convert = getattr(calorine.caro.converters, mime.function)
     oggname = convert(newpath, upload)
 
     if oggname is None:
