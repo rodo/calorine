@@ -35,6 +35,9 @@ function add_to_playlist(id) {
 
     url = '/playlist/add/' + id;
 
+    $('.btn_'+id).addClass("btn-info");
+    $('.btn_'+id).removeClass("btn-primary");
+
     $.get(url,
 	  function(data) {
 	      $('.result').html("ok");
