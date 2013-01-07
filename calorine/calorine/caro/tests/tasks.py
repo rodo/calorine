@@ -30,36 +30,7 @@ from calorine.caro.tasks import store_upload
 from calorine.caro.tasks import get_upload_status
 from uuid import uuid4
 import os
-import SimpleHTTPServer
-import SocketServer
-import threading
-
-
-class JsonHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
-    """
-    Basic handler, serve a basic JSON answer
-    """
-    def do_GET(self):
-        """Respond to a GET request."""
-        self.send_response(200)
-        self.send_header("Content-type", "application/json")
-        self.end_headers()
-        self.wfile.write('{"state": "done"}')
-
-
-class TestServer(threading.Thread):
-    """
-    Basic http server to serve JSON
-    """
-    def __init__(self):
-        threading.Thread.__init__(self)
-        self.port = 10042
-        self.httpd = SocketServer.TCPServer(("", self.port), JsonHandler)
-
-    def run(self):
-        print "serving at port", self.port
-        self.httpd.handle_request()
-
+from httpserver import TestServer
 
 class TasksTests(TestCase):  # pylint: disable-msg=R0904
     """
@@ -70,7 +41,17 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         """Configure env for tests
         """
         settings.REMOVE_UPLOAD_FILES = False
-        settings.UPLOAD_DEST_DIR = '/tmp/'
+        self.test_dir = os.path.join('/tmp', str(uuid4()))
+        os.mkdir(self.test_dir)
+        settings.UPLOAD_DEST_DIR = self.test_dir
+
+    def tearDown(self):
+        """
+        Clean after test
+        """
+        for fpath in os.listdir(self.test_dir):
+            os.unlink(os.path.join(self.test_dir, fpath))
+        os.rmdir(self.test_dir)
 
     def test_getuploadstatus(self):
         """
@@ -116,10 +97,8 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         """
         Upload.objects.all().delete()
 
-        tdir = os.path.join('/tmp', str(uuid4()))
-        os.mkdir(tdir)
         settings.REMOVE_UPLOAD_FILES = False
-        settings.UPLOAD_DEST_DIR = tdir
+        settings.UPLOAD_DEST_DIR = self.test_dir
 
         fpath = os.path.join(os.path.dirname(__file__),
                              'samples',
@@ -129,27 +108,19 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         move_file(fpath, 'toto.ogg')
 
         upl = Upload.objects.create(uuid='123456789',
-                                    path=os.path.join(tdir, 'toto.ogg'),
+                                    path=os.path.join(self.test_dir, 'toto.ogg'),
                                     filename='The Healing Game.ogg',
                                     content_type='video/ogg')
 
         result = store_upload(upl)
 
         self.assertEqual(result, 0)
-        # cleaning
-        os.unlink(upl.path)
-        os.unlink(os.path.join(tdir, upl.filename))
-        os.rmdir(tdir)
 
     def test_store_upload_nonaudio(self):
         """
         Test with a picture with cover
         """
-        tdir = os.path.join('/tmp', str(uuid4()))
-        os.mkdir(tdir)
-
         settings.REMOVE_UPLOAD_FILES = False
-        settings.UPLOAD_DEST_DIR = tdir
 
         fpath = os.path.join(os.path.dirname(__file__),
                              'samples',
@@ -159,7 +130,7 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         move_file(fpath, 'toto.ogg')
 
         upl = Upload.objects.create(uuid='123456789',
-                                    path=os.path.join(tdir, 'toto.ogg'),
+                                    path=os.path.join(self.test_dir, 'toto.ogg'),
                                     filename='The Healing Game.ogg',
                                     content_type='image/jpeg')
 
@@ -167,20 +138,11 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
 
         self.assertEqual(result, 1)
 
-        # cleaning
-        os.unlink(upl.path)
-        os.unlink(os.path.join(tdir, upl.filename))
-        os.rmdir(tdir)
-
     def test_store_upload_mp3(self):
         """
         Test with a picture with cover
         """
-        tdir = os.path.join('/tmp', str(uuid4()))
-        os.mkdir(tdir)
-
         settings.REMOVE_UPLOAD_FILES = False
-        settings.UPLOAD_DEST_DIR = tdir
 
         fpath = os.path.join(os.path.dirname(__file__),
                              'samples',
@@ -189,13 +151,10 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         move_file(fpath, 'Cocaine.mp3')
 
         upl = Upload.objects.create(uuid='123456789',
-                                    path=os.path.join(tdir, 'Cocaine.mp3'),
+                                    path=os.path.join(self.test_dir, 'Cocaine.mp3'),
                                     filename='Cocaine.mp3',
                                     content_type='audio/mp3')
         self.assertEqual(store_upload(upl), 0)
-        # cleaning
-        os.unlink(os.path.join(tdir, 'Cocaine.ogg'))
-        os.rmdir(tdir)
 
     def test_store_upload_wrongfile(self):
         """
@@ -222,9 +181,11 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         os.unlink(upl.path)
         os.rmdir(tdir)
 
-    def test_import_upload(self):
+    def test_importupload_failed(self):
         """
         Simple upload
+
+        Assume the nginx server will not answer
         """
         Upload.objects.all().delete()
         upl = Upload.objects.create(uuid='123456789',
@@ -235,3 +196,32 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         result = import_upload(upl.uuid, 2)
 
         self.assertEqual(result['state'], 'starting')
+
+    def test_importupload_success(self):
+        """
+        Simple upload
+
+        Assume all is ok
+        """
+        http = TestServer()
+        http.start()
+        url = 'http://127.0.0.1:%d/progress-url-test' % (http.port)
+
+        Upload.objects.all().delete()
+
+        fpath = os.path.join(os.path.dirname(__file__),
+                             'samples',
+                             'first',
+                             'test.ogg')
+
+        move_file(fpath, 'toto.ogg')
+
+        upl = Upload.objects.create(uuid='123456789',
+                                    path=os.path.join(self.test_dir, 'toto.ogg'),
+                                    filename='The Healing Game.ogg',
+                                    content_type='application/ogg')
+
+        result = import_upload(upl.uuid, 2, url)
+
+        self.assertEqual(result['state'], 'done')
+
