@@ -196,13 +196,24 @@ def move_file(path_from, filename):
     if not os.path.exists(path_to):
         shutil.copyfile(path_from, path_to)
         if settings.REMOVE_UPLOAD_FILES:
-            try:
-                os.unlink(path_from)
-            except:
-                logger = logging.getLogger(__name__)
-                logger.info("can't delete [%s]" % path_from)
+            remove_file(path_from)
 
     return path_to
+
+
+def remove_file(fpath):
+    """Remove file and log on error
+
+    path_from is an nginx datas
+    """
+    logger = logging.getLogger(__name__)
+    logger.debug("remove file [%s]")
+    try:
+        os.unlink(fpath)
+        return 0
+    except:
+        logger.info("can't delete [%s]" % path_from)
+        return 1
 
 
 def readtags(fname):

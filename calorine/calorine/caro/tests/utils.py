@@ -27,6 +27,7 @@ from calorine.caro.utils import sigfile
 from calorine.caro.utils import createsong
 from calorine.caro.utils import onair_datas
 from calorine.caro.utils import move_file
+from calorine.caro.utils import remove_file
 from calorine.caro.utils import readtags
 from calorine.caro.utils import mp3ogg
 from calorine.caro.utils import mp4ogg
@@ -365,3 +366,19 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
         result = createsong(tags, "signature2", "/bar/foo.ogg")
 
         self.assertEqual(result, "[I] \n")
+
+    def test_remove_file_suc(self):
+        """Sucessfuly remove file
+        """
+        fpath = mktemp()
+        result = remove_file(fpath)
+        self.assertTrue(result, 0)
+        self.assertFalse(os.path.exists(fpath))
+
+    def test_remove_file_unc(self):
+        """Un successfuly remove file
+        """
+        fpath = mktemp()
+        unlink(fpath)
+        result = remove_file(fpath)
+        self.assertTrue(result, 1)
