@@ -29,6 +29,7 @@ from django.core.cache import cache
 from calorine.caro.models import Logs
 from calorine.utils.lastfm import get_tags
 from calorine.caro.models import Song
+from calorine.caro.models import Vote
 import subprocess
 
 

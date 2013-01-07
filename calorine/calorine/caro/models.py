@@ -18,7 +18,7 @@
 """
 Models definition for caro app
 """
-
+import logging
 from django.contrib.auth.models import User
 from django.db import models
 from datetime import datetime
@@ -76,6 +76,18 @@ class Song(models.Model):
             date_add=datetime.now(),
             score=1)
 
+    def userlike(self, user):
+        """
+        A user like this song
+        """
+        logger = logging.getLogger(__name__)
+        logger.debug('user %s like song id %s' % (user.username,
+                                                  self.id))
+        self.global_score += 1
+        self.save()
+        # create a vote for this song
+        Vote.objects.create(song=self, user=user, vote=1)
+
 
 class PlaylistEntry(models.Model):
     """
@@ -98,7 +110,7 @@ class HistoryEntry(models.Model):
 
     """
     song = models.ForeignKey(Song)
-    date_played = models.DateTimeField()
+    date_played = models.DateTimeField(auto_now_add=True)
 
 
 class Logs(models.Model):

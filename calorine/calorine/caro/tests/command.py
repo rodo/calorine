@@ -23,6 +23,8 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from calorine.caro.models import Song
 from calorine.caro.models import PlaylistEntry
+from calorine.caro.models import HistoryEntry
+from calorine.caro.models import UserProfile
 from django.core.management import call_command
 from os import path
 from StringIO import StringIO
@@ -435,3 +437,37 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         attend = '1 song title\n'
 
         self.assertEqual(content.read(), attend)
+
+    def test_irclike(self):
+        """
+        Management command irclike
+
+        The last play song has a score increase by one
+        """
+        Song.objects.all().delete()
+        HistoryEntry.objects.all().delete()
+
+        song = Song.objects.create(artist='Lou Reed',
+                                   album='Transformer',
+                                   title='''song title''',
+                                   genre='',
+                                   score=0,
+                                   family=0,
+                                   global_score=0)
+
+        hist = HistoryEntry.objects.create(song=song)
+
+        userp = UserProfile.objects.get(user=self.user)
+
+        before = song.global_score
+
+        content = StringIO()
+        call_command('irclike', userp.ircnick, stdout=content)
+        output = content.seek(0)
+
+        upsong = Song.objects.get(pk=song.id)
+
+        after = upsong.global_score
+
+        self.assertEqual(before, 0)
+        self.assertEqual(after, 1)
