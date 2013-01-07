@@ -27,8 +27,44 @@ from calorine.caro.utils import move_file
 from calorine.caro.tasks import addgenre
 from calorine.caro.tasks import import_upload
 from calorine.caro.tasks import store_upload
+from calorine.caro.tasks import get_upload_status
 from uuid import uuid4
 import os
+import SimpleHTTPServer
+import SocketServer
+import threading
+from pprint import pprint
+
+
+class JsonHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
+    """
+    Basic handler, serve a basic JSON answer
+    """
+    def do_GET(self):
+        """Respond to a GET request."""
+        self.send_response(200)
+        self.send_header("Content-type", "application/json")
+        self.end_headers()
+        self.wfile.write('{"state": "done"}')
+
+
+class TestServer(threading.Thread):
+    """
+    Basic http server to serve JSON
+    """
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.port = 10042
+        Handler = SimpleHTTPServer.SimpleHTTPRequestHandler
+        self.httpd = SocketServer.TCPServer(("", self.port), JsonHandler)
+
+    def run(self):
+        print "serving at port", self.port
+        # serve only one request
+        self.httpd.handle_request()
+
+    def stop(self):
+        self.httpd.shutdown
 
 
 class TasksTests(TestCase):  # pylint: disable-msg=R0904
@@ -41,6 +77,20 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         """
         settings.REMOVE_UPLOAD_FILES = False
         settings.UPLOAD_DEST_DIR = '/tmp/'
+
+
+    def test_getuploadstatus(self):
+        """
+        Function : get_upload_status()
+        """
+        http = TestServer()
+        http.start()
+        url = 'http://127.0.0.1:%d/progress-url-test' % (http.port)
+
+        datas = get_upload_status("fakeuuid", url)
+
+        self.assertEqual(datas['state'], 'done')
+        http.stop()
 
     def test_addgenre(self):
         """Add genre

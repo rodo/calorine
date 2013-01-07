@@ -60,9 +60,13 @@ def import_upload(uuid, maxtime=480):
 
 def get_upload_status(uuid, url=settings.NGINX_PROGRESS_URL):
     """Retrieve upload status from nginx
+
+    Return : dict
     """
     status = {'state': 'starting'}
     params = {'X-Progress-ID': uuid}
+    logger = logging.getLogger(__name__)
+    logger.debug("Connect on nginx progress url [%s]" % (url))
     try:
         datas = requests.get(url, params=params, timeout=1).content
         status = json.loads(datas)
