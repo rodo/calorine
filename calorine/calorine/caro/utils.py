@@ -242,6 +242,8 @@ def mp3ogg(fname, datas):
     logger = logging.getLogger(__name__)
     oggname = "%s.ogg" % fname[:-4]
     logger.info("(mp3ogg) encode [%s]" % fname)
+    logger.debug("oggenc binary path %s" % settings.OGGENC)
+    logger.debug("mpg123 binary path %s" % settings.MPG123)
 
     mpg = subprocess.Popen([settings.MPG123,
                             "-w",
@@ -282,15 +284,17 @@ def mp4ogg(fname):
     """
     Encode mp4 files to ogg vorbis
     """
-    logger = logging.getLogger('calorine')
-    logger.info("(mp4ogg) encode %s" % fname)
+    logger = logging.getLogger(__name__)
+    logger.info("(mp4ogg) encode [%s] with [%s]" % (fname,
+                                                    settings.FFMPEG2THEORA))
     oggname = "%s.oga" % fname[:-4]
 
-    try:
-        subprocess.call([settings.FFMPEG2THEORA, fname])
+    rescom = subprocess.call([settings.FFMPEG2THEORA, fname])
+    if rescom == 0:
+        logger.debug("(mp4ogg) success on [%s]" % fname)
         result = oggname
-    except:
-        logger.error("(mp4ogg) subprocess failed on [%s]" % fname)
+    else:
+        logger.warning("(mp4ogg) subprocess failed on [%s]" % fname)
         result = None
 
     if result:

@@ -34,6 +34,7 @@ from django.core.cache import cache
 import memcache
 import os
 from tempfile import mkdtemp
+from tempfile import mktemp
 
 
 class UtilsTests(TestCase):  # pylint: disable-msg=R0904
@@ -302,3 +303,13 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
         oggpath = mp4ogg(newpath)
 
         self.assertTrue(os.path.exists(oggpath))
+
+    def test_mp4ogg_wrongfile(self):
+        """Convert mp4 in ogg
+
+        The file is not compatible
+        """
+        fpath = mktemp()
+        oggpath = mp4ogg(fpath)
+
+        self.assertEqual(oggpath, None)
