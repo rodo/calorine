@@ -51,6 +51,31 @@ class SongTests(TestCase):  # pylint: disable-msg=R0904
 
         self.assertGreater(song.id, 0)
 
+    def test_create_song_emptytitle(self):
+        """
+        Create a song with empty title
+        """
+        song = Song.objects.create(artist='Van Morrison',
+                                   album='The Healing Game',
+                                   genre='Blues',
+                                   score=0,
+                                   global_score=0)
+
+        self.assertGreater(song.id, 0)
+        self.assertEqual(song.title, '')
+
+    def test_create_song_emptyartist(self):
+        """
+        Create a song with empty artist
+        """
+        song = Song.objects.create(album='The Healing Game',
+                                   genre='Blues',
+                                   score=0,
+                                   global_score=0)
+
+        self.assertGreater(song.id, 0)
+        self.assertEqual(song.artist, '')
+
     def test_jingles(self):
         """
         Jingles must not be shown in /songs/

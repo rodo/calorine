@@ -179,7 +179,7 @@ def createsong(tags, sig, fpath):
                                uniq=sig,
                                global_score=0,
                                filename=fpath)
-    if hasattr(song, 'title') and song.title is not None:
+    if hasattr(song, 'title') and song.title != '':
         try:
             song.genre += ','.join(get_tags(song.artist, song.title))
         except:
