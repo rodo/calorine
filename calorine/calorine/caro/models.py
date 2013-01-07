@@ -180,3 +180,21 @@ class Mime(models.Model):
     """
     name = models.CharField(max_length=64)
     function = models.CharField(max_length=300)
+
+
+class UserProfile(models.Model):  
+    user = models.OneToOneField(User)  
+    #other fields here
+    ircnick = models.CharField(max_length=64,
+                               unique=True)
+
+    def __str__(self):  
+        return "%s's profile" % self.user  
+
+
+def create_user_profile(sender, instance, created, **kwargs):  
+    if created:  
+       profile, created = UserProfile.objects.get_or_create(user=instance,
+                                                            ircnick=instance.username)
+
+models.signals.post_save.connect(create_user_profile, sender=User) 
