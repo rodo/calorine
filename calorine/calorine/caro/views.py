@@ -112,9 +112,8 @@ class NeverList(ListView):
 
 
 class ArtistList(ListView):
-    queryset = ArtistVote.objects.values(
-        'artist').filter(vote=1).annotate(
-        artist_count=Count('artist')).order_by('-artist_count')
+    artists = ArtistVote.objects.values('artist').filter(vote=1)
+    queryset = artists.annotate(art_c=Count('artist')).order_by('-art_c')
     paginate_by = 17
     template_name = 'stats.html'
     context_object_name = "songs"
