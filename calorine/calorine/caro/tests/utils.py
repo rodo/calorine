@@ -379,6 +379,6 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
         """Un successfuly remove file
         """
         fpath = mktemp()
-        unlink(fpath)
+        os.unlink(fpath)
         result = remove_file(fpath)
         self.assertTrue(result, 1)
