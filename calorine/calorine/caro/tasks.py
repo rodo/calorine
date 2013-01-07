@@ -39,13 +39,7 @@ def import_upload(uuid, maxtime=480):
     """Import uploaded files
 
     maxtime : number in second to wait max
-    """
-    url = settings.NGINX_PROGRESS_URL
-
-    upload = get_object_or_404(Upload, uuid=uuid)
-
-    params = {'X-Progress-ID': uuid}
-
+    """    
     state = 'starting'
     counter = 1
 
@@ -53,15 +47,30 @@ def import_upload(uuid, maxtime=480):
 
     while (counter < maxtime) and (state != 'done'):
         counter += 1
-        prg = requests.get(url, params=params, timeout=1).content
-        datas = json.loads(prg)
+        datas = get_upload_status(uuid)
 
         if datas['state'] == 'done':
             state = 'done'
+            upload = get_object_or_404(Upload, uuid=uuid)
             store_upload(upload)
         sleep(1)
 
     return datas
+
+
+def get_upload_status(uuid, url=settings.NGINX_PROGRESS_URL):
+    """Retrieve upload status from nginx
+    """
+    status = {'state': 'starting'}
+    params = {'X-Progress-ID': uuid}
+    try:
+        datas = requests.get(url, params=params, timeout=1).content
+        status = json.loads(datas)
+    except requests.ConnectionError:
+        logger = logging.getLogger(__name__)
+        logger.info("Cant't connect on nginx progress url [%s]" % (url))
+
+    return status
 
 
 def store_upload(upload):
