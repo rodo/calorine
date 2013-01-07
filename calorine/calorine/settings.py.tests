@@ -21,6 +21,8 @@ DATABASES = {
     }
 }
 #
+NGINX_PROGRESS_URL = 'http://127.0.0.1:81/progress'
+#
 LASTFM_ENDPOINT = 'http://ws.audioscrobbler.com/2.0/'
 LASTFM_API_KEY = "9cf47d9fa4689d0d50db43503a28e48f"
 #
