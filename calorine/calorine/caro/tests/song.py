@@ -127,3 +127,18 @@ class SongTests(TestCase):  # pylint: disable-msg=R0904
                                    global_score=0)
 
         self.assertEqual(song.cover, '')
+
+    def test_userlike(self):
+        """
+        A user like the song, the global score increase by one
+        """
+        song = Song.objects.create(artist='Van Morrison',
+                                   album='The Healing Game',
+                                   title='Sometimes We Cry',
+                                   genre='Blues',
+                                   score=0,
+                                   global_score=0)
+
+        song.userlike(self.user)
+
+        self.assertEqual(song.global_score, 1)
