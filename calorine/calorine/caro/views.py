@@ -161,7 +161,10 @@ class LogList(ListView):
 
 
 class UglyList(ListView):
-    queryset = Song.objects.filter(Q(title='') | Q(artist='') | Q(album='') | Q(genre='')).order_by('artist')
+    queryset = Song.objects.filter(Q(title='') |
+                                   Q(artist='') |
+                                   Q(album='') |
+                                   Q(genre='')).order_by('artist')
     template_name = 'ugly.html'
     context_object_name = 'songs'
     paginate_by = 17
