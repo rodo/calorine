@@ -18,7 +18,6 @@
 #
 from django import template
 from calorine.utils.lastfm import get_picture
-#from calorine.utils.store_image import store_image
 from django.core.cache import cache
 from django.template.defaultfilters import slugify
 register = template.Library()
@@ -40,7 +39,6 @@ def picture(song):
             if pict:
                 song.cover = pict
                 song.save()
-                #store_image(pict)
             else:
                 pict = "http://lorempixel.com/64/64/animals/"
             cache.set(key, pict)
