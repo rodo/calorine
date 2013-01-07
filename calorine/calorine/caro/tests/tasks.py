@@ -30,7 +30,8 @@ from calorine.caro.tasks import store_upload
 from calorine.caro.tasks import get_upload_status
 from uuid import uuid4
 import os
-from httpserver import TestServer
+from calorine.caro.tests.httpserver import TestServer
+
 
 class TasksTests(TestCase):  # pylint: disable-msg=R0904
     """
@@ -41,17 +42,17 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         """Configure env for tests
         """
         settings.REMOVE_UPLOAD_FILES = False
-        self.test_dir = os.path.join('/tmp', str(uuid4()))
-        os.mkdir(self.test_dir)
-        settings.UPLOAD_DEST_DIR = self.test_dir
+        self.tpath = os.path.join('/tmp', str(uuid4()))
+        os.mkdir(self.tpath)
+        settings.UPLOAD_DEST_DIR = self.tpath
 
     def tearDown(self):
         """
         Clean after test
         """
-        for fpath in os.listdir(self.test_dir):
-            os.unlink(os.path.join(self.test_dir, fpath))
-        os.rmdir(self.test_dir)
+        for fpath in os.listdir(self.tpath):
+            os.unlink(os.path.join(self.tpath, fpath))
+        os.rmdir(self.tpath)
 
     def test_getuploadstatus(self):
         """
@@ -98,7 +99,6 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         Upload.objects.all().delete()
 
         settings.REMOVE_UPLOAD_FILES = False
-        settings.UPLOAD_DEST_DIR = self.test_dir
 
         fpath = os.path.join(os.path.dirname(__file__),
                              'samples',
@@ -108,7 +108,7 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         move_file(fpath, 'toto.ogg')
 
         upl = Upload.objects.create(uuid='123456789',
-                                    path=os.path.join(self.test_dir, 'toto.ogg'),
+                                    path=os.path.join(self.tpath, 'toto.ogg'),
                                     filename='The Healing Game.ogg',
                                     content_type='video/ogg')
 
@@ -130,7 +130,7 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         move_file(fpath, 'toto.ogg')
 
         upl = Upload.objects.create(uuid='123456789',
-                                    path=os.path.join(self.test_dir, 'toto.ogg'),
+                                    path=os.path.join(self.tpath, 'toto.ogg'),
                                     filename='The Healing Game.ogg',
                                     content_type='image/jpeg')
 
@@ -151,7 +151,8 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         move_file(fpath, 'Cocaine.mp3')
 
         upl = Upload.objects.create(uuid='123456789',
-                                    path=os.path.join(self.test_dir, 'Cocaine.mp3'),
+                                    path=os.path.join(self.tpath,
+                                                      'Cocaine.mp3'),
                                     filename='Cocaine.mp3',
                                     content_type='audio/mp3')
         self.assertEqual(store_upload(upl), 0)
@@ -164,7 +165,6 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         os.mkdir(tdir)
 
         settings.REMOVE_UPLOAD_FILES = False
-        settings.UPLOAD_DEST_DIR = tdir
 
         fpath = os.path.join(os.path.dirname(__file__),
                              'samples',
@@ -217,7 +217,7 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         move_file(fpath, 'toto.ogg')
 
         upl = Upload.objects.create(uuid='123456789',
-                                    path=os.path.join(self.test_dir, 'toto.ogg'),
+                                    path=os.path.join(self.tpath, 'toto.ogg'),
                                     filename='The Healing Game.ogg',
                                     content_type='application/ogg')
 

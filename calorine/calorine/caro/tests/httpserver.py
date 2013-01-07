@@ -46,12 +46,12 @@ class TestServer(threading.Thread):
         connected = False
         while not connected and self.port < 100142:
             try:
-                self.httpd = SocketServer.TCPServer(("", self.port), JsonHandler)
+                self.httpd = SocketServer.TCPServer(("", self.port),
+                                                    JsonHandler)
                 self.httpd.timeout = 30
                 connected = True
             except:
                 self.port = self.port + 1
-
 
     def run(self):
         print "serving at port", self.port

@@ -39,7 +39,7 @@ def import_upload(uuid, maxtime=480, url=settings.NGINX_PROGRESS_URL):
     """Import uploaded files
 
     maxtime : number in second to wait max
-    """    
+    """
     state = 'starting'
     counter = 1
 
