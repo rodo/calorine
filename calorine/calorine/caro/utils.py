@@ -50,10 +50,6 @@ def checkid3(filename):
     """
     datas = None
     mdat = None
-    try:
-        unicode(filename)
-    except UnicodeDecodeError:
-        pass
 
     try:
         mdat = mutagen.File(filename, easy=True)
