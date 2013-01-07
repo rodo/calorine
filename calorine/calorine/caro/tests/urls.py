@@ -433,7 +433,6 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
                   'songname.path': 'Foo.ogg',
                   'songname.content_type': 'video/ogg'}
 
-
         client = Client()
         client.login(username='admin_search', password='admintest')
 
