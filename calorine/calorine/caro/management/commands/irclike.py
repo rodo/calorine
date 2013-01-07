@@ -17,13 +17,15 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 """
-irclike
+command used by the irc bot. When a user like a song the global_score
+is increase by one
 """
 import logging
 from django.core.management.base import BaseCommand
 from calorine.caro.models import UserProfile
 from calorine.caro.models import HistoryEntry
 from calorine.caro.models import Song
+
 
 class Command(BaseCommand):
     args = '<ircnick>'
@@ -38,8 +40,7 @@ class Command(BaseCommand):
         result = self.irclike(args[0])
 
         if result == -1:
-            raise CommandError('Poll "%s" does not exist' % args[0])
-        
+            raise CommandError('nick "%s" does not exist' % args[0])
 
     def irclike(self, nick):
         """
@@ -51,8 +52,7 @@ class Command(BaseCommand):
         except UserProfile.DoesNotExist:
             logger.warning("ircnick [%s] does not exists" % (nick))
             return -1
-        
+
         songs = HistoryEntry.objects.values('song').order_by('-pk')[:1]
         song = Song.objects.get(pk=songs[0]['song'])
         song.userlike(userp.user)
-
