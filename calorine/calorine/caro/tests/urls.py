@@ -409,7 +409,7 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
 
     def test_uploads(self):
         """
-        The stars
+        List uploaded files
         """
         Upload.objects.all().delete()
 
@@ -423,3 +423,20 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
 
         response = client.get('/uploads/')
         self.assertContains(response, upl.filename, status_code=200)
+
+    def test_upload(self):
+        """
+        Upload url passed to nginx
+        """
+        Upload.objects.all().delete()
+        params = {'songname.name': 'FOO_SERVER_NAME',
+                  'songname.path': 'Foo.ogg',
+                  'songname.content_type': 'video/ogg'}
+
+
+        client = Client()
+        client.login(username='admin_search', password='admintest')
+
+        response = client.post('/upload/?X-Progress-ID=123', params)
+        self.assertEqual(response['Location'], 'http://testserver/uploads/')
+        self.assertEqual(Upload.objects.all().count(), 1)

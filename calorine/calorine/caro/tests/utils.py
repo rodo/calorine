@@ -291,6 +291,23 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
 
         self.assertTrue(os.path.exists(oggpath))
 
+    def test_mp3ogg_badbin(self):
+        """Convert mp3 in ogg
+        """
+        setattr(settings, 'MPG123', '/usr/bin/this-bin-is-nothing')
+
+        tags = {'artist': 'artist',
+                'title': 'title',
+                'album': 'album',
+                'genre': 'genre',
+                'date': 'date',
+                'tracknumber': '1'}
+
+        oggpath = mp3ogg(mktemp(), tags)
+
+        self.assertEqual(oggpath, None)
+
+
     def test_mp4ogg(self):
         """Convert mp4 in ogg
         """

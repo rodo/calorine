@@ -242,14 +242,8 @@ def mp3ogg(fname, datas):
     logger = logging.getLogger(__name__)
     oggname = "%s.ogg" % fname[:-4]
     logger.info("(mp3ogg) encode [%s]" % fname)
-    logger.debug("oggenc binary path %s" % settings.OGGENC)
-    logger.debug("mpg123 binary path %s" % settings.MPG123)
-
-    mpg = subprocess.Popen([settings.MPG123,
-                            "-w",
-                            "-",
-                            fname],
-                           stdout=subprocess.PIPE)
+    logger.debug("(mp3ogg) oggenc binary path %s" % settings.OGGENC)
+    logger.debug("(mp3ogg) mpg123 binary path %s" % settings.MPG123)
 
     command = [settings.OGGENC,
                "--artist", datas['artist'],
@@ -262,6 +256,12 @@ def mp3ogg(fname, datas):
                "-"]
 
     try:
+        mpg = subprocess.Popen([settings.MPG123,
+                                "-w",
+                                "-",
+                                fname],
+                               stdout=subprocess.PIPE)
+
         ogg = subprocess.Popen(command,
                                stdin=mpg.stdout,
                                stdout=subprocess.PIPE,
