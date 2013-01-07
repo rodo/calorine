@@ -212,7 +212,7 @@ def remove_file(fpath):
         os.unlink(fpath)
         return 0
     except:
-        logger.info("can't delete [%s]" % path_from)
+        logger.info("can't delete [%s]" % fpath)
         return 1
 
 
