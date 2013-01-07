@@ -221,23 +221,6 @@ def upload(request):
 
 
 @login_required
-def cover(request, cover):
-    """The profile wiew
-    """
-    data = cache.get("%s_data" % cover)
-    mode = cache.get("%s_mode" % cover)
-    size = cache.get("%s_size" % cover)
-
-    #img = Image.new(mode, size)
-    img = Image.fromstring(mode, size, data)
-
-    response = HttpResponse(mimetype='image/jpeg')
-    response.write(img)
-
-    return response
-
-
-@login_required
 def onair(request):
     """The onair view
     """
