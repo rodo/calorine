@@ -22,6 +22,7 @@ Unit tests for Song
 from django.contrib.auth.models import User
 from django.test import TestCase
 from calorine.caro.models import Song
+from calorine.caro.search_indexes import SongIndex
 from haystack.query import SearchQuerySet
 
 
@@ -89,3 +90,20 @@ class SearchTests(TestCase):  # pylint: disable-msg=R0904
         sqr = SearchQuerySet().filter(artist__contains='popa').models(Song)
 
         self.assertEqual(len(sqr), 1)
+
+    def test_updateall(self):
+        """
+        Make an update on all index
+        """
+        Song.objects.all().delete()
+        Song.objects.create(artist='Popa Chubby',
+                            album='''How'd a White Boy Get the Blues?''',
+                            title='No Comfort',
+                            genre='Rock',
+                            score=0,
+                            family=0,
+                            global_score=0)
+
+        sqr = SongIndex().update()
+
+        self.assertEqual(sqr, None)
