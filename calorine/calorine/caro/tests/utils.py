@@ -27,13 +27,13 @@ from calorine.caro.utils import onair_datas
 from calorine.caro.utils import move_file
 from calorine.caro.utils import readtags
 from calorine.caro.utils import mp3ogg
-#from calorine.caro.utils import store_image
+from calorine.caro.utils import mp4ogg
 from calorine.utils.store_image import store_image
 from os import path
 from django.core.cache import cache
 import memcache
 import os
-from uuid import uuid4
+from tempfile import mkdtemp
 
 
 class UtilsTests(TestCase):  # pylint: disable-msg=R0904
@@ -45,16 +45,17 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
         """
         Init
         """
-        self.test_dir = os.path.join('/tmp', str(uuid4()))
-        os.mkdir(self.test_dir)
+        settings.REMOVE_UPLOAD_FILES = False
+        self.tpath = mkdtemp(prefix='calorine-test_')
+        settings.UPLOAD_DEST_DIR = self.tpath
 
     def tearDown(self):
         """
         Clean after test
         """
-        for fpath in os.listdir(self.test_dir):
-            os.unlink(path.join(self.test_dir, fpath))
-        os.rmdir(self.test_dir)
+        for fpath in os.listdir(self.tpath):
+            os.unlink(path.join(self.tpath, fpath))
+        os.rmdir(self.tpath)
 
     def test_checkid3(self):
         """
@@ -219,9 +220,6 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
     def test_move_file(self):
         """Copy file to newdir
         """
-        settings.REMOVE_UPLOAD_FILES = False
-        settings.UPLOAD_DEST_DIR = self.test_dir
-
         fpath = path.join(path.dirname(__file__),
                           'samples',
                           'first',
@@ -229,17 +227,14 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
 
         move_file(fpath, 'toto.ogg')
 
-        self.assertTrue(os.path.exists(path.join(self.test_dir,
+        self.assertTrue(os.path.exists(path.join(self.tpath,
                                                  'toto.ogg')))
-        os.unlink(path.join(self.test_dir,
+        os.unlink(path.join(self.tpath,
                             'toto.ogg'))
 
     def test_move_file2(self):
         """Copy file to new dir, with existent file
         """
-        settings.REMOVE_UPLOAD_FILES = False
-        settings.UPLOAD_DEST_DIR = self.test_dir
-
         fpath = path.join(path.dirname(__file__),
                           'samples',
                           'first',
@@ -249,17 +244,14 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
         # redo the same action
         result = move_file(fpath, 'toto.ogg')
 
-        self.assertEqual(result, path.join(self.test_dir,
+        self.assertEqual(result, path.join(self.tpath,
                                            'toto.ogg'))
-        self.assertTrue(os.path.exists(path.join(self.test_dir,
+        self.assertTrue(os.path.exists(path.join(self.tpath,
                                                  'toto.ogg')))
 
     def test_move_file3(self):
         """Copy file to new dir and remove source
         """
-        settings.REMOVE_UPLOAD_FILES = False
-        settings.UPLOAD_DEST_DIR = self.test_dir
-
         fpath = path.join(path.dirname(__file__),
                           'samples',
                           'first',
@@ -268,24 +260,19 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
         move_file(fpath, 'toto.ogg')
 
         setattr(settings, 'REMOVE_UPLOAD_FILES', True)
-        result = move_file(path.join(self.test_dir,
+        result = move_file(path.join(self.tpath,
                                      'toto.ogg'), 'tata.ogg')
 
-        self.assertEqual(result, path.join(self.test_dir,
+        self.assertEqual(result, path.join(self.tpath,
                                            'tata.ogg'))
-        self.assertTrue(os.path.exists(path.join(self.test_dir,
+        self.assertTrue(os.path.exists(path.join(self.tpath,
                                                  'tata.ogg')))
-        self.assertFalse(os.path.exists(path.join(self.test_dir,
+        self.assertFalse(os.path.exists(path.join(self.tpath,
                                                   'toto.ogg')))
 
     def test_mp3ogg(self):
         """Convert mp3 in ogg
         """
-        tdir = os.path.join('/tmp', str(uuid4()))
-        os.mkdir(tdir)
-        settings.REMOVE_UPLOAD_FILES = False
-        settings.UPLOAD_DEST_DIR = tdir
-
         fpath = path.join(path.dirname(__file__),
                           'samples',
                           'Cocaine.mp3')
@@ -300,5 +287,18 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
                 'tracknumber': '1'}
 
         oggpath = mp3ogg(newpath, tags)
+
+        self.assertTrue(os.path.exists(oggpath))
+
+    def test_mp4ogg(self):
+        """Convert mp4 in ogg
+        """
+        fpath = path.join(path.dirname(__file__),
+                          'samples',
+                          'test.m4a')
+
+        newpath = move_file(fpath, 'test.m4a')
+
+        oggpath = mp4ogg(newpath)
 
         self.assertTrue(os.path.exists(oggpath))

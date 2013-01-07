@@ -28,9 +28,9 @@ from calorine.caro.tasks import addgenre
 from calorine.caro.tasks import import_upload
 from calorine.caro.tasks import store_upload
 from calorine.caro.tasks import get_upload_status
-from uuid import uuid4
 import os
 from calorine.caro.tests.httpserver import TestServer
+from tempfile import mkdtemp
 
 
 class TasksTests(TestCase):  # pylint: disable-msg=R0904
@@ -42,8 +42,7 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         """Configure env for tests
         """
         settings.REMOVE_UPLOAD_FILES = False
-        self.tpath = os.path.join('/tmp', str(uuid4()))
-        os.mkdir(self.tpath)
+        self.tpath = mkdtemp(prefix='calorine-test_')
         settings.UPLOAD_DEST_DIR = self.tpath
 
     def tearDown(self):
@@ -161,9 +160,6 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         """
         Test with a wrong file, text.mp3 contains plaintext
         """
-        tdir = os.path.join('/tmp', str(uuid4()))
-        os.mkdir(tdir)
-
         settings.REMOVE_UPLOAD_FILES = False
 
         fpath = os.path.join(os.path.dirname(__file__),
