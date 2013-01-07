@@ -21,7 +21,10 @@ Unit tests for urls in caro
 """
 from django.conf import settings
 from django.test import TestCase
-from calorine.caro.utils import importdir, checkid3, sigfile
+from calorine.caro.utils import importdir
+from calorine.caro.utils import checkid3
+from calorine.caro.utils import sigfile
+from calorine.caro.utils import createsong
 from calorine.caro.utils import onair_datas
 from calorine.caro.utils import move_file
 from calorine.caro.utils import readtags
@@ -328,3 +331,37 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
         oggpath = mp4ogg(fpath)
 
         self.assertEqual(oggpath, None)
+
+    def test_createsong(self):
+        """Create a song
+
+        Assume result is ok
+        """
+
+        tags = {'artist': 'artist',
+                'title': 'title',
+                'album': 'album',
+                'genre': 'genre',
+                'date': 'date',
+                'tracknumber': '1'}
+
+        result = createsong(tags, "signature", "/bar/foo.ogg")
+
+        self.assertEqual(result, "[I] title\n")
+
+    def test_createsong_wotitle(self):
+        """Create a song with no title
+
+        Assume result is ok
+        """
+
+        tags = {'artist': 'artist',
+                'title': '',
+                'album': 'album',
+                'genre': 'genre',
+                'date': 'date',
+                'tracknumber': '1'}
+
+        result = createsong(tags, "signature2", "/bar/foo.ogg")
+
+        self.assertEqual(result, "[I] \n")
