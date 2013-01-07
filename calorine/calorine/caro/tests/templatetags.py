@@ -65,3 +65,20 @@ class TemplateTagsTests(TestCase):  # pylint: disable-msg=R0904
         response = picture(song)
         attend = {'picture': song.cover}
         self.assertEqual(response, attend)
+
+    def test_picture_baddatas2(self):
+        """
+        Test with a song that must nor return a cover
+        """
+        song = Song.objects.create(artist='Foobar',
+                                   album='Sure this album does not exists',
+                                   title='Lorem ipsum',
+                                   genre='Ipsum',
+                                   score=0,
+                                   played=0,
+                                   family=0,
+                                   global_score=0)
+
+        response = picture(song)
+        attend = {'picture': 'http://lorempixel.com/64/64/animals/'}
+        self.assertEqual(response, attend)
