@@ -38,6 +38,7 @@ import memcache
 import os
 from tempfile import mkdtemp
 from tempfile import mktemp
+from tempfile import mkstemp
 
 
 class UtilsTests(TestCase):  # pylint: disable-msg=R0904
@@ -370,15 +371,15 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
     def test_remove_file_suc(self):
         """Sucessfuly remove file
         """
-        fpath = mktemp()
+        fpath = mkstemp()[1]
         result = remove_file(fpath)
-        self.assertTrue(result, 0)
+        self.assertEqual(result, 0)
         self.assertFalse(os.path.exists(fpath))
 
     def test_remove_file_unc(self):
         """Un successfuly remove file
         """
-        fpath = mktemp()
+        fpath = mkstemp()[1]
         os.unlink(fpath)
         result = remove_file(fpath)
-        self.assertTrue(result, 1)
+        self.assertEqual(result, 1)
