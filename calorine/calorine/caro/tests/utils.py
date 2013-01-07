@@ -45,12 +45,16 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
         """
         Init
         """
-        self.user = User.objects.create_user('admin_search',
-                                             'admin_search@bar.com',
-                                             'admintest')
+        self.test_dir = os.path.join('/tmp', str(uuid4()))
+        os.mkdir(self.test_dir)
 
-        if os.path.exists('/tmp/toto.ogg'):
-            os.unlink('/tmp/toto.ogg')
+    def tearDown(self):
+        """
+        Clean after test
+        """
+        for fpath in os.listdir(self.test_dir):
+            os.unlink(path.join(self.test_dir, fpath))
+        os.rmdir(self.test_dir)
 
     def test_checkid3(self):
         """
@@ -216,7 +220,7 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
         """Copy file to newdir
         """
         settings.REMOVE_UPLOAD_FILES = False
-        settings.UPLOAD_DEST_DIR = '/tmp/'
+        settings.UPLOAD_DEST_DIR = self.test_dir
 
         fpath = path.join(path.dirname(__file__),
                           'samples',
@@ -225,13 +229,16 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
 
         move_file(fpath, 'toto.ogg')
 
-        self.assertTrue(os.path.exists('/tmp/toto.ogg'))
+        self.assertTrue(os.path.exists(path.join(self.test_dir,
+                                                 'toto.ogg')))
+        os.unlink(path.join(self.test_dir,
+                            'toto.ogg'))
 
     def test_move_file2(self):
         """Copy file to new dir, with existent file
         """
         settings.REMOVE_UPLOAD_FILES = False
-        settings.UPLOAD_DEST_DIR = '/tmp/'
+        settings.UPLOAD_DEST_DIR = self.test_dir
 
         fpath = path.join(path.dirname(__file__),
                           'samples',
@@ -242,14 +249,16 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
         # redo the same action
         result = move_file(fpath, 'toto.ogg')
 
-        self.assertEqual(result, '/tmp/toto.ogg')
-        self.assertTrue(os.path.exists('/tmp/toto.ogg'))
+        self.assertEqual(result, path.join(self.test_dir,
+                                           'toto.ogg'))
+        self.assertTrue(os.path.exists(path.join(self.test_dir,
+                                                 'toto.ogg')))
 
     def test_move_file3(self):
         """Copy file to new dir and remove source
         """
         settings.REMOVE_UPLOAD_FILES = False
-        settings.UPLOAD_DEST_DIR = '/tmp/'
+        settings.UPLOAD_DEST_DIR = self.test_dir
 
         fpath = path.join(path.dirname(__file__),
                           'samples',
@@ -259,11 +268,15 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
         move_file(fpath, 'toto.ogg')
 
         setattr(settings, 'REMOVE_UPLOAD_FILES', True)
-        result = move_file('/tmp/toto.ogg', 'tata.ogg')
+        result = move_file(path.join(self.test_dir,
+                                     'toto.ogg'), 'tata.ogg')
 
-        self.assertEqual(result, '/tmp/tata.ogg')
-        self.assertTrue(os.path.exists('/tmp/tata.ogg'))
-        self.assertFalse(os.path.exists('/tmp/toto.ogg'))
+        self.assertEqual(result, path.join(self.test_dir,
+                                           'tata.ogg'))
+        self.assertTrue(os.path.exists(path.join(self.test_dir,
+                                                 'tata.ogg')))
+        self.assertFalse(os.path.exists(path.join(self.test_dir,
+                                                  'toto.ogg')))
 
     def test_mp3ogg(self):
         """Convert mp3 in ogg
