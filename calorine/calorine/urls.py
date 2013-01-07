@@ -6,6 +6,7 @@ from calorine.caro.views import SongList, PlayList
 from calorine.caro.views import PopsList
 from calorine.caro.views import StarList
 from calorine.caro.views import NeverList
+from calorine.caro.views import ScoreNull
 from calorine.caro.views import ArtistList
 from calorine.caro.views import UglyList
 from calorine.caro.views import UploadList
@@ -25,6 +26,7 @@ urlpatterns = patterns('',
                        url(r'^stats/ugly/$', login_required(UglyList.as_view())),
                        url(r'^songs/pops/$', login_required(PopsList.as_view())),
                        url(r'^songs/never-played/$', login_required(NeverList.as_view())),
+                       url(r'^songs/score-null/$', login_required(ScoreNull.as_view())),
                        url(r'^logs/$', login_required(LogList.as_view())),
                        url(r'^history/', login_required(HistoryList.as_view())),
                        url(r'^playlist/add/(?P<song_id>\d+)$', 'calorine.caro.views.pladd'),

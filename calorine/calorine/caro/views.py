@@ -90,13 +90,6 @@ class HistoryList(ListView):
     context_object_name = "songs"
 
 
-class PopsList(ListView):
-    queryset = Song.objects.all().order_by("-global_score")
-    paginate_by = 17
-    template_name = 'songs.html'
-    context_object_name = "songs"
-
-
 class NeverList(ListView):
     queryset = Song.objects.filter(played=0)
     paginate_by = 17
@@ -109,6 +102,21 @@ class NeverList(ListView):
             if cache.get('song_{}'.format(song.pk)):
                 song.vote = True
         return context
+
+
+class PopsList(NeverList):
+    queryset = Song.objects.all().order_by("-global_score")
+
+
+class ScoreNull(NeverList):
+    queryset = Song.objects.filter(global_score=0)
+
+
+class UglyList(NeverList):
+    queryset = Song.objects.filter(Q(title='') |
+                                   Q(artist='') |
+                                   Q(album='') |
+                                   Q(genre='')).order_by('artist')
 
 
 class ArtistList(ListView):
@@ -156,16 +164,6 @@ class LogList(ListView):
     queryset = Logs.objects.all().order_by('-date_import')
     template_name = 'errors.html'
     context_object_name = 'errors'
-    paginate_by = 17
-
-
-class UglyList(ListView):
-    queryset = Song.objects.filter(Q(title='') |
-                                   Q(artist='') |
-                                   Q(album='') |
-                                   Q(genre='')).order_by('artist')
-    template_name = 'ugly.html'
-    context_object_name = 'songs'
     paginate_by = 17
 
 
