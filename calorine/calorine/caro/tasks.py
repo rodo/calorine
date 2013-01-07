@@ -35,8 +35,10 @@ import converters
 
 
 @task()
-def import_upload(uuid):
+def import_upload(uuid, maxtime=480):
     """Import uploaded files
+
+    maxtime : number in second to wait max
     """
     url = settings.NGINX_PROGRESS_URL
 
@@ -47,7 +49,9 @@ def import_upload(uuid):
     state = 'starting'
     counter = 1
 
-    while (counter < 480) and (state != 'done'):
+    datas = {'state': 'starting'}
+
+    while (counter < maxtime) and (state != 'done'):
         counter += 1
         prg = requests.get(url, params=params, timeout=1).content
         datas = json.loads(prg)

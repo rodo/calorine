@@ -68,20 +68,6 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
 
         self.assertEqual(result, 1)
 
-    def test_import_upload(self):
-        """
-        Test with a picture with cover
-        """
-        Upload.objects.all().delete()
-        upl = Upload.objects.create(uuid='123456789',
-                                    path='/tmp/123456789',
-                                    filename='The Healing Game.ogg',
-                                    content_type='application/ogg')
-
-        result = import_upload.delay(upl.uuid)
-
-        self.assertTrue(result.task_id > 0)
-
     def test_store_upload(self):
         """
         Test with a picture with cover
@@ -193,3 +179,18 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         # cleaning
         os.unlink(upl.path)
         os.rmdir(tdir)
+
+    def test_import_upload(self):
+        """
+        Simple upload
+        """
+        Upload.objects.all().delete()
+        upl = Upload.objects.create(uuid='123456789',
+                                    path='/tmp/123456789',
+                                    filename='The Healing Game.ogg',
+                                    content_type='application/ogg')
+
+        result = import_upload(upl.uuid, 2)
+
+        self.assertEqual(result['state'], 'starting')
+
