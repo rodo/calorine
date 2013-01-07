@@ -19,7 +19,6 @@
 Unit tests for urls in caro
 
 """
-from django.contrib.auth.models import User
 from django.conf import settings
 from django.test import TestCase
 from calorine.caro.utils import importdir, checkid3, sigfile
@@ -306,7 +305,6 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
         oggpath = mp3ogg(mktemp(), tags)
 
         self.assertEqual(oggpath, None)
-
 
     def test_mp4ogg(self):
         """Convert mp4 in ogg
