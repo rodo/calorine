@@ -14,3 +14,4 @@ from calorine.caro.tests.profile import ProfileTests
 from calorine.caro.tests.views import ViewsTests
 from calorine.caro.tests.templatetags import TemplateTagsTests
 from calorine.caro.tests.tasks import TasksTests
+from calorine.caro.tests.upload import UploadTests
