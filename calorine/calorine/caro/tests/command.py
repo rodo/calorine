@@ -402,7 +402,11 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
                             global_score=0,
                             filename='/tmp/this_file_does_not_exists')
 
-        attend = u'notfound.value 0\nneverplayed.value 1\nplayedone.value 1\nplayedmore.value 0\ntotal.value 2\n'
+        attend = ('\n').join(('notfound.value 0',
+                             'neverplayed.value 1',
+                             'playedone.value 1',
+                             'playedmore.value 0',
+                             'total.value 2\n'))
 
         content = StringIO()
         call_command('munin', stdout=content)
