@@ -33,7 +33,6 @@ import os
 import SimpleHTTPServer
 import SocketServer
 import threading
-from pprint import pprint
 
 
 class JsonHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
@@ -55,16 +54,11 @@ class TestServer(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
         self.port = 10042
-        Handler = SimpleHTTPServer.SimpleHTTPRequestHandler
         self.httpd = SocketServer.TCPServer(("", self.port), JsonHandler)
 
     def run(self):
         print "serving at port", self.port
-        # serve only one request
         self.httpd.handle_request()
-
-    def stop(self):
-        self.httpd.shutdown
 
 
 class TasksTests(TestCase):  # pylint: disable-msg=R0904
@@ -78,7 +72,6 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         settings.REMOVE_UPLOAD_FILES = False
         settings.UPLOAD_DEST_DIR = '/tmp/'
 
-
     def test_getuploadstatus(self):
         """
         Function : get_upload_status()
@@ -90,7 +83,6 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         datas = get_upload_status("fakeuuid", url)
 
         self.assertEqual(datas['state'], 'done')
-        http.stop()
 
     def test_addgenre(self):
         """Add genre
@@ -109,7 +101,7 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
 
         self.assertEqual(result, 0)
 
-    def test_addgenre(self):
+    def test_addgenre_undef(self):
         """Add genre with undefined song
         """
         song = None
@@ -243,4 +235,3 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         result = import_upload(upl.uuid, 2)
 
         self.assertEqual(result['state'], 'starting')
-
