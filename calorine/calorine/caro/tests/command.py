@@ -455,7 +455,7 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
                                    family=0,
                                    global_score=0)
 
-        hist = HistoryEntry.objects.create(song=song)
+        HistoryEntry.objects.create(song=song)
 
         userp = UserProfile.objects.get(user=self.user)
 
@@ -523,7 +523,7 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
                                    score=0,
                                    family=0,
                                    global_score=0)
-        
+
         HistoryEntry.objects.create(song=song)
 
         before = song.global_score
@@ -543,3 +543,35 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         self.assertEqual(after, 0)
         self.assertEqual(output,
                          'nick [%s] does not exist' % nick)
+
+    def test_ircdislike(self):
+        """
+        Management command ircdislike
+
+        The last play song has a score decrease by one
+        """
+        Song.objects.all().delete()
+        HistoryEntry.objects.all().delete()
+
+        song = Song.objects.create(artist='Lou Reed',
+                                   album='Transformer',
+                                   title='''song title''',
+                                   genre='',
+                                   score=0,
+                                   family=0,
+                                   global_score=10)
+
+        HistoryEntry.objects.create(song=song)
+        userp = UserProfile.objects.get(user=self.user)
+        before = song.global_score
+
+        content = StringIO()
+        call_command('irclike', userp.ircnick, stdout=content)
+        content.seek(0)
+
+        upsong = Song.objects.get(pk=song.id)
+
+        after = upsong.global_score
+
+        self.assertEqual(before, 10)
+        self.assertEqual(after, 9)
