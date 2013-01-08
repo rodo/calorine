@@ -182,7 +182,6 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
                                     content_type='audio/mp3')
         self.assertEqual(store_upload(upl), 2)
 
-
     def test_importupload_failed(self):
         """
         Simple upload
@@ -228,4 +227,3 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         result = import_upload(upl.uuid, 2, url)
 
         self.assertEqual(result['state'], 'done')
-
