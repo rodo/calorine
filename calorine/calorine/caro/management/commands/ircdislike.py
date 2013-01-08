@@ -50,7 +50,8 @@ class Command(BaseCommand):
             self.stderr.write('nick [%s] does not exist' % args[0])
             return "\n"
         else:
-            msg = u'''Ok tu n'aimes pas %s, c'est noté''' % self.songtitle
+            msg = '''Ok %s tu n'aimes pas %s, je le note''' % (args[0],
+                                                               self.songtitle)
             self.stdout.write(msg)
             return "\n"
             
