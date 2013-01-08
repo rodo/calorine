@@ -145,6 +145,11 @@ class StarList(ListView):
         return context
 
 
+class StarUploadList(ListView):
+    queryset = Upload.objects.values('user').annotate(
+        dcount=Count('user')).order_by('-dcount')
+
+
 class PlayList(ListView):
     queryset = PlaylistEntry.objects.all().order_by('-score', 'date_add')
     paginate_by = 17

@@ -5,6 +5,7 @@ from calorine.caro.views import LogList, HistoryList
 from calorine.caro.views import SongList, PlayList
 from calorine.caro.views import PopsList
 from calorine.caro.views import StarList
+from calorine.caro.views import StarUploadList
 from calorine.caro.views import NeverList
 from calorine.caro.views import ScoreNull
 from calorine.caro.views import ArtistList
@@ -22,6 +23,7 @@ urlpatterns = patterns('',
                        url(r'^onair.json$', 'calorine.caro.views.onair'),
                        url(r'^songs/$', login_required(SongList.as_view())),
                        url(r'^stars/$', login_required(StarList.as_view())),
+                       url(r'^stats/upload/$', login_required(StarUploadList.as_view())),
                        url(r'^stats/artist/$', login_required(ArtistList.as_view())),
                        url(r'^stats/ugly/$', login_required(UglyList.as_view())),
                        url(r'^songs/pops/$', login_required(PopsList.as_view())),

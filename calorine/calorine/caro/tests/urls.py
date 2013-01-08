@@ -467,3 +467,21 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
         response = client.post('/upload/?X-Progress-ID=123', params)
         self.assertEqual(response['Location'], 'http://testserver/uploads/')
         self.assertEqual(Upload.objects.all().count(), 1)
+
+    def test_stats_upload(self):
+        """
+        The stars
+        """
+        Upload.objects.all().delete()
+
+        upl = Upload.objects.create(uuid='123456789',
+                                    user=self.user,
+                                    path='/tmp/notimport.mp3',
+                                    filename='The Healing Game.ogg',
+                                    content_type='application/ogg')
+
+        client = Client()
+        client.login(username='admin_search', password='admintest')
+
+        response = client.get('/stats/upload/')
+        self.assertContains(response, self.user.username, status_code=200)
