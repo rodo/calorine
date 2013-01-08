@@ -463,7 +463,7 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
 
         content = StringIO()
         call_command('irclike', userp.ircnick, stdout=content)
-        output = content.seek(0)
+        content.seek(0)
 
         upsong = Song.objects.get(pk=song.id)
 
@@ -489,7 +489,7 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
                                    family=0,
                                    global_score=0)
 
-        hist = HistoryEntry.objects.create(song=song)
+        HistoryEntry.objects.create(song=song)
 
         before = song.global_score
 
@@ -523,8 +523,8 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
                                    score=0,
                                    family=0,
                                    global_score=0)
-
-        hist = HistoryEntry.objects.create(song=song)
+        
+        HistoryEntry.objects.create(song=song)
 
         before = song.global_score
 
@@ -543,4 +543,3 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         self.assertEqual(after, 0)
         self.assertEqual(output,
                          'nick [%s] does not exist' % nick)
-
