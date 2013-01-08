@@ -73,5 +73,5 @@ class Command(BaseCommand):
 
         songs = HistoryEntry.objects.values('song').order_by('-pk')[:1]
         self.song = Song.objects.get(pk=songs[0]['song'])
-        
+
         return self.song.userlike(userp.user, -1)
