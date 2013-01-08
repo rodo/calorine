@@ -28,6 +28,7 @@ from calorine.caro.models import Song
 
 logger = logging.getLogger(__name__)
 
+
 class Command(BaseCommand):
     args = '<ircnick>'
     help = 'Import recursively all ogg file in a directory'
@@ -35,21 +36,22 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         if len(args) == 0:
+            msg = "Erreur, vous devez indiquez un nick irc en option"
             logger.warning("ircnick is missing")
-            self.stderr.write("Erreur, vous devez indiquez un nick irc en option")
+            self.stderr.write(msg)
             return "\n"
 
         result = self.irclike(args[0])
 
         if result == -1:
             logger.warning('nick [%s] does not exist' % args[0])
-            self.stderr.write('nick [%s] does not exist' % args[0])            
+            self.stderr.write('nick [%s] does not exist' % args[0])
             return "\n"
 
     def irclike(self, nick):
         """
         An irc user like the actual song
-        """    
+        """
         try:
             userp = UserProfile.objects.get(ircnick=nick)
         except UserProfile.DoesNotExist:
