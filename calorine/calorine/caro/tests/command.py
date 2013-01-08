@@ -575,3 +575,39 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
 
         self.assertEqual(before, 10)
         self.assertEqual(after, 9)
+
+    def test_ircdislike_spamdetection(self):
+        """
+        Management command ircdislike
+
+        The last play song has a score decrease by one
+        """
+        Song.objects.all().delete()
+        HistoryEntry.objects.all().delete()
+
+        song = Song.objects.create(artist='Lou Reed',
+                                   album='Transformer',
+                                   title='''song title''',
+                                   genre='',
+                                   score=0,
+                                   family=0,
+                                   global_score=10)
+
+        HistoryEntry.objects.create(song=song)
+        userp = UserProfile.objects.get(user=self.user)
+        before = song.global_score
+
+        # do a first call
+        call_command('ircdislike', userp.ircnick)
+
+        content = StringIO()
+        call_command('ircdislike', userp.ircnick, stdout=content)
+        content.seek(0)
+        output = content.read()
+
+        upsong = Song.objects.get(pk=song.id)
+
+        after = upsong.global_score
+
+        self.assertEqual(before, 10)
+        self.assertEqual(after, 9)
