@@ -90,7 +90,7 @@ class HistoryList(ListView):
     context_object_name = "songs"
 
 
-class NeverList(ListView):
+class NeverList(ListView):  # pylint: disable-msg=R0901
     queryset = Song.objects.filter(played=0)
     paginate_by = 17
     template_name = 'songs.html'
@@ -104,15 +104,15 @@ class NeverList(ListView):
         return context
 
 
-class PopsList(NeverList):
+class PopsList(NeverList):  # pylint: disable-msg=R0901
     queryset = Song.objects.all().order_by("-global_score")
 
 
-class ScoreNull(NeverList):
+class ScoreNull(NeverList):  # pylint: disable-msg=R0901
     queryset = Song.objects.filter(global_score=0)
 
 
-class UglyList(NeverList):
+class UglyList(NeverList):  # pylint: disable-msg=R0901
     queryset = Song.objects.filter(Q(title='') |
                                    Q(artist='') |
                                    Q(album='') |
@@ -145,7 +145,7 @@ class StarList(ListView):
         return context
 
 
-class StarUploadList(StarList):
+class StarUploadList(StarList):  # pylint: disable-msg=R0901
     queryset = Upload.objects.values('user').annotate(
         dcount=Count('user')).order_by('-dcount')
 
