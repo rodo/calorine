@@ -155,9 +155,13 @@ class BotCalorine(ircbot.SingleServerIRCBot):
                 self.asv()
             elif msg.startswith("%s: onair" % self.nick):
                 self.onair()
+            elif msg.startswith("%s: on air" % self.nick):
+                self.onair()
             elif msg.startswith("%s: like" % self.nick):
                 self.like(irclib.nm_to_n(event.source()))
             elif msg.startswith("%s: hate" % self.nick):
+                self.hate(irclib.nm_to_n(event.source()))
+            elif msg.startswith("%s: dislike" % self.nick):
                 self.hate(irclib.nm_to_n(event.source()))
             elif msg.startswith("%s: help" % self.nick):
                 self.help()
@@ -183,7 +187,9 @@ class BotCalorine(ircbot.SingleServerIRCBot):
     def hate(self, nick):
         """Hate a song
         """
-        self.speak("oh peuchère tu n'aimes pas ma musiqueuh ?")
+        syslog.syslog("action: like from %s" % nick)
+        res = subprocess.check_output([self.manage, 'ircdislike', nick])
+        self.speak(res.rstrip())
 
     def like(self, nick):
         """Like a song
