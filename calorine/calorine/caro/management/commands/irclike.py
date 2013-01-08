@@ -26,6 +26,7 @@ from calorine.caro.models import UserProfile
 from calorine.caro.models import HistoryEntry
 from calorine.caro.models import Song
 
+logger = logging.getLogger(__name__)
 
 class Command(BaseCommand):
     args = '<ircnick>'
@@ -34,19 +35,21 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         if len(args) == 0:
-            print "Erreur, vous devez indiquez un nick irc en option"
-            return -1
+            logger.warning("ircnick is missing")
+            self.stderr.write("Erreur, vous devez indiquez un nick irc en option")
+            return "\n"
 
         result = self.irclike(args[0])
 
         if result == -1:
-            raise CommandError('nick "%s" does not exist' % args[0])
+            logger.warning('nick [%s] does not exist' % args[0])
+            self.stderr.write('nick [%s] does not exist' % args[0])            
+            return "\n"
 
     def irclike(self, nick):
         """
         An irc user like the actual song
-        """
-        logger = logging.getLogger(__name__)
+        """    
         try:
             userp = UserProfile.objects.get(ircnick=nick)
         except UserProfile.DoesNotExist:
