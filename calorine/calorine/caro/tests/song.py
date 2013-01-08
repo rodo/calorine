@@ -23,6 +23,8 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.test import Client
 from calorine.caro.models import Song
+from calorine.caro.models import Vote
+from datetime import date
 
 
 class SongTests(TestCase):  # pylint: disable-msg=R0904
@@ -132,6 +134,24 @@ class SongTests(TestCase):  # pylint: disable-msg=R0904
         """
         A user like the song, the global score increase by one
         """
+        Vote.objects.all().delete()
+        song = Song.objects.create(artist='Van Morrison',
+                                   album='The Healing Game',
+                                   title='Sometimes We Cry',
+                                   genre='Blues',
+                                   score=0,
+                                   global_score=0)
+
+        result = song.userlike(self.user)
+
+        self.assertEqual(song.global_score, 1)
+        self.assertEqual(result, 0)
+
+    def test_userlike_antispam(self):
+        """
+        A user like the song, the global score increase by one
+        """
+        Vote.objects.all().delete()
         song = Song.objects.create(artist='Van Morrison',
                                    album='The Healing Game',
                                    title='Sometimes We Cry',
@@ -140,5 +160,59 @@ class SongTests(TestCase):  # pylint: disable-msg=R0904
                                    global_score=0)
 
         song.userlike(self.user)
+        # we call twice like a spammer
+        result = song.userlike(self.user)
 
         self.assertEqual(song.global_score, 1)
+        self.assertEqual(result, 1)
+
+    def test_userlike_antispam2(self):
+        """
+        Two user like the same song
+        """
+        Vote.objects.all().delete()
+
+        userb = User.objects.create_user('adminb',
+                                         'adminb@bar.com',
+                                         'adminb')
+
+        song = Song.objects.create(artist='Van Morrison',
+                                   album='The Healing Game',
+                                   title='Sometimes We Cry',
+                                   genre='Blues',
+                                   score=0,
+                                   global_score=0)
+
+        song.userlike(userb)
+        result = song.userlike(self.user)
+
+        self.assertEqual(song.global_score, 2)
+        self.assertEqual(result, 0)
+
+    def test_userlike_oldvote(self):
+        """
+        A user like the song, the global score increase by one
+        """
+        Vote.objects.all().delete()
+
+        song = Song.objects.create(artist='Van Morrison',
+                                   album='The Healing Game',
+                                   title='Sometimes We Cry',
+                                   genre='Blues',
+                                   score=0,
+                                   global_score=1)
+
+        # the date_vote is more than 24 hours
+        vote = Vote.objects.create(user=self.user,
+                                   vote=1,
+                                   song=song)
+
+        vote.date_vote = date(2012,1,2)
+        vote.save()
+
+
+        result = song.userlike(self.user)
+
+        self.assertEqual(result, 0)
+        self.assertEqual(song.global_score, 2)
+

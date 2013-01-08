@@ -22,6 +22,7 @@ import logging
 from django.contrib.auth.models import User
 from django.db import models
 from datetime import datetime
+from datetime import timedelta
 
 
 class Song(models.Model):
@@ -83,10 +84,20 @@ class Song(models.Model):
         logger = logging.getLogger(__name__)
         logger.debug('user %s like song id %s' % (user.username,
                                                   self.id))
-        self.global_score = self.global_score + note
-        self.save()
-        # create a vote for this song
-        Vote.objects.create(song=self, user=user, vote=note)
+
+        yesterday = datetime.today() - timedelta(hours=24)
+
+        votes = Vote.objects.filter(song=self,
+                                    user=user,
+                                    date_vote__gt=yesterday)
+        if len(votes) > 0:
+            return 1
+        else:
+            self.global_score = self.global_score + note
+            self.save()
+            # create a vote for this song
+            Vote.objects.create(song=self, user=user, vote=note)
+            return 0
 
 
 class PlaylistEntry(models.Model):
