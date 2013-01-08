@@ -17,7 +17,7 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 """
-command used by the irc bot. When a user like a song the global_score
+command used by the irc bot. When a user dislike a song the global_score
 is increase by one
 """
 import logging
@@ -32,7 +32,6 @@ logger = logging.getLogger(__name__)
 class Command(BaseCommand):
     args = '<ircnick>'
     help = 'dislike a song from an irc account'
-
     song = None
 
     def handle(self, *args, **options):
@@ -50,13 +49,14 @@ class Command(BaseCommand):
             self.stderr.write('nick [%s] does not exist' % args[0])
             return "\n"
         else:
-            msg = '''Ok %s tu n'aimes pas %s, je le note %d -> %d''' % (args[0],
-                                                                        self.song.title,
-                                                                        self.song.global_score + 1,
-                                                                        self.song.global_score)
+            infos = (args[0],
+                     self.song.title,
+                     self.song.global_score + 1,
+                     self.song.global_score)
+            msg = '''Ok %s tu n'aimes pas %s, je le note %d -> %d''' % infos
             self.stdout.write(msg)
             return "\n"
-            
+
     def ircdislike(self, nick):
         """
         An irc user dislike the current playing song
