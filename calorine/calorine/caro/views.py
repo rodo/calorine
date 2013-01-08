@@ -145,7 +145,7 @@ class StarList(ListView):
         return context
 
 
-class StarUploadList(ListView):
+class StarUploadList(StarList):
     queryset = Upload.objects.values('user').annotate(
         dcount=Count('user')).order_by('-dcount')
 
