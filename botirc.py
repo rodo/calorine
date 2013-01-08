@@ -161,6 +161,8 @@ class BotCalorine(ircbot.SingleServerIRCBot):
                 self.like(irclib.nm_to_n(event.source()))
             elif msg.startswith("%s: hate" % self.nick):
                 self.hate(irclib.nm_to_n(event.source()))
+            elif msg.startswith("%s: caca" % self.nick):
+                self.hate(irclib.nm_to_n(event.source()))
             elif msg.startswith("%s: dislike" % self.nick):
                 self.hate(irclib.nm_to_n(event.source()))
             elif msg.startswith("%s: help" % self.nick):
