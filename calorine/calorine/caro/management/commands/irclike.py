@@ -50,7 +50,7 @@ class Command(BaseCommand):
         else:
             self.stdout.write(u'''Merci pour ton vote %s''' % args[0])
             return "\n"
-            
+
     def irclike(self, nick):
         """
         An irc user like the actual song
