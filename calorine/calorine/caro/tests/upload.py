@@ -43,6 +43,7 @@ class UploadTests(TestCase):  # pylint: disable-msg=R0904
         """
         upl = Upload.objects.create(uuid='123456789',
                                     path='Cocaine.mp3',
+                                    user=self.user,
                                     filename='Cocaine.mp3',
                                     content_type='audio/mp3')
 
@@ -55,6 +56,7 @@ class UploadTests(TestCase):  # pylint: disable-msg=R0904
         """
         upl = Upload.objects.create(uuid='123456789',
                                     path='Cocaine.mp3',
+                                    user=self.user,
                                     filename='Cocaine.mp3',
                                     content_type='audio/mp3')
 

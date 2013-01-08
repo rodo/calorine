@@ -169,6 +169,7 @@ class Upload(models.Model):
     A file uploaded
 
     """
+    user = models.ForeignKey(User)
     uuid = models.CharField(max_length=64)
     path = models.CharField(max_length=300)
     filename = models.CharField(max_length=100)

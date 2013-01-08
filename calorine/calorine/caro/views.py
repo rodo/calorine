@@ -209,6 +209,7 @@ def upload(request):
     uuid = request.GET['X-Progress-ID']
     Upload.objects.create(uuid=uuid,
                           path=request.POST['songname.path'],
+                          user=request.user,
                           filename=filename,
                           content_type=request.POST['songname.content_type'])
 
