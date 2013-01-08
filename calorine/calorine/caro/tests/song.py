@@ -207,12 +207,10 @@ class SongTests(TestCase):  # pylint: disable-msg=R0904
                                    vote=1,
                                    song=song)
 
-        vote.date_vote = date(2012,1,2)
+        vote.date_vote = date(2012, 1, 2)
         vote.save()
-
 
         result = song.userlike(self.user)
 
         self.assertEqual(result, 0)
         self.assertEqual(song.global_score, 2)
-
