@@ -506,3 +506,41 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         self.assertEqual(after, 0)
         self.assertEqual(output,
                          "Erreur, vous devez indiquez un nick irc en option")
+
+    def test_irclike_badnick(self):
+        """
+        Management command irclike
+
+        The nick is unknown
+        """
+        Song.objects.all().delete()
+        HistoryEntry.objects.all().delete()
+
+        song = Song.objects.create(artist='Lou Reed',
+                                   album='Transformer',
+                                   title='''song title''',
+                                   genre='',
+                                   score=0,
+                                   family=0,
+                                   global_score=0)
+
+        hist = HistoryEntry.objects.create(song=song)
+
+        before = song.global_score
+
+        nick = 'this_is_not_a_real_nick'
+
+        content = StringIO()
+        call_command('irclike', nick, stderr=content)
+        content.seek(0)
+        output = content.read()
+
+        upsong = Song.objects.get(pk=song.id)
+
+        after = upsong.global_score
+
+        self.assertEqual(before, 0)
+        self.assertEqual(after, 0)
+        self.assertEqual(output,
+                         'nick [%s] does not exist' % nick)
+
