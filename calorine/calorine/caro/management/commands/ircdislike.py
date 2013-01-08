@@ -33,7 +33,7 @@ class Command(BaseCommand):
     args = '<ircnick>'
     help = 'dislike a song from an irc account'
 
-    songtitle = ''
+    song = None
 
     def handle(self, *args, **options):
 
@@ -50,8 +50,10 @@ class Command(BaseCommand):
             self.stderr.write('nick [%s] does not exist' % args[0])
             return "\n"
         else:
-            msg = '''Ok %s tu n'aimes pas %s, je le note''' % (args[0],
-                                                               self.songtitle)
+            msg = '''Ok %s tu n'aimes pas %s, je le note %d -> %d''' % (args[0],
+                                                                        self.song.title,
+                                                                        self.song.global_score + 1,
+                                                                        self.song.global_score)
             self.stdout.write(msg)
             return "\n"
             
@@ -66,8 +68,7 @@ class Command(BaseCommand):
             return -1
 
         songs = HistoryEntry.objects.values('song').order_by('-pk')[:1]
-        song = Song.objects.get(pk=songs[0]['song'])
-        self.songtitle = song.title
-        song.userlike(userp.user, -1)
+        self.song = Song.objects.get(pk=songs[0]['song'])
+        self.song.userlike(userp.user, -1)
 
         return 0
