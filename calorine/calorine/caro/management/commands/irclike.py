@@ -47,7 +47,10 @@ class Command(BaseCommand):
             logger.warning('nick [%s] does not exist' % args[0])
             self.stderr.write('nick [%s] does not exist' % args[0])
             return "\n"
-
+        else:
+            self.stdout.write('Merci pour ton vote')
+            return "\n"
+            
     def irclike(self, nick):
         """
         An irc user like the actual song
