@@ -40,6 +40,10 @@ class BotCalorine(ircbot.SingleServerIRCBot):
     pl_prefix = ["donne moi du", "allez balance", "vas-y envoi", "gimme",
                  "balance"]
 
+    manage = os.path.join(os.path.dirname(__file__),
+                          'calorine',
+                          'manage.py')
+
     def __init__(self, nick, chan, url):
         """
         Constructeur qui pourrait prendre des paramètres dans un "vrai" programme.
@@ -184,13 +188,15 @@ class BotCalorine(ircbot.SingleServerIRCBot):
     def like(self):
         """Like a song
         """
-        self.speak("You like the song cool")
+        syslog.syslog("action: like")
+        res = subprocess.check_output([self.manage, 'irclike', self.nick])
+        self.speak(res.rstrip())
 
     def help(self):
         """Prints help commands on IRC
         """
-        self.speak("prefix the folowwing command by 'nick: '")
-        self.speak(" asv : crticial informations")
+        self.speak("prefix the following command by 'nick: '")
+        self.speak(" asv : critical information, must sign an NDA to know them")
         self.speak(" cassos : irc bot quit")
         self.speak(" like : I like the song")
         self.speak(" onair : display on air song informations")
@@ -203,10 +209,7 @@ class BotCalorine(ircbot.SingleServerIRCBot):
     def addpl(self, message):
         msg = message.lower()
 
-        manage = os.path.join(os.path.dirname(__file__),
-                              'calorine',
-                              'manage.py')
-        syslog.syslog("run %s" % manage)
+        syslog.syslog("run %s" % self.manage)
         if 'britney' in msg:
             self.speak("euh, ça non je ne peux pas, Britney ça fait saigner les oreilles, désolé")
             return 0
@@ -232,7 +235,7 @@ class BotCalorine(ircbot.SingleServerIRCBot):
                 index = len(self.nick) + 2 + len(plp) + 1
                 lookup = message[index:]
                 syslog.syslog("action: lookup %s " % lookup)
-                res = subprocess.check_output([manage, 'lookup_add_playlist', lookup])
+                res = subprocess.check_output([self.manage, 'lookup_add_playlist', lookup])
                 self.speak(res.rstrip())
 
 
