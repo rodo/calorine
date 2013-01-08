@@ -566,7 +566,7 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         before = song.global_score
 
         content = StringIO()
-        call_command('irclike', userp.ircnick, stdout=content)
+        call_command('ircdislike', userp.ircnick, stdout=content)
         content.seek(0)
 
         upsong = Song.objects.get(pk=song.id)
