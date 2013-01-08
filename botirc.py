@@ -189,7 +189,7 @@ class BotCalorine(ircbot.SingleServerIRCBot):
     def hate(self, nick):
         """Hate a song
         """
-        syslog.syslog("action: like from %s" % nick)
+        syslog.syslog("action: dislike from %s" % nick)
         res = subprocess.check_output([self.manage, 'ircdislike', nick])
         self.speak(res.rstrip())
 
