@@ -47,6 +47,10 @@ class Command(BaseCommand):
             logger.warning('nick [%s] does not exist' % args[0])
             self.stderr.write('nick [%s] does not exist' % args[0])
             return "\n"
+        elif result == 1:
+            msg = '''On vote une seule fois par jour %s''' % args[0]
+            self.stdout.write(msg)
+            return "\n"
         else:
             self.stdout.write(u'''Merci pour ton vote %s''' % args[0])
             return "\n"
@@ -63,4 +67,4 @@ class Command(BaseCommand):
 
         songs = HistoryEntry.objects.values('song').order_by('-pk')[:1]
         song = Song.objects.get(pk=songs[0]['song'])
-        song.userlike(userp.user)
+        return song.userlike(userp.user)
