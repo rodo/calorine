@@ -76,17 +76,17 @@ class Song(models.Model):
             date_add=datetime.now(),
             score=1)
 
-    def userlike(self, user):
+    def userlike(self, user, note=1):
         """
         A user like this song
         """
         logger = logging.getLogger(__name__)
         logger.debug('user %s like song id %s' % (user.username,
                                                   self.id))
-        self.global_score += 1
+        self.global_score = self.global_score + note
         self.save()
         # create a vote for this song
-        Vote.objects.create(song=self, user=user, vote=1)
+        Vote.objects.create(song=self, user=user, vote=note)
 
 
 class PlaylistEntry(models.Model):
