@@ -159,6 +159,12 @@ class BotCalorine(ircbot.SingleServerIRCBot):
                 self.onair()
             elif msg.startswith("%s: like" % self.nick):
                 self.like(irclib.nm_to_n(event.source()))
+            elif msg.startswith("%s: je kiffe" % self.nick):
+                self.like(irclib.nm_to_n(event.source()))
+            elif msg.startswith("%s: love" % self.nick):
+                self.like(irclib.nm_to_n(event.source()))
+            elif msg.startswith("%s: j'aime" % self.nick):
+                self.like(irclib.nm_to_n(event.source()))
             elif msg.startswith("%s: hate" % self.nick):
                 self.hate(irclib.nm_to_n(event.source()))
             elif msg.startswith("%s: caca" % self.nick):
