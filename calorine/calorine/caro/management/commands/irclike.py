@@ -48,7 +48,7 @@ class Command(BaseCommand):
             self.stderr.write('nick [%s] does not exist' % args[0])
             return "\n"
         else:
-            self.stdout.write('Merci pour ton vote')
+            self.stdout.write(u'''Merci pour ton vote %s''' % args[0])
             return "\n"
             
     def irclike(self, nick):
