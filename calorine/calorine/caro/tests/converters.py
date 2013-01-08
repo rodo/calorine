@@ -26,6 +26,7 @@ from os import listdir
 from tempfile import mkdtemp
 from django.conf import settings
 from django.test import TestCase
+from django.contrib.auth.models import User
 from calorine.caro.models import Upload
 from calorine.caro.converters import convert_mp4
 from calorine.caro.utils import move_file
@@ -40,6 +41,9 @@ class ConvertersTests(TestCase):  # pylint: disable-msg=R0904
         """
         Init
         """
+        self.user = User.objects.create_user('admin_search',
+                                             'admin_search@bar.com',
+                                             'admintest')
         settings.REMOVE_UPLOAD_FILES = False
         self.tpath = mkdtemp(prefix='calorine-test_')
         settings.UPLOAD_DEST_DIR = self.tpath
@@ -62,6 +66,7 @@ class ConvertersTests(TestCase):  # pylint: disable-msg=R0904
         newpath = move_file(fpath, 'test.m4a')
 
         upl = Upload.objects.create(uuid='123456789',
+                                    user=self.user,
                                     path=newpath,
                                     filename='Cocaine.mp3',
                                     content_type='audio/mp3')
