@@ -100,7 +100,7 @@ class BotCalorine(ircbot.SingleServerIRCBot):
                 break
 
         if message.startswith(self.nick):
-            self.action(message, serv)
+            self.action(message, serv, event)
 
     def on_join(self, serv, event):
         """
@@ -137,7 +137,7 @@ class BotCalorine(ircbot.SingleServerIRCBot):
         """
         self.queue.send(message, self.chan)
 
-    def action(self, message, serv):
+    def action(self, message, serv, event):
         msg = message.lower()
         if message.startswith(self.nick):
             if message == "%s: cassos" % self.nick:
@@ -156,9 +156,9 @@ class BotCalorine(ircbot.SingleServerIRCBot):
             elif msg.startswith("%s: onair" % self.nick):
                 self.onair()
             elif msg.startswith("%s: like" % self.nick):
-                self.like()
+                self.like(irclib.nm_to_n(event.source()))
             elif msg.startswith("%s: hate" % self.nick):
-                self.hate()
+                self.hate(irclib.nm_to_n(event.source()))
             elif msg.startswith("%s: help" % self.nick):
                 self.help()
             else:
@@ -180,16 +180,16 @@ class BotCalorine(ircbot.SingleServerIRCBot):
 
         self.speak(info)
 
-    def hate(self):
+    def hate(self, nick):
         """Hate a song
         """
         self.speak("oh peuchère tu n'aimes pas ma musiqueuh ?")
 
-    def like(self):
+    def like(self, nick):
         """Like a song
         """
-        syslog.syslog("action: like")
-        res = subprocess.check_output([self.manage, 'irclike', self.nick])
+        syslog.syslog("action: like from %s" % nick)
+        res = subprocess.check_output([self.manage, 'irclike', nick])
         self.speak(res.rstrip())
 
     def help(self):
