@@ -142,7 +142,7 @@ class BotCalorine(ircbot.SingleServerIRCBot):
         msg = message.lower()
         if message.startswith(self.nick):
 
-            command = utils.extract_command(message)
+            command = extract_command(message)
 
             if command == "cassos":
                 self.queue.stop()
