@@ -6,6 +6,15 @@
 
 var int=self.setInterval(function(){onair()},42000);
 
+function enable(obj, value) {
+
+    if (value.length > 0) {
+	$('#'+obj).removeAttr('disabled');
+    } else {
+	$('#'+obj).attr("disabled", 'disabled');	
+    }
+}
+
 function onair() {
 
     url = '/onair.json';
