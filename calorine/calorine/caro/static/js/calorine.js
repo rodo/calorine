@@ -40,7 +40,7 @@ var req = new Request({
 		      });
 
 
-function upmeter() {
+function upmeter(uuid) {
     
     req.startTimer('X-Progress-ID=' + uuid);    
 }
