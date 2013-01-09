@@ -1,6 +1,11 @@
-On Debian
-=========
+On Debian Wheezy
+================
 
-apt-get install python-django python-django-registration python-psycopg2 python-mutagen python-memcache
+apt-get install python-django \
+		python-django-registration \
+		python-psycopg2 python-mutagen \
+		python-memcache python-whoosh python-django-celery
 
-python-whoosh
+Packages for audio files conversion 
+
+ mpg123 vorbis-tools ffmpeg2theora
