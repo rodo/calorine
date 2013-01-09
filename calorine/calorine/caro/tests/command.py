@@ -446,6 +446,7 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         """
         Song.objects.all().delete()
         HistoryEntry.objects.all().delete()
+        userp = UserProfile.objects.get(user=self.user)
 
         song = Song.objects.create(artist='Lou Reed',
                                    album='Transformer',
@@ -456,8 +457,6 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
                                    global_score=0)
 
         HistoryEntry.objects.create(song=song)
-
-        userp = UserProfile.objects.get(user=self.user)
 
         before = song.global_score
 
@@ -506,6 +505,55 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         self.assertEqual(after, 0)
         self.assertEqual(output,
                          "Erreur, vous devez indiquez un nick irc en option")
+
+    def test_irclike_spam(self):
+        """
+        Management command irclike
+
+        The nick is missing, no action
+        """
+        Song.objects.all().delete()
+        HistoryEntry.objects.all().delete()
+        userp = UserProfile.objects.get(user=self.user)
+
+        fatou = Song.objects.create(artist='Fatoumata Diawara',
+                                    album='Kanou',
+                                    title='Nayan',
+                                    genre='Folk Wassoulou',
+                                    score=0,
+                                    family=0,
+                                    global_score=0)
+
+        lou = Song.objects.create(artist='Lou Reed',
+                                  album='Transformer',
+                                  title='''song title''',
+                                  genre='',
+                                  score=0,
+                                  family=0,
+                                  global_score=0)
+
+        HistoryEntry.objects.create(song=lou)
+        HistoryEntry.objects.create(song=fatou)
+
+        self.assertEqual(HistoryEntry.objects.all().count(), 2)
+
+        before = fatou.global_score
+
+        # first like
+        call_command('irclike', userp.ircnick)
+
+        # second like
+        content = StringIO()
+        call_command('irclike', userp.ircnick, stdout=content)
+        content.seek(0)
+        output = content.read()
+
+        after = Song.objects.get(pk=fatou.id).global_score
+
+        self.assertEqual(before, 0)
+        self.assertEqual(after, 1)
+        self.assertEqual(output,
+                         "On vote une seule fois par jour %s\n" % userp.ircnick)
 
     def test_irclike_badnick(self):
         """
