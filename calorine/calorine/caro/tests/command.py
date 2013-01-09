@@ -552,8 +552,8 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
 
         self.assertEqual(before, 0)
         self.assertEqual(after, 1)
-        self.assertEqual(output,
-                         "On vote une seule fois par jour %s\n" % userp.ircnick)
+        msg = "On vote une seule fois par jour %s\n"
+        self.assertEqual(output, msg % userp.ircnick)
 
     def test_irclike_suds(self):
         """
@@ -684,14 +684,10 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         # do a first call
         call_command('ircdislike', userp.ircnick)
 
-        content = StringIO()
-        call_command('ircdislike', userp.ircnick, stdout=content)
-        content.seek(0)
-        output = content.read()
+        # second call
+        call_command('ircdislike', userp.ircnick)
 
-        upsong = Song.objects.get(pk=song.id)
-
-        after = upsong.global_score
+        after = Song.objects.get(pk=song.id).global_score
 
         self.assertEqual(before, 10)
         self.assertEqual(after, 9)
