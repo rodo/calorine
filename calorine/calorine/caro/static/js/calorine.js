@@ -6,46 +6,6 @@
 
 var int=self.setInterval(function(){onair()},42000);
 
-var req = new Request({
-			  method: 'get',
-			  headers: {'X-Progress-ID': uuid},
-			  url: '/upload/progress/',
-			  initialDelay: 500,
-			  delay: 1000,
-			  limit: 10000,
-			  async: false,
-			  onSuccess: function(reply) {
-			      test = JSON.decode(reply);
-			      switch(test.state) {
-			      case "uploading": 
-				  percent = 0.00 + parseFloat(Math.floor((test.received / test.size)*1000)/10);
-				  $('#progress_filename').set('html','Uploading ' + filename + ' ...' + percent + '%');
-				  $('#progress_upload').set('style', 'width: '+ percent);
-				  break;
-			      case "starting":
-				  $('#progress_filename').set('html','Starting Upload... '); 
-				  break;
-			      case "error":
-				  $('#progress_filename').set('html','Upload Error... ' + test.status);
-				  break;
-			      case "done":
-				  $('#progress_filename').set('html','Upload Finished...');
-				  req.stopTimer();
-				  break;
-			      default:
-				  console.debug("Oooops!");
-				  break;  
-			      }
-			  }
-		      });
-
-
-function upmeter(uuid) {
-    
-    req.startTimer('X-Progress-ID=' + uuid);
-
-}
-
 function enable(obj, value) {
 
     if (value.length > 0) {
