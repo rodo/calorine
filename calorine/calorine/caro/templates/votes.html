@@ -33,6 +33,13 @@
 	    <td>{{vote.song}}</td>
 	    <td>{{vote.user}}</td>
 	    <td>{{vote.date_vote}}</td>
+	    <td>
+	      {% if vote.vote == 10 %}
+	      <span class="badge badge-success">{{vote.vote}}</span>
+	      {% else %}
+	      <span class="badge badge-important">{{vote.vote}}</span>
+	      {% endif %}
+	    </td>
 	  </tr>
 	  {% endfor %}
 	</tbody>
