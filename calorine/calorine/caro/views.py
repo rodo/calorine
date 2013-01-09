@@ -127,6 +127,13 @@ class ArtistList(ListView):
     context_object_name = "songs"
 
 
+class VoteList(ListView):
+    queryset = Vote.objects.all().order_by('-date_vote')
+    paginate_by = 17
+    template_name = 'votes.html'
+    context_object_name = "votes"
+
+
 class StarList(ListView):
     queryset = Vote.objects.values('user').annotate(
         dcount=Count('user')).order_by('-dcount')

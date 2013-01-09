@@ -485,3 +485,12 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
 
         response = client.get('/stats/upload/')
         self.assertContains(response, self.user.username, status_code=200)
+
+    def test_votes(self):
+        """
+        The url for votes
+        """
+        client = Client()
+        client.login(username='admin_search', password='admintest')
+        response = client.get('/votes/')
+        self.assertContains(response, self.user.username, status_code=200)
