@@ -42,7 +42,8 @@ var req = new Request({
 
 function upmeter(uuid) {
     
-    req.startTimer('X-Progress-ID=' + uuid);    
+    req.startTimer('X-Progress-ID=' + uuid);
+
 }
 
 function enable(obj, value) {
