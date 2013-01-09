@@ -25,9 +25,16 @@ import mutagen
 def strtag(fname):
     """Return a string based on ID3 tags
     """
+    muts = mutagen.File(fname, easy=True)
+
+    return strdetag(muts)
+
+def strdetag(muts):
+    """Return a string based on ID3 tags
+    """
     datas = {}
     fields = ['album', 'artist', 'title', 'genre', 'date', 'tracknumber']
-    muts = mutagen.File(fname, easy=True)
+
     for fld in fields:
         if not muts.has_key(fld):
             datas[fld] = ''
@@ -35,6 +42,7 @@ def strtag(fname):
             data = muts[fld]
             datas[fld] = data[0]
     return "%s - %s (%s)" % (datas['artist'], datas['title'], datas['album'])
+
 
 def trigger(fname, socket_fname=None):
 
@@ -73,3 +81,12 @@ def hashfile(filepath):
     finally:
         f.close()
     return sha1.hexdigest()
+
+def extract_command(line):
+    """
+    Extract the command from a message on irc
+    """
+    datas = line.split(':')
+    command  = datas[1].strip()
+
+    return command
