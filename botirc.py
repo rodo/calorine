@@ -30,6 +30,7 @@ from random import random
 from optparse import OptionParser
 from time import sleep
 import ttclient
+from utils import extract_command
 
 """
 debian package python-irclib
@@ -140,7 +141,10 @@ class BotCalorine(ircbot.SingleServerIRCBot):
     def action(self, message, serv, event):
         msg = message.lower()
         if message.startswith(self.nick):
-            if message == "%s: cassos" % self.nick:
+
+            command = utils.extract_command(message)
+
+            if command == "cassos":
                 self.queue.stop()
                 sleep(.7)  # ensure the stop was read
                 self.speak("ok je comprends")
@@ -151,31 +155,35 @@ class BotCalorine(ircbot.SingleServerIRCBot):
                 sleep(2)
                 syslog.syslog("quit on cassos irc message")
                 sys.exit(0)
-            elif msg.startswith("%s: asv" % self.nick):
+            elif command == "asv":
                 self.asv()
-            elif msg.startswith("%s: onair" % self.nick):
+            elif command == "onair":
                 self.onair()
-            elif msg.startswith("%s: on air" % self.nick):
+            elif command == "on air":
                 self.onair()
-            elif msg.startswith("%s: like" % self.nick):
+            elif command == "like":
                 self.like(irclib.nm_to_n(event.source()))
-            elif msg.startswith("%s: je kiffe" % self.nick):
+            elif command == "je kiffe":
                 self.like(irclib.nm_to_n(event.source()))
-            elif msg.startswith("%s: love" % self.nick):
+            elif command == "love":
                 self.like(irclib.nm_to_n(event.source()))
-            elif msg.startswith("%s: j'aime" % self.nick):
+            elif command == "j'aime":
                 self.like(irclib.nm_to_n(event.source()))
-            elif msg.startswith("%s: hate" % self.nick):
+            elif command == "hate":
                 self.hate(irclib.nm_to_n(event.source()))
-            elif msg.startswith("%s: caca" % self.nick):
+            elif command == "caca":
                 self.hate(irclib.nm_to_n(event.source()))
-            elif msg.startswith("%s: dislike" % self.nick):
+            elif command == "beurk":
                 self.hate(irclib.nm_to_n(event.source()))
-            elif msg.startswith("%s: help" % self.nick):
+            elif command == "pouah":
+                self.hate(irclib.nm_to_n(event.source()))
+            elif command == "dislike":
+                self.hate(irclib.nm_to_n(event.source()))
+            elif command == "help":
                 self.help()
             else:
                 for plp in self.pl_prefix:
-                    if msg.startswith("%s: %s" % (self.nick, plp)):
+                    if command == plp:
                         self.addpl(message)
 
     def onair(self):
