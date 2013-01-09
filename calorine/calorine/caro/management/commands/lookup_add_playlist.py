@@ -22,6 +22,7 @@ from django.core.management.base import BaseCommand
 from haystack.query import SearchQuerySet
 from random import sample
 from calorine.caro.models import Song
+from calorine.caro.models import PlaylistEntry
 
 
 class Command(BaseCommand):
@@ -35,8 +36,16 @@ class Command(BaseCommand):
     def lookup(self, qry):
         """lookup
         """
+        results = []
         srchqry = SearchQuerySet().filter(content__contains=qry).models(Song)
+
         results = [r.pk for r in srchqry]
+
+        # remove actual song in playlist from search results
+        ple = PlaylistEntry.objects.values('song')
+        if len(ple) > 0:
+            for p in ple:
+                results.remove(unicode(p['song']))
 
         count = Song.objects.filter(pk__in=results).count()
 
