@@ -37,7 +37,7 @@ class Command(BaseCommand):
         """lookup
         """
         results = []
-        srchqry = SearchQuerySet().filter(content__contains=qry).models(Song)
+        srchqry = SearchQuerySet().filter(content__contains=qry).models(Song)[:100]
 
         results = [r.pk for r in srchqry]
 
