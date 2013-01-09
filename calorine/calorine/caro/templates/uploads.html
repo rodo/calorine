@@ -10,8 +10,12 @@
 	<form name="upload" method="POST" enctype="multipart/form-data" action="/upload/?X-Progress-ID={{uuid}}">
 	  {% csrf_token %}
 	  <input type="file" name="songname" size="40" onchange="enable('submit', this.value)">
-	  <input id="submit" type="submit" name="submit" value="Upload" disabled>
+	  <input id="submit" type="submit" name="submit" value="Upload" disabled onclick="upmeter()">
 	</form>
+      </div>
+
+      <div class="progress progress-info">
+	<div id="progress_upload" class="bar" style="width: {{star.percent}}%"></div>
       </div>
 
     </div>
