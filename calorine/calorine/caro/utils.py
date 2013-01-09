@@ -32,6 +32,8 @@ from calorine.caro.models import Song
 from calorine.caro.models import Vote
 import subprocess
 
+logger = logging.getLogger(__name__)
+
 
 def clean_cache(user_id, song_id, ple_id):
     """Remove data in cache
@@ -134,10 +136,8 @@ def importdir(path):
 def importsong(fpath):
     """Import a file as a song
     """
-    # Get an instance of a logger
-    logger = logging.getLogger(__name__)
-
     result = ""
+
     tags = checkid3(fpath)
     if tags is not None:
         sig = sigfile(fpath)
@@ -207,7 +207,6 @@ def remove_file(fpath):
 
     path_from is an nginx datas
     """
-    logger = logging.getLogger(__name__)
     logger.debug("remove file [%s]")
     try:
         os.unlink(fpath)
@@ -229,7 +228,6 @@ def readtags(fname):
     try:
         muts = mutagen.File(fname, easy=True)
     except:
-        logger = logging.getLogger(__name__)
         logger.error("can't read tags in [%s]" % fname)
 
     if muts:
@@ -247,7 +245,6 @@ def mp3ogg(fname, datas):
     """
     Encode mp3 files to ogg vorbis
     """
-    logger = logging.getLogger(__name__)
     oggname = "%s.ogg" % fname[:-4]
     logger.info("(mp3ogg) encode [%s]" % fname)
     logger.debug("(mp3ogg) oggenc binary path %s" % settings.OGGENC)
@@ -292,7 +289,7 @@ def mp4ogg(fname):
     """
     Encode mp4 files to ogg vorbis
     """
-    logger = logging.getLogger(__name__)
+
     logger.info("(mp4ogg) encode [%s] with [%s]" % (fname,
                                                     settings.FFMPEG2THEORA))
     oggname = "%s.oga" % fname[:-4]
