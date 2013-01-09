@@ -40,6 +40,8 @@ class Command(BaseCommand):
             logger.warning("ircnick is missing")
             self.stderr.write(msg)
             return "\n"
+        else:
+            logger.debug("irclike [%s]" % args[0])
 
         result = self.irclike(args[0])
 
