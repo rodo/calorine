@@ -510,7 +510,7 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         """
         Management command irclike
 
-        The nick is missing, no action
+        The same user vote for the same song twice, it must be impossible
         """
         Song.objects.all().delete()
         HistoryEntry.objects.all().delete()
@@ -554,6 +554,42 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         self.assertEqual(after, 1)
         self.assertEqual(output,
                          "On vote une seule fois par jour %s\n" % userp.ircnick)
+
+    def test_irclike_suds(self):
+        """
+        Management command irclike
+
+        The same user vote for two different songs
+        """
+        Song.objects.all().delete()
+        HistoryEntry.objects.all().delete()
+        userp = UserProfile.objects.get(user=self.user)
+
+        fatou = Song.objects.create(artist='Fatoumata Diawara',
+                                    album='Kanou',
+                                    title='Nayan',
+                                    genre='Folk Wassoulou',
+                                    score=0,
+                                    family=0,
+                                    global_score=0)
+
+        lou = Song.objects.create(artist='Lou Reed',
+                                  album='Transformer',
+                                  title='''song title''',
+                                  genre='',
+                                  score=0,
+                                  family=0,
+                                  global_score=0)
+
+        # first song
+        HistoryEntry.objects.create(song=lou)
+        call_command('irclike', userp.ircnick)
+        self.assertEqual(Song.objects.get(pk=lou.id).global_score, 1)
+
+        # second song
+        HistoryEntry.objects.create(song=fatou)
+        call_command('irclike', userp.ircnick)
+        self.assertEqual(Song.objects.get(pk=fatou.id).global_score, 1)
 
     def test_irclike_badnick(self):
         """
@@ -659,3 +695,62 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
 
         self.assertEqual(before, 10)
         self.assertEqual(after, 9)
+
+    def test_ircdislike_nickdne(self):
+        """
+        Management command ircdislike
+
+        The ircnick does not exist
+        """
+        Song.objects.all().delete()
+        HistoryEntry.objects.all().delete()
+        nick = 'this_not_a_realnick'
+
+        song = Song.objects.create(artist='Lou Reed',
+                                   album='Transformer',
+                                   title='''song title''',
+                                   genre='',
+                                   score=0,
+                                   family=0,
+                                   global_score=9)
+
+        HistoryEntry.objects.create(song=song)
+
+        content = StringIO()
+        call_command('ircdislike', nick, stderr=content)
+        content.seek(0)
+        output = content.read()
+
+        after = Song.objects.get(pk=song.id).global_score
+
+        self.assertEqual(after, 9)
+        self.assertEqual(output,
+                         'nick [%s] does not exist' % nick)
+
+    def test_ircdislike_nonick(self):
+        """
+        Management command ircdislike
+
+        The nick is missing, no action
+        """
+        Song.objects.all().delete()
+        HistoryEntry.objects.all().delete()
+
+        song = Song.objects.create(artist='Lou Reed',
+                                   album='Transformer',
+                                   title='''song title''',
+                                   genre='',
+                                   score=0,
+                                   family=0,
+                                   global_score=0)
+
+        HistoryEntry.objects.create(song=song)
+
+        content = StringIO()
+        call_command('ircdislike', stderr=content)
+        content.seek(0)
+        output = content.read()
+
+        self.assertEqual(Song.objects.get(pk=song.id).global_score, 0)
+        self.assertEqual(output,
+                         "Erreur, vous devez indiquez un nick irc en option")

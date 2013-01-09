@@ -82,8 +82,9 @@ class Song(models.Model):
         A user like this song
         """
         logger = logging.getLogger(__name__)
-        logger.debug('user %s like song id %s' % (user.username,
-                                                  self.id))
+        logger.debug('user %s like song id %s with note %s' % (user.username,
+                                                               self.id,
+                                                               note))
 
         yesterday = datetime.today() - timedelta(hours=24)
 
