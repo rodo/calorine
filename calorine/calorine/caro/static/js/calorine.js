@@ -35,7 +35,7 @@ function startupload(uuid) {
 	function () {
 	    fetchjson(uuid);
 	},
-	100
+	500
     );
 }
 
