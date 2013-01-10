@@ -39,15 +39,8 @@ import os
 from tempfile import mkdtemp
 from tempfile import mktemp
 from tempfile import mkstemp
+from calorine.caro.tests.tools import emptydirs
 
-
-def emptydirs(fullpath):
-    for fpath in os.listdir(fullpath):
-        if os.path.isfile(path.join(fullpath, fpath)):
-            os.unlink(path.join(fullpath, fpath))
-        elif os.path.isdir(path.join(fullpath, fpath)):
-            emptydirs(path.join(fullpath, fpath))
-    os.rmdir(fullpath)
 
 class UtilsTests(TestCase):  # pylint: disable-msg=R0904
     """

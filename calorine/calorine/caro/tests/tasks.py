@@ -32,6 +32,7 @@ from calorine.caro.tasks import import_upload
 from calorine.caro.tasks import store_upload
 from calorine.caro.tasks import get_upload_status
 from calorine.caro.tests.httpserver import TestServer
+from calorine.caro.tests.tools import emptydirs
 
 
 class TasksTests(TestCase):  # pylint: disable-msg=R0904
@@ -54,7 +55,7 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         Clean after test
         """
         for fpath in os.listdir(self.tpath):
-            os.unlink(os.path.join(self.tpath, fpath))
+            emptydirs(os.path.join(self.tpath, fpath))
         os.rmdir(self.tpath)
 
     def test_getuploadstatus(self):
@@ -108,11 +109,11 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
                              'first',
                              'test.ogg')
 
-        move_file(fpath, 'toto.ogg')
+        newpath = move_file(fpath, 'toto.ogg')
 
         upl = Upload.objects.create(uuid='123456789',
                                     user=self.user,
-                                    path=os.path.join(self.tpath, 'toto.ogg'),
+                                    path=newpath,
                                     filename='The Healing Game.ogg',
                                     content_type='video/ogg')
 
@@ -131,11 +132,11 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
                              'first',
                              'test.ogg')
 
-        move_file(fpath, 'toto.ogg')
+        newpath = move_file(fpath, 'toto.ogg')
 
         upl = Upload.objects.create(uuid='123456789',
                                     user=self.user,
-                                    path=os.path.join(self.tpath, 'toto.ogg'),
+                                    path=newpath,
                                     filename='The Healing Game.ogg',
                                     content_type='image/jpeg')
 
@@ -216,11 +217,11 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
                              'first',
                              'test.ogg')
 
-        move_file(fpath, 'toto.ogg')
+        newpath = move_file(fpath, 'toto.ogg')
 
         upl = Upload.objects.create(uuid='123456789',
                                     user=self.user,
-                                    path=os.path.join(self.tpath, 'toto.ogg'),
+                                    path=newpath,
                                     filename='The Healing Game.ogg',
                                     content_type='application/ogg')
 
