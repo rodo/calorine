@@ -5,6 +5,51 @@
  */
 
 var int=self.setInterval(function(){onair()},42000);
+var intervall = null;
+
+function fetch(uuid) {
+    
+    req = new XMLHttpRequest();
+    req.open("GET", "/progress", 1);
+    req.setRequestHeader("X-Progress-ID", uuid);
+    req.onreadystatechange = function () {
+	
+	if (req.readyState == 4) {
+	    
+	    if (req.status == 200) {
+		
+		/* poor-man JSON parser */
+		var upload = eval(req.responseText);
+		
+		document.getElementById('tp').innerHTML = upload.state;
+		
+		/* change the width if the inner progress-bar */
+		if (upload.state == 'done' || upload.state == 'uploading') {
+		    
+		    bar = document.getElementById('progress_upload');
+		    w = 400 * upload.received / upload.size;
+		    bar.style.width = w + 'px';
+		}
+		/* we are done, stop the interval */
+		if (upload.state == 'done') {		    
+		    window.clearTimeout(interval);
+		}
+	    }
+	}
+    }
+    req.send(null);
+}
+
+
+function startupload(uuid) {
+    $('#progress_filename').html(uuid);
+    interval = window.setInterval(
+	function () {
+	    fetch(uuid);
+	},
+	1000
+    );
+}
 
 function enable(obj, value) {
 
