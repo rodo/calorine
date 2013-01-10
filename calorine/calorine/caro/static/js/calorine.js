@@ -21,7 +21,7 @@ function fetch(uuid) {
 		/* poor-man JSON parser */
 		var upload = eval(req.responseText);
 		
-		document.getElementById('tp').innerHTML = upload.state;
+		document.getElementById('progress_status').innerHTML = upload.state;
 		
 		/* change the width if the inner progress-bar */
 		if (upload.state == 'done' || upload.state == 'uploading') {
@@ -40,12 +40,36 @@ function fetch(uuid) {
     req.send(null);
 }
 
+function fetchjson(uuid) {
+    
+
+
+    $.ajax({url: '/progress',
+	    headers: { 'X-Progress-ID': uuid },
+	    success: function(data) {
+
+		if (data.state == 'done' || data.state == 'uploading') {
+
+		    w = 400 * upload.received / upload.size;
+		    $('#progress_status').html(w);
+		}
+
+		/* we are done, stop the interval */
+		if (data.state == 'done') {		    
+		    window.clearTimeout(interval);
+		}
+
+	    }
+	  }
+	  );
+}
+
 
 function startupload(uuid) {
     $('#progress_filename').html(uuid);
     interval = window.setInterval(
 	function () {
-	    fetch(uuid);
+	    fetchjson(uuid);
 	},
 	1000
     );
@@ -67,7 +91,6 @@ function onair() {
     $.get(url,
 	  function(data) {
 	      text = "On air :";
-
               text = text + " " + data.artist;
               text = text + " - " + data.title;
 	      if (data.album) {
