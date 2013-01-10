@@ -7,58 +7,23 @@
 var int=self.setInterval(function(){onair()},42000);
 var intervall = null;
 
-function fetch(uuid) {
-    
-    req = new XMLHttpRequest();
-    req.open("GET", "/progress", 1);
-    req.setRequestHeader("X-Progress-ID", uuid);
-    req.onreadystatechange = function () {
-	
-	if (req.readyState == 4) {
-	    
-	    if (req.status == 200) {
-		
-		/* poor-man JSON parser */
-		var upload = eval(req.responseText);
-		
-		document.getElementById('progress_status').innerHTML = upload.state;
-		
-		/* change the width if the inner progress-bar */
-		if (upload.state == 'done' || upload.state == 'uploading') {
-		    
-		    bar = document.getElementById('progress_upload');
-		    w = 400 * upload.received / upload.size;
-		    bar.style.width = w + 'px';
-		}
-		/* we are done, stop the interval */
-		if (upload.state == 'done') {		    
-		    window.clearTimeout(interval);
-		}
-	    }
-	}
-    }
-    req.send(null);
-}
-
 function fetchjson(uuid) {
     
-
-
     $.ajax({url: '/progress',
 	    headers: { 'X-Progress-ID': uuid },
 	    success: function(data) {
 
-		if (data.state == 'done' || data.state == 'uploading') {
+		$('#progress_status').html(data.state);
 
-		    w = 400 * upload.received / upload.size;
-		    $('#progress_status').html(w);
+		if (data.state == 'done' || data.state == 'uploading') {
+		    w = (100 * upload.received / upload.size) + '%';
+		    $('#progress_upload').css('width', w);
 		}
 
 		/* we are done, stop the interval */
 		if (data.state == 'done') {		    
 		    window.clearTimeout(interval);
 		}
-
 	    }
 	  }
 	  );
@@ -67,11 +32,12 @@ function fetchjson(uuid) {
 
 function startupload(uuid) {
     $('#progress_filename').html(uuid);
+
     interval = window.setInterval(
 	function () {
 	    fetchjson(uuid);
 	},
-	1000
+	100
     );
 }
 
