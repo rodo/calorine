@@ -42,12 +42,46 @@ class TestServer(threading.Thread):
     """
     def __init__(self):
         threading.Thread.__init__(self)
-        self.port = 10042
+        self.port = 1024
         connected = False
-        while not connected and self.port < 100142:
+        while not connected and self.port < 2048:
             try:
                 self.httpd = SocketServer.TCPServer(("", self.port),
                                                     JsonHandler)
+                self.httpd.timeout = 30
+                connected = True
+            except:
+                self.port = self.port + 1
+
+    def run(self):
+        print "serving at port", self.port
+        self.httpd.handle_request()
+
+
+class LastFMHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
+    """
+    Basic handler, serve a basic JSON answer
+    """
+    def do_GET(self):
+        """Respond to a GET request."""
+        self.send_response(200)
+        self.send_header("Content-type", "application/json")
+        self.end_headers()
+        self.wfile.write('{"state": "done"}')
+
+
+class LastFMServer(threading.Thread):
+    """
+    Basic http server to serve JSON
+    """
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.port = 1024
+        connected = False
+        while not connected and self.port < 2048:
+            try:
+                self.httpd = SocketServer.TCPServer(("", self.port),
+                                                    LastFM)
                 self.httpd.timeout = 30
                 connected = True
             except:

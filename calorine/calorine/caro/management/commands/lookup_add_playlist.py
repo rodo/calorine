@@ -44,8 +44,8 @@ class Command(BaseCommand):
         # remove actual song in playlist from search results
         ple = PlaylistEntry.objects.values('song')
         if len(ple) > 0:
-            for p in ple:
-                results.remove(unicode(p['song']))
+            for pun in ple:
+                results.remove(unicode(pun['song']))
 
         count = Song.objects.filter(pk__in=results).count()
 

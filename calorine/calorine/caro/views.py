@@ -332,7 +332,7 @@ def songlike(request, pk):
     """
     Like a song
     """
-    
+
     return song_vote("plus", request, pk)
 
 
