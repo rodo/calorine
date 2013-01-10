@@ -31,8 +31,6 @@ function fetchjson(uuid) {
 
 
 function startupload(uuid) {
-    $('#progress_filename').html(uuid);
-
     interval = window.setInterval(
 	function () {
 	    fetchjson(uuid);
