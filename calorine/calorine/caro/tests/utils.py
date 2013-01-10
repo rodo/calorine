@@ -170,12 +170,14 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
         cache.set('onair_artist', artist)
         cache.set('onair_album', album)
         cache.set('onair_title', title)
+        cache.set('onair_songid', '42')
 
         datas = onair_datas()
 
         attends = {'artist': artist,
                    'title': title,
-                   'album': album}
+                   'album': album,
+                   'songid': '42'}
 
         self.assertEqual(datas, attends)
 
@@ -191,7 +193,8 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
 
         attends = {'artist': None,
                    'title': None,
-                   'album': None}
+                   'album': None,
+                   'songid': None}
 
         self.assertEqual(datas, attends)
 
