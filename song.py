@@ -1,3 +1,20 @@
+# -*- coding: utf-8 -*-
+#
+# Copyright (c) 2013 Rodolphe Quiédeville <rodolphe@quiedeville.org>
+#
+#     This program is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
 """
 
 - python-memcache
@@ -20,7 +37,7 @@ class Song():
     def __init__(self):
         """Class initialization"""
         self.conf = self.readopts()
-        self.memcache_conn()
+        self.memcache = self._memcache_conn()
         self.conn = psycopg2.connect(self.conf)
 
     def readopts(self):
@@ -28,7 +45,11 @@ class Song():
         Read options passed on command line
         """
         parser = OptionParser()
-        parser.add_option("--dbname", action="store", type="string", dest="dbname", default=None)
+        parser.add_option("--dbname",
+                          action="store",
+                          type="string",
+                          dest="dbname",
+                          default=None)
 
         parser.add_option("--user",
                           action="store",
@@ -67,17 +88,17 @@ class Song():
         return conf
 
 
-    def memcache_conn(self):
+    def _memcache_conn(self):
         """
         Connect to memcache
         """
-        self.memcache = memcache.Client(['127.0.0.1:11211'], debug=0)
+        return memcache.Client(['127.0.0.1:11211'], debug=0)
 
-    def onair(self, song, score):
+    def onair(self, song, score, songid):
         """
         Store the actual playing song
         """
-        for key in ['title', 'artist', 'score', 'full']:
+        for key in ['title', 'artist', 'score', 'full', 'songid']:
             self.memcache.delete("%s:1:onair_%s" % (self.prefix, key))
 
         try:
@@ -86,6 +107,7 @@ class Song():
             pass
 
         try:
+            self.memcache.set("%s:1:onair_songid" % self.prefix, songid)
             self.memcache.set("%s:1:onair_title" % self.prefix, datas["title"][0])
             self.memcache.set("%s:1:onair_artist" % self.prefix, datas["artist"][0])
             self.memcache.set("%s:1:onair_score" % self.prefix, score)
@@ -124,7 +146,7 @@ class Song():
         query = """INSERT INTO caro_historyentry (song_id, date_played) VALUES (%s, now())"""
         cur.execute(query, (song_id, ))
 
-        self.onair(filename, song_score)
+        self.onair(filename, song_score, song_id)
 
         self.conn.commit()
 
