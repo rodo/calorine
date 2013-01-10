@@ -223,7 +223,7 @@ def remove_file(fpath):
 
     path_from is an nginx datas
     """
-    logger.debug("remove file [%s]")
+    logger.debug("remove file [%s]" % fpath)
     try:
         os.unlink(fpath)
         return 0
