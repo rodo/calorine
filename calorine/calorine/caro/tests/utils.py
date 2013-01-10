@@ -41,6 +41,14 @@ from tempfile import mktemp
 from tempfile import mkstemp
 
 
+def emptydirs(fullpath):
+    for fpath in os.listdir(fullpath):
+        if os.path.isfile(path.join(fullpath, fpath)):
+            os.unlink(path.join(fullpath, fpath))
+        elif os.path.isdir(path.join(fullpath, fpath)):
+            emptydirs(path.join(fullpath, fpath))
+    os.rmdir(fullpath)
+
 class UtilsTests(TestCase):  # pylint: disable-msg=R0904
     """
     The url view
@@ -59,7 +67,7 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
         Clean after test
         """
         for fpath in os.listdir(self.tpath):
-            os.unlink(path.join(self.tpath, fpath))
+            emptydirs(path.join(self.tpath, fpath))
         os.rmdir(self.tpath)
 
     def test_checkid3(self):
@@ -232,10 +240,8 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
 
         move_file(fpath, 'toto.ogg')
 
-        self.assertTrue(os.path.exists(path.join(self.tpath,
+        self.assertTrue(os.path.exists(path.join(self.tpath, '4', '3',
                                                  'toto.ogg')))
-        os.unlink(path.join(self.tpath,
-                            'toto.ogg'))
 
     def test_move_file2(self):
         """Copy file to new dir, with existent file
@@ -249,9 +255,11 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
         # redo the same action
         result = move_file(fpath, 'toto.ogg')
 
-        self.assertEqual(result, path.join(self.tpath,
+        self.assertEqual(result, path.join(self.tpath, '4', '3',
                                            'toto.ogg'))
         self.assertTrue(os.path.exists(path.join(self.tpath,
+                                                 '4',
+                                                 '3',
                                                  'toto.ogg')))
 
     def test_move_file3(self):
@@ -262,18 +270,16 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
                           'first',
                           'test.ogg')
 
-        move_file(fpath, 'toto.ogg')
+        newpath = move_file(fpath, 'toto.ogg')
 
         setattr(settings, 'REMOVE_UPLOAD_FILES', True)
-        result = move_file(path.join(self.tpath,
-                                     'toto.ogg'), 'tata.ogg')
+        result = move_file(newpath, 'tata.ogg')
 
-        self.assertEqual(result, path.join(self.tpath,
+        self.assertEqual(result, path.join(self.tpath, '9', 'f',
                                            'tata.ogg'))
-        self.assertTrue(os.path.exists(path.join(self.tpath,
+        self.assertTrue(os.path.exists(path.join(self.tpath, '9', 'f',
                                                  'tata.ogg')))
-        self.assertFalse(os.path.exists(path.join(self.tpath,
-                                                  'toto.ogg')))
+        self.assertFalse(os.path.exists(newpath))
 
     def test_mp3ogg(self):
         """Convert mp3 in ogg

@@ -31,6 +31,7 @@ from calorine.utils.lastfm import get_tags
 from calorine.caro.models import Song
 from calorine.caro.models import Vote
 import subprocess
+import hashlib
 
 logger = logging.getLogger(__name__)
 
@@ -190,7 +191,7 @@ def move_file(path_from, filename):
 
     path_from is an nginx datas
     """
-    finaldir = settings.UPLOAD_DEST_DIR
+    finaldir = getormakedir(settings.UPLOAD_DEST_DIR, filename)
 
     path_to = os.path.join(finaldir, filename)
 
@@ -200,6 +201,21 @@ def move_file(path_from, filename):
             remove_file(path_from)
 
     return path_to
+
+
+def getormakedir(base, random):
+    """
+    Create path from filename, create the directory corresponding
+    if not exists
+
+    Return (string) the path
+    """
+    sha = hashlib.sha224(random).hexdigest()
+    newdir = os.path.join(base, sha[0], sha[1])
+    if not os.path.exists(newdir):
+        logger.debug("create dir %s" % newdir)
+        os.makedirs(newdir)
+    return newdir
 
 
 def remove_file(fpath):
