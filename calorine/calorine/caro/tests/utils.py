@@ -188,6 +188,7 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
         cache.delete('onair_artist')
         cache.delete('onair_album')
         cache.delete('onair_title')
+        cache.delete('onair_songid')
 
         datas = onair_datas()
 
