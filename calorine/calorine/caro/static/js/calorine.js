@@ -3,6 +3,7 @@
  *
  *
  */
+onair();
 
 var int=self.setInterval(function(){onair()},42000);
 var intervall = null;
@@ -48,6 +49,49 @@ function enable(obj, value) {
     }
 }
 
+function onairbutton(id) {
+    /*
+     * Update on air vote button
+     * 
+     */
+    $('#onairplus').show();
+    $('#onairplus').attr("onclick" ,"inc_onair("+id+")");
+    $('#onairstop').attr("onclick", "dec_onair("+id+")");
+}
+
+function inc_onair(id) {
+
+    if (id > 0) {
+	url = '/songvote/inc/' + id;
+
+	$.get(url,
+	      function(data) {
+		  $('#onairplus').hide();
+		  $('#onairstop').hide();
+		  if(data.entry){
+		      $('#onairbuttons').html(" - score " + data.entry.score);
+		  }
+	      });
+    }
+}
+
+function dec_onair(id) {
+    if (id > 0 ) {
+	
+	url = '/songvote/dec/' + id;
+
+	$.get(url,
+	      function(data) {
+		  $('#onairplus').hide();
+		  $('#onairstop').hide();
+		  if(data.entry){
+		      $('#onairbuttons').html(" - score " + data.entry.score);
+		  }
+	      });
+    }
+}
+
+
 function onair() {
 
     url = '/onair.json';
@@ -61,10 +105,10 @@ function onair() {
 		  text = text + " - " + data.album;		  
 	      }
 
+	      onairbutton(data.songid);
 	      $("#onair").html(text);
 	  });
 }
-
 
 function initboot() {
     $(".collapse").collapse();

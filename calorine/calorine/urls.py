@@ -36,6 +36,8 @@ urlpatterns = patterns('',
                        url(r'^playlist/add/(?P<song_id>\d+)$', 'calorine.caro.views.pladd'),
                        url(r'^playlist/inc/(?P<pk>\d+)$', 'calorine.caro.views.pllike'),
                        url(r'^playlist/dec/(?P<pk>\d+)$', 'calorine.caro.views.pldislike'),
+                       url(r'^songvote/inc/(?P<pk>\d+)$', 'calorine.caro.views.songlike'),
+                       url(r'^songvote/dec/(?P<pk>\d+)$', 'calorine.caro.views.songdislike'),
                        url(r'^$', login_required(PlayList.as_view()), name="playlist"),
                        url(r'^admin/', include(admin.site.urls)),
                        )

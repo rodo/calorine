@@ -17,3 +17,6 @@ span.badge:hover{
              } 
 
 #container {  padding-top: 20px; } 
+
+#onair { float: left;
+         margin-right: 10px; }

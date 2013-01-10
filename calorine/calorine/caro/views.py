@@ -37,6 +37,7 @@ from calorine.caro.models import Logs
 from calorine.caro.models import PlaylistEntry
 from calorine.caro.models import HistoryEntry
 from calorine.caro.models import Vote
+from calorine.caro.models import UserProfile
 from calorine.caro.models import Upload
 from calorine.caro.models import ArtistVote
 from calorine.caro.models import Stream
@@ -200,6 +201,7 @@ def profile(request):
     ples = PlaylistEntry.objects.all().order_by('-score', 'date_add')[:4]
     songs = Song.objects.all().order_by('-pk')[:4]
     uploads = Upload.objects.all().order_by('-pk')[:4]
+    uprofile = UserProfile.objects.get(user=request.user)
     streams = Stream.objects.all()
     template_name = 'profile.html'
 
@@ -208,6 +210,7 @@ def profile(request):
                   {'songs': songs,
                    'uploads': uploads,
                    'ples': ples,
+                   'uprofile': uprofile,
                    'streams': streams,
                    'uuid': str(uuid4()),
                    })
@@ -263,6 +266,7 @@ def pladd(request, song_id):
     return render(request, 'playlist_add.html')
 
 
+@login_required
 def pldislike(request, pk):
     """
     dislike a song in Playlist
@@ -310,6 +314,48 @@ def inc_desc(sign, request, pk):
     Vote.objects.create(song=song, user=request.user, vote=vte)
 
     resp = {'score': ple.score, 'id': ple.pk}
+    return HttpResponse(
+        json.dumps({'entry': resp}),
+        mimetype="application/json")
+
+
+@login_required
+def songdislike(request, pk):
+    """
+    dislike a song by id
+    """
+    return song_vote("less", request, pk)
+
+
+@login_required
+def songlike(request, pk):
+    """
+    Like a song
+    """
+    
+    return song_vote("plus", request, pk)
+
+
+def song_vote(sign, request, pk):
+    """
+    Vote for a song
+    """
+    song = Song.objects.get(pk=pk)
+    song_key = 'song_{}'.format(song.id)
+
+    if cache.get(song_key):
+        return HttpResponse(
+            json.dumps({'message': 'Do not try this with me'}),
+            mimetype="application/json")
+    else:
+        cache.set(song_key, True)
+
+    if sign == "plus":
+        song.userlike(request.user, 1)
+    else:
+        song.userlike(request.user, -1)
+
+    resp = {'score': song.global_score, 'id': song.id}
     return HttpResponse(
         json.dumps({'entry': resp}),
         mimetype="application/json")
