@@ -55,6 +55,7 @@ function onairbutton(id) {
      * 
      */
     $('#onairplus').show();
+    $('#onairstop').show();
     $('#onairplus').attr("onclick" ,"inc_onair("+id+")");
     $('#onairstop').attr("onclick", "dec_onair("+id+")");
 }
