@@ -27,10 +27,11 @@ import mutagen
 from django.conf import settings
 from django.core.cache import cache
 from django.db.models import Min
+from celery.task import task
 from calorine.caro.models import Logs
 from calorine.utils.lastfm import get_tags
+from calorine.utils.lastfm import get_picture
 from calorine.caro.models import Song
-from calorine.caro.tasks import picture
 import subprocess
 
 logger = logging.getLogger(__name__)
@@ -210,6 +211,23 @@ def createsong(tags, sig, fpath, played=0):
             pass
     song.save()
     return "[I] %s\n" % song.title
+
+
+@task()
+def picture(song):
+    """
+    Return a picture of the album containing this song
+    """
+    pict = None
+    if song.cover == '' or song.cover is None:
+        pict = get_picture(song.artist, song.title)
+        if pict:
+            song.cover = pict
+            song.save()
+        else:
+            logger.warning('no picture found for %s %s' % (song.artist,
+                                                           song.title))
+    return pict
 
 
 def move_file(path_from, filename):

@@ -33,7 +33,6 @@ from calorine.caro.utils import move_file
 from calorine.caro.utils import importsong
 from calorine.caro.utils import get_tags
 import calorine.caro.converters
-from calorine.utils.lastfm import get_picture
 
 logger = logging.getLogger(__name__)
 
@@ -126,20 +125,3 @@ def addgenre(song):
         return 0
     except:
         return 1
-
-
-@task()
-def picture(song):
-    """
-    Return a picture of the album containing this song
-    """
-    pict = None
-    if song.cover == '' or song.cover is None:
-        pict = get_picture(song.artist, song.title)
-        if pict:
-            song.cover = pict
-            song.save()
-        else:
-            logger.warning('no picture found for %s %s' % (song.artist,
-                                                           song.title))
-    return pict
