@@ -674,13 +674,9 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         content = StringIO()
         call_command('ircdislike', userp.ircnick, stdout=content)
         content.seek(0)
-
-        upsong = Song.objects.get(pk=song.id)
-
-        after = upsong.global_score
-
+                
         self.assertEqual(before, 10)
-        self.assertEqual(after, 9)
+        self.assertEqual(Song.objects.get(pk=song.id).global_score, 9)
 
     def test_ircdislike_spamdetection(self):
         """
@@ -709,10 +705,8 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         # second call
         call_command('ircdislike', userp.ircnick)
 
-        after = Song.objects.get(pk=song.id).global_score
-
         self.assertEqual(before, 10)
-        self.assertEqual(after, 9)
+        self.assertEqual(Song.objects.get(pk=song.id).global_score, 9)
 
     def test_ircdislike_nickdne(self):
         """
@@ -739,9 +733,7 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         content.seek(0)
         output = content.read()
 
-        after = Song.objects.get(pk=song.id).global_score
-
-        self.assertEqual(after, 9)
+        self.assertEqual(Song.objects.get(pk=song.id).global_score, 9)
         self.assertEqual(output,
                          'nick [%s] does not exist' % nick)
 
