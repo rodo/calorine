@@ -55,25 +55,27 @@ function onairbutton(id, user_vote) {
      * 
      */
     if (user_vote == 'null') {
-	$('#onairplus').show();
-	$('#onairstop').show();
+	$('#onairplus').css('visibility', 'visible');
+	$('#onairstop').css('visibility', 'visible');
 	$('#onairplus').attr("onclick" ,"inc_onair("+id+")");
 	$('#onairstop').attr("onclick", "dec_onair("+id+")");	
     } else {
-	$('#onairplus').hide();
-	$('#onairstop').hide();
+	$('#onairplus').css('visibility', 'hidden');
+	$('#onairstop').css('visibility', 'hidden');
     }
 }
 
 function inc_onair(id) {
 
     if (id > 0) {
+
+	$('#onairplus').css('visibility', 'hidden');
+	$('#onairstop').css('visibility', 'hidden');
+
 	url = '/songvote/inc/' + id;
 
 	$.get(url,
 	      function(data) {
-		  $('#onairplus').hide();
-		  $('#onairstop').hide();
 		  if(data.entry){
 		      $('#onairbuttons').html(" - score " + data.entry.score);
 		  }
@@ -84,12 +86,13 @@ function inc_onair(id) {
 function dec_onair(id) {
     if (id > 0 ) {
 	
+	$('#onairplus').css('visibility', 'hidden');
+	$('#onairstop').css('visibility', 'hidden');
+
 	url = '/songvote/dec/' + id;
 
 	$.get(url,
 	      function(data) {
-		  $('#onairplus').hide();
-		  $('#onairstop').hide();
 		  if(data.entry){
 		      $('#onairbuttons').html(" - score " + data.entry.score);
 		  }
