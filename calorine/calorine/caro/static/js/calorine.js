@@ -49,15 +49,17 @@ function enable(obj, value) {
     }
 }
 
-function onairbutton(id) {
+function onairbutton(id, user_vote) {
     /*
      * Update on air vote button
      * 
      */
-    $('#onairplus').show();
-    $('#onairstop').show();
-    $('#onairplus').attr("onclick" ,"inc_onair("+id+")");
-    $('#onairstop').attr("onclick", "dec_onair("+id+")");
+    if (user_vote == 'null') {
+	$('#onairplus').show();
+	$('#onairstop').show();
+	$('#onairplus').attr("onclick" ,"inc_onair("+id+")");
+	$('#onairstop').attr("onclick", "dec_onair("+id+")");	
+    }
 }
 
 function inc_onair(id) {
@@ -106,7 +108,7 @@ function onair() {
 		  text = text + " - " + data.album;		  
 	      }
 
-	      onairbutton(data.songid);
+	      onairbutton(data.songid, data.user_vote);
 	      $("#onair").html(text);
 	  });
 }

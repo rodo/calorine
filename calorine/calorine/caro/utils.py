@@ -93,18 +93,27 @@ def sigfile(fpath):
     return sigsha.hexdigest()
 
 
-def onair_datas():
+def onair_datas(userid):
     """Read onair datas from cache
     """
+
     songid = cache.get('onair_songid')
     artist = cache.get('onair_artist')
     title = cache.get('onair_title')
     album = cache.get('onair_album')
 
+    song_key = 'song_{}_user_{}'.format(songid, userid)
+
+    voted = cache.get(song_key)
+
+    if voted is None:
+        voted = 'null';
+
     datas = {'artist': artist,
              'title': title,
              'album': album,
-             'songid': songid}
+             'songid': songid,
+             'user_vote': voted}
 
     return datas
 

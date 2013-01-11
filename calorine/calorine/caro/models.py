@@ -94,6 +94,10 @@ class Song(models.Model):
         if len(votes) > 0:
             return 1
         else:
+            # flag in memcache for this song/user
+            song_key = 'song_{}_user_{}'.format(self.id, user.id)
+            cache.set(song_key, True)
+
             self.global_score = self.global_score + note
             self.save()
             # create a vote for this song

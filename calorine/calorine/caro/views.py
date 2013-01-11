@@ -240,7 +240,7 @@ def upload(request):
 def onair(request):
     """The onair view
     """
-    datas = onair_datas()
+    datas = onair_datas(request.user.id)
 
     response = HttpResponse(mimetype='application/json; charset=utf-8')
 
@@ -341,7 +341,7 @@ def song_vote(sign, request, pk):
     Vote for a song
     """
     song = Song.objects.get(pk=pk)
-    song_key = 'song_{}'.format(song.id)
+    song_key = 'song_{}_user_{}'.format(song.id, request.user.id)
 
     if cache.get(song_key):
         return HttpResponse(
