@@ -16,11 +16,10 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 """
-Unit tests for Vote
+Unit tests for audio files converters
 
 """
 from os import path
-from os import unlink
 from os import rmdir
 from os import listdir
 from tempfile import mkdtemp
@@ -30,6 +29,7 @@ from django.contrib.auth.models import User
 from calorine.caro.models import Upload
 from calorine.caro.converters import convert_mp4
 from calorine.caro.utils import move_file
+from calorine.caro.tests.tools import emptydirs
 
 
 class ConvertersTests(TestCase):  # pylint: disable-msg=R0904
@@ -53,7 +53,7 @@ class ConvertersTests(TestCase):  # pylint: disable-msg=R0904
         Clean after test
         """
         for fpath in listdir(self.tpath):
-            unlink(path.join(self.tpath, fpath))
+            emptydirs(path.join(self.tpath, fpath))
         rmdir(self.tpath)
 
     def test_convert_mp4(self):
