@@ -17,7 +17,7 @@ function fetchjson(uuid) {
 		$('#progress_status').html(data.state);
 
 		if (data.state == 'done' || data.state == 'uploading') {
-		    w = (100 * upload.received / upload.size) + '%';
+		    w = (100 * data.received / data.size) + '%';
 		    $('#progress_upload').css('width', w);
 		}
 
