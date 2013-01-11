@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-  pylint: disable-msg=R0801
 #
 # Copyright (c) 2012 Yohann Gabory <yohann@gabory.fr>
-# Copyright (c) 2012 Rodolphe Quiédeville <rodolphe@quiedeville.org>
+# Copyright (c) 2012,2013 Rodolphe Quiédeville <rodolphe@quiedeville.org>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ import json
 from django.conf import settings
 from django.core.cache import cache
 
+logger = logging.getLogger(__name__)
 
 format = "json"
 
@@ -36,6 +37,7 @@ def get_datas(endpoint=settings.LASTFM_ENDPOINT):
         try:
             datas = requests.get(endpoint, params=params, timeout=1).content
         except requests.exceptions.Timeout:
+            logger.error('lastfm API Error on endpoint %s' % endpoint)
             cache.set('lastfm_broken', True, 300)
     return datas
 
@@ -60,7 +62,9 @@ def get_tags(artist, track, endpoint=settings.LASTFM_ENDPOINT):
             response.append(elem['name'])
         return response
     except:
-        return
+        logger.error('lastfm API Error %s on endpoint %s' % (params['method'],
+                                                             endpoint))
+        return []
 
 
 def get_picture(artist, track, size="small", endpoint=settings.LASTFM_ENDPOINT):
