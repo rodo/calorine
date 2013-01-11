@@ -19,10 +19,11 @@
 Models definition for caro app
 """
 import logging
-from django.contrib.auth.models import User
-from django.db import models
 from datetime import datetime
 from datetime import timedelta
+from django.contrib.auth.models import User
+from django.core.cache import cache
+from django.db import models
 
 
 class Song(models.Model):
