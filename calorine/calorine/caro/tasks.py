@@ -38,14 +38,17 @@ logger = logging.getLogger(__name__)
 
 
 @task()
-def mail_uploader(user):
+def mail_uploader(upload):
     """Send an email at the end of upload
     """
-    email = user.email
+    email = upload.user.email
 
     logger.debug("send email to [%s]" % (email))
-    msg = "Thanks,\n\nYou upload is now finish\n"
-    send_mail('Upload',
+    msg = "Thanks,\n\nYour upload is now finish\n\n"
+    msg += "File : %s\n" % upload.filename
+    msg += "Type : %s\n" % upload.content_type
+    msg += "Final status : %s\n" % upload.status
+    send_mail('Upload on calorine',
               msg,
               settings.EMAIL_FROM,
               [email])
@@ -118,7 +121,7 @@ def store_upload(upload):
         importsong(oggname)
         upload.status = 'done'
         upload.save()
-        mail_uploader.delay(upload.user)
+        mail_uploader.delay(upload)
         return 0
 
 
