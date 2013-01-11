@@ -7,26 +7,19 @@
     <div class="span12">
 
       <div>
-	<form name="upload" method="POST" enctype="multipart/form-data" action="/upload/?X-Progress-ID={{uuid}}">
+	<form class="form-inline" name="upload" method="POST" enctype="multipart/form-data" action="/upload/?X-Progress-ID={{uuid}}">
 	  {% csrf_token %}
-	  <input type="file" name="songname" size="40" onchange="enable('submit', this.value)">
+	  <input type="file" name="songname" size="60" onchange="enable('submit', this.value)">
 	  <input id="submit" type="submit" name="submit" value="Upload" disabled onclick="startupload('{{uuid}}')">
 	</form>
       </div>
 
       <div>
-	<span id="progress_filename"></span>
+	<span class="badge badge-success" id="progress_status">Ready</span>
+	<div class="progress progress-striped active">	  
+	  <div id="progress_upload" class="bar" style="width: {{star.percent}}%"></div>
+	</div>
       </div>
-
-      <div>
-	<span id="progress_status"></span>
-      </div>
-
-
-      <div class="progress progress-info">
-	<div id="progress_upload" class="bar" style="width: {{star.percent}}%"></div>
-      </div>
-
     </div>
   </div>
 
