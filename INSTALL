@@ -4,7 +4,8 @@ On Debian Wheezy
 apt-get install python-django \
 		python-django-registration \
 		python-psycopg2 python-mutagen \
-		python-memcache python-whoosh python-django-celery
+		python-memcache python-whoosh python-django-celery \
+		python-requests
 
 Packages for audio files conversion 
 
