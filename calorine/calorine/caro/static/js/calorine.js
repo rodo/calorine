@@ -59,6 +59,9 @@ function onairbutton(id, user_vote) {
 	$('#onairstop').show();
 	$('#onairplus').attr("onclick" ,"inc_onair("+id+")");
 	$('#onairstop').attr("onclick", "dec_onair("+id+")");	
+    } else {
+	$('#onairplus').hide();
+	$('#onairstop').hide();
     }
 }
 
