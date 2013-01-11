@@ -133,6 +133,13 @@ def picture(song):
     """
     Return a picture of the album containing this song
     """
+    pict = None
     if song.cover == '' or song.cover is None:
-
-        return  get_picture(song.artist, song.title)
+        pict = get_picture(song.artist, song.title)
+        if pict:
+            song.cover = pict
+            song.save()
+        else:
+            logger.warning('no picture found for %s %s' % (song.artist,
+                                                           song.title))
+    return pict
