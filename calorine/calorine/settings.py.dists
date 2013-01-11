@@ -21,6 +21,10 @@ DATABASES = {
     }
 }
 #
+# the mails are sent with this from
+#
+EMAIL_FROM = 'no-reply@foo.bar'
+#
 # Your last.fm api key
 # This one does not work
 LASTFM_API_KEY = 'a5446d9f4a6890dd512b4ac03afee400'
