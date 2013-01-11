@@ -18,20 +18,37 @@
 """
 The tasks
 """
-from django.conf import settings
-from django.shortcuts import get_object_or_404
 from time import sleep
 import json
 import requests
 import logging
 from celery.task import task
+from django.core.mail import send_mail
+from django.core.exceptions import ObjectDoesNotExist
+from django.conf import settings
+from django.shortcuts import get_object_or_404
 from calorine.caro.models import Upload
 from calorine.caro.models import Mime
-from django.core.exceptions import ObjectDoesNotExist
 from calorine.caro.utils import move_file
 from calorine.caro.utils import importsong
 from calorine.caro.utils import get_tags
 import calorine.caro.converters
+
+logger = logging.getLogger(__name__)
+
+
+@task()
+def mail_uploader(user):
+    """Send an email at the end of upload
+    """
+    email = user.email_user
+
+    logger.debug("send email to [%s]" % (email))
+    msg = "Thanks,\n\nYou upload is now finish\n"
+    send_mail('Upload',
+              msg,
+              settings.EMAIL_FROM,
+              [email])
 
 
 @task()
@@ -65,13 +82,11 @@ def get_upload_status(uuid, url=settings.NGINX_PROGRESS_URL):
     """
     status = {'state': 'starting'}
     params = {'X-Progress-ID': uuid}
-    logger = logging.getLogger(__name__)
     logger.debug("Connect on nginx progress url [%s]" % (url))
     try:
         datas = requests.get(url, params=params, timeout=1).content
         status = json.loads(datas)
     except requests.ConnectionError:
-        logger = logging.getLogger(__name__)
         logger.info("Cant't connect on nginx progress url [%s]" % (url))
 
     return status
@@ -84,11 +99,9 @@ def store_upload(upload):
     newpath = move_file(upload.path, upload.filename)
     try:
         mime = Mime.objects.get(name=upload.content_type)
-        logger = logging.getLogger(__name__)
         logger.info("will use %s() to convert %s" % (mime.function,
                                                      mime.name))
     except ObjectDoesNotExist:
-        logger = logging.getLogger(__name__)
         logger.error("(%s) wrong mime/type for %s %s" % ('store_upload',
                                                          newpath,
                                                          upload.content_type))
@@ -105,6 +118,7 @@ def store_upload(upload):
         importsong(oggname)
         upload.status = 'done'
         upload.save()
+        mail_uploader.delay(upload.user)
         return 0
 
 
