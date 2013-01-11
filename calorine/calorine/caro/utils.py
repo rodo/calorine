@@ -26,6 +26,7 @@ import hashlib
 import mutagen
 from django.conf import settings
 from django.core.cache import cache
+from django.db.models import Min
 from calorine.caro.models import Logs
 from calorine.utils.lastfm import get_tags
 from calorine.caro.models import Song
@@ -159,10 +160,21 @@ def importsong(fpath):
             else:
                 result = "[X] %s" % exsong[0].title
         else:
-            result = createsong(tags, sig, fpath)
+            result = createsong(tags, sig, fpath, songminplay())
     else:
         logger.error('No tags found in [%s]' % fpath)
 
+    return result
+
+
+def songminplay():
+    """The min played from all songs
+    """
+    played = Song.objects.filter(score__gte=0).aggregate(Min('played'))
+    if played['played__min'] is None:
+        result = 0
+    else:
+        result = played['played__min']
     return result
 
 
@@ -174,7 +186,7 @@ def updatesong(song, fpath):
     return "[U] %s\n" % song.title
 
 
-def createsong(tags, sig, fpath):
+def createsong(tags, sig, fpath, played=0):
     """Create a new song in db
     """
 
@@ -183,6 +195,7 @@ def createsong(tags, sig, fpath):
                                title=tags['title'],
                                genre=tags['genre'],
                                score=0,
+                               played=played,
                                uniq=sig,
                                global_score=0,
                                filename=fpath)

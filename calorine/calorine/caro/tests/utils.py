@@ -21,6 +21,7 @@ Unit tests for urls in caro
 """
 from django.conf import settings
 from django.test import TestCase
+from calorine.caro.models import Song
 from calorine.caro.utils import importdir
 from calorine.caro.utils import checkid3
 from calorine.caro.utils import sigfile
@@ -31,6 +32,7 @@ from calorine.caro.utils import remove_file
 from calorine.caro.utils import readtags
 from calorine.caro.utils import mp3ogg
 from calorine.caro.utils import mp4ogg
+from calorine.caro.utils import songminplay
 from calorine.utils.store_image import store_image
 from os import path
 from django.core.cache import cache
@@ -388,3 +390,35 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
         os.unlink(fpath)
         result = remove_file(fpath)
         self.assertEqual(result, 1)
+
+    def test_songminplay(self):
+        """
+        """
+        Song.objects.create(artist='Van Morrison',
+                            album='The Healing Game',
+                            title='Sometimes We Cry',
+                            genre='Blues',
+                            played=12,
+                            score=0,
+                            global_score=0)
+
+        Song.objects.create(artist='les Brigitte',
+                            album='The Healing Game',
+                            title='Oh la la',
+                            genre='Blues',
+                            played=6,
+                            score=0,
+                            global_score=1)
+
+        result = songminplay()
+
+        self.assertEqual(result, 6)
+
+    def test_songminplay_null(self):
+        """
+        """
+        Song.objects.all().delete()
+
+        result = songminplay()
+
+        self.assertEqual(result, 0)
