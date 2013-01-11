@@ -41,7 +41,7 @@ logger = logging.getLogger(__name__)
 def mail_uploader(user):
     """Send an email at the end of upload
     """
-    email = user.email_user
+    email = user.email
 
     logger.debug("send email to [%s]" % (email))
     msg = "Thanks,\n\nYou upload is now finish\n"
