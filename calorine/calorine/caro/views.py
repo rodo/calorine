@@ -232,7 +232,7 @@ def upload(request):
     logger.info("upload [%s] %s" % (filename, uuid))
     # launch a celery task
     tid = import_upload.delay(uuid)
-    logger.info("launch task id : %s" % (tid))
+    logger.info("launch task id : %s upload %s" % (tid, uuid))
     return redirect('/uploads/')
 
 
