@@ -60,21 +60,11 @@ def import_upload(uuid, maxtime=480, url=settings.NGINX_PROGRESS_URL):
 
     maxtime : number in second to wait max
     """
-    state = 'starting'
-    counter = 1
+    logger.debug(counter)
+    datas = get_upload_status(uuid, url)
 
-    datas = {'state': 'starting'}
-
-    while (counter < maxtime) and (state != 'done'):
-        logger.debug(counter)
-        counter += 1
-        datas = get_upload_status(uuid, url)
-
-        if datas['state'] == 'done':
-            state = 'done'
-            upload = get_object_or_404(Upload, uuid=uuid)
-            store_upload(upload)
-        sleep(1)
+    upload = get_object_or_404(Upload, uuid=uuid)
+    store_upload(upload)
 
     return datas
 
