@@ -30,6 +30,7 @@ from django.db.models import Min
 from calorine.caro.models import Logs
 from calorine.utils.lastfm import get_tags
 from calorine.caro.models import Song
+from calorine.caro.tasks import picture
 import subprocess
 
 logger = logging.getLogger(__name__)
@@ -199,6 +200,9 @@ def createsong(tags, sig, fpath, played=0):
                                uniq=sig,
                                global_score=0,
                                filename=fpath)
+    # lookup to fill cover
+    picture.delay(song)
+    
     if hasattr(song, 'title') and song.title != '':
         try:
             song.genre += ','.join(get_tags(song.artist, song.title))
