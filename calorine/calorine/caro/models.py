@@ -189,7 +189,7 @@ class Upload(models.Model):
     user = models.ForeignKey(User)
     uuid = models.CharField(max_length=64)
     path = models.CharField(max_length=300)
-    filename = models.CharField(max_length=100)
+    filename = models.CharField(max_length=300)
     content_type = models.CharField(max_length=30)
     date_upload = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=32,
