@@ -29,9 +29,7 @@ from django.core.cache import cache
 from calorine.caro.models import Logs
 from calorine.utils.lastfm import get_tags
 from calorine.caro.models import Song
-from calorine.caro.models import Vote
 import subprocess
-import hashlib
 
 logger = logging.getLogger(__name__)
 
@@ -107,7 +105,7 @@ def onair_datas(userid):
     voted = cache.get(song_key)
 
     if voted is None:
-        voted = 'null';
+        voted = 'null'
 
     datas = {'artist': artist,
              'title': title,
@@ -221,7 +219,7 @@ def getormakedir(base, random):
 
     Return (string) the path
     """
-    sha = hashlib.sha224(random).hexdigest()
+    sha = hashlib.sha224(random).hexdigest()  # pylint: disable-msg=E1101
     newdir = os.path.join(base, sha[0], sha[1])
     if not os.path.exists(newdir):
         logger.debug("create dir %s" % newdir)
@@ -295,7 +293,7 @@ def mp3ogg(fname, datas):
                                stdout=subprocess.PIPE)
 
         ogg = subprocess.Popen(command,
-                               stdin=mpg.stdout,
+                               stdin=mpg.stdout,  # pylint: disable-msg=E1101
                                stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE)
         (stdout, stderr) = ogg.communicate()
