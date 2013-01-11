@@ -178,7 +178,7 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
                    'title': title,
                    'album': album,
                    'songid': '42',
-                   'user_vote': None}
+                   'user_vote': 'null'}
 
         self.assertEqual(datas, attends)
 
@@ -197,7 +197,7 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
                    'title': None,
                    'album': None,
                    'songid': None,
-                   'user_vote': None}
+                   'user_vote': 'null'}
 
         self.assertEqual(datas, attends)
 
