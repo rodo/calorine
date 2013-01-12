@@ -28,7 +28,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         i = 0
-        songs = Song.objects.filter(cover='')
+        songs = Song.objects.filter(cover__isnull=True)
         for song in songs:
             picture.delay(song)
             i += 1
