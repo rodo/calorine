@@ -674,7 +674,7 @@ class CommandTests(TestCase):  # pylint: disable-msg=R0904
         content = StringIO()
         call_command('ircdislike', userp.ircnick, stdout=content)
         content.seek(0)
-                
+
         self.assertEqual(before, 10)
         self.assertEqual(Song.objects.get(pk=song.id).global_score, 9)
 
