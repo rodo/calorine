@@ -46,7 +46,7 @@ from calorine.caro.tests.tools import emptydirs
 
 class UtilsTests(TestCase):  # pylint: disable-msg=R0904
     """
-    The url view
+    Test on function in utils.py
 
     """
     def setUp(self):
@@ -384,7 +384,9 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
         self.assertFalse(os.path.exists(fpath))
 
     def test_remove_file_unc(self):
-        """Un successfuly remove file
+        """Unsuccessfuly remove file
+
+        The path does not exists the function return 1
         """
         fpath = mkstemp()[1]
         os.unlink(fpath)
@@ -393,6 +395,7 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
 
     def test_songminplay(self):
         """
+        songminplay return the right value under regulary conditions
         """
         Song.objects.create(artist='Van Morrison',
                             album='The Healing Game',
@@ -416,6 +419,7 @@ class UtilsTests(TestCase):  # pylint: disable-msg=R0904
 
     def test_songminplay_null(self):
         """
+        Return 0 when database is empty
         """
         Song.objects.all().delete()
 
