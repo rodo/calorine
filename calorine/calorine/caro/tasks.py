@@ -18,7 +18,6 @@
 """
 The tasks
 """
-from time import sleep
 import json
 import requests
 import logging
