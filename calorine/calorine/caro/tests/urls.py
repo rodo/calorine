@@ -494,3 +494,51 @@ class UrlsTests(TestCase):  # pylint: disable-msg=R0904
         client.login(username='admin_search', password='admintest')
         response = client.get('/votes/')
         self.assertContains(response, self.user.username, status_code=200)
+
+    def test_song_vote_plus(self):
+        """
+        Vote for a song
+        """
+        song = Song.objects.create(artist='Portishead',
+                                   album='Dummy',
+                                   title='Mysterons',
+                                   genre='Rock',
+                                   score=0,
+                                   family=0,
+                                   global_score=4)
+
+        client = Client()
+        client.login(username='admin_search', password='admintest')
+        response = client.get('/songvote/inc/%d' % song.id)
+
+        attend = {"entry":
+                      {"score": 5,
+                       "id": song.id
+                       }
+                  }
+
+        self.assertTrue(type(eval(response.content)) is dict)
+
+    def test_song_vote_neg(self):
+        """
+        Negative vote for a song
+        """
+        song = Song.objects.create(artist='Portishead',
+                                   album='Dummy',
+                                   title='Mysterons',
+                                   genre='Rock',
+                                   score=0,
+                                   family=0,
+                                   global_score=4)
+
+        client = Client()
+        client.login(username='admin_search', password='admintest')
+        response = client.get('/songvote/dec/%d' % song.id)
+
+        attend = {"entry":
+                      {"score": 5,
+                       "id": song.id
+                       }
+                  }
+
+        self.assertTrue(type(eval(response.content)) is dict)
