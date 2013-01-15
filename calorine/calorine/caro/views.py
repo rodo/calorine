@@ -110,7 +110,12 @@ class PopsList(NeverList):  # pylint: disable-msg=R0901
 
 
 class ScoreNull(NeverList):  # pylint: disable-msg=R0901
-    queryset = Song.objects.filter(global_score=0)
+    """
+    Song never requested by a human
+    """
+    queryset = Song.objects.filter(global_score=0,
+                                   played__lt=2,
+                                   played__gt=-1)
 
 
 class UglyList(NeverList):  # pylint: disable-msg=R0901
