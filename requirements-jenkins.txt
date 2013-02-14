@@ -1,0 +1,15 @@
+#
+# Required packages to run Calorine
+#
+#
+#  following package are for running tests
+#
+nosexcover
+django-nose
+pep8
+flake8
+#
+#  For jenkins
+#
+django-jenkins
+gcovr
