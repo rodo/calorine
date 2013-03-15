@@ -192,7 +192,7 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
         Upload.objects.all().delete()
         upl = Upload.objects.create(uuid='123456789',
                                     user=self.user,
-                                    path='/tmp/123456789',
+                                    path=self.tpath,
                                     filename='The Healing Game.ogg',
                                     content_type='application/ogg')
 
