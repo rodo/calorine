@@ -183,23 +183,6 @@ class TasksTests(TestCase):  # pylint: disable-msg=R0904
                                     content_type='audio/mp3')
         self.assertEqual(store_upload(upl), 2)
 
-    def test_importupload_failed(self):
-        """
-        Simple upload
-
-        Assume the nginx server will not answer
-        """
-        Upload.objects.all().delete()
-        upl = Upload.objects.create(uuid='123456789',
-                                    user=self.user,
-                                    path=self.tpath,
-                                    filename='The Healing Game.ogg',
-                                    content_type='application/ogg')
-
-        result = import_upload(upl.uuid, 2)
-
-        self.assertEqual(result['state'], 'starting')
-
     def test_importupload_success(self):
         """
         Simple upload
