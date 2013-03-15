@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2012 Rodolphe Quiédeville <rodolphe@quiedeville.org>
+# Copyright (c) 2012,2013 Rodolphe Quiédeville <rodolphe@quiedeville.org>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 """
-Unit tests for urls in caro
+Unit tests for template tags in caro
 
 """
 from django.test import TestCase
@@ -27,7 +27,6 @@ from calorine.caro.templatetags.lastfm import picture
 class TemplateTagsTests(TestCase):  # pylint: disable-msg=R0904
     """
     TemplateTags
-
     """
 
     def test_picture(self):
@@ -68,7 +67,7 @@ class TemplateTagsTests(TestCase):  # pylint: disable-msg=R0904
 
     def test_picture_baddatas2(self):
         """
-        Test with a song that must nor return a cover
+        Test with a song that must not return a cover
         """
         song = Song.objects.create(artist='Foobar',
                                    album='Sure this album does not exists',
@@ -97,5 +96,6 @@ class TemplateTagsTests(TestCase):  # pylint: disable-msg=R0904
                                    global_score=0)
 
         response = picture(song)
-        attend = {'picture': song.cover}
+        url = u'http://userserve-ak.last.fm/serve/64s/57976973.png'
+        attend = {'picture': url}
         self.assertEqual(response, attend)
