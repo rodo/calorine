@@ -280,8 +280,11 @@ class Song():
     def insertfile(self, datas):
         """
         Insert datas in database
+        
+        Global score is set to 1 at creation to push the song in the
+        mains stream
         """
-        query = """INSERT INTO caro_song (score, filename, artist, album, title, genre, played, uniq, global_score, family) VALUES (0, %s, %s, %s, %s, %s, 0, %s, 0, 0);"""
+        query = """INSERT INTO caro_song (score, filename, artist, album, title, genre, played, uniq, global_score, family) VALUES (0, %s, %s, %s, %s, %s, 0, %s, 1, 0);"""
         cur = self.conn.cursor()
         try:
             cur.execute(query, (datas[0],
