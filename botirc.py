@@ -92,8 +92,8 @@ class BotCalorine(ircbot.SingleServerIRCBot):
         canal = event.target()
         message = event.arguments()[0].lower() # Les insultes sont écrites en minuscules.
 
-        insultes = ["con ", "pute", "connard", "salope", "salop", "crétin",
-                    "pétasse ", "putain", "bordel "," chier "]
+        insultes = [" con ", " pute ", " connard ", " salope ", " salop ", " crétin ",
+                    "pétasse ", " putain ", " bordel "," chier "]
 
         for insulte in insultes:
             if insulte in message:
