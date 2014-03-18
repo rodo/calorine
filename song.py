@@ -24,6 +24,7 @@
 import psycopg2
 import memcache
 import mutagen
+from random import randint
 import sys
 from os import path
 from optparse import OptionParser
@@ -157,8 +158,8 @@ class Song():
         """
         Fetch song from playlist
         """
-        query = """SELECT s.id, s.filename, s.score FROM caro_playlistentry AS p, caro_song as s WHERE s.id = p.song_id AND s.score >= 0 ORDER BY p.score DESC, p.date_add ASC LIMIT 1"""
-        rows = self.fetchfile(query)
+        query = """SELECT s.id, s.filename, s.score FROM caro_playlistentry AS p, caro_song as s WHERE s.id = p.song_id AND s.score >= 0 ORDER BY p.score DESC, p.date_add ASC LIMIT %s"""
+        rows = self.fetchfile(query, (1,))
         return rows
 
     def next_random(self):
@@ -168,12 +169,12 @@ class Song():
         query = """SELECT id, filename, score FROM caro_song """
         query = query + """WHERE score >= 0 AND ( played = 0 """
         query = query + """ OR (played > 0 AND global_score > 0 ) )"""
-        query = query + """ORDER by played ASC, global_score DESC, uniq ASC LIMIT 1"""
-        rows = self.fetchfile(query)
+        query = query + """ORDER by played ASC, global_score DESC, uniq ASC LIMIT %s OFFSET %s"""
+        rows = self.fetchfile(query, (1, randint(1,100),))
         return rows
 
 
-    def fetchfile(self, query):
+    def fetchfile(self, query, parms):
         """
         Fetch file from db and mark it as deleted if not exists
         """
@@ -183,7 +184,7 @@ class Song():
         limit = 1000
         datas = None
         while (not exists) and (i < limit):
-            cur.execute(query)
+            cur.execute(query, parms)
             rows = cur.fetchall()
             if len(rows) == 0:
                 break
