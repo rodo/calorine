@@ -32,6 +32,7 @@ logger = logging.getLogger(__name__)
 class Command(BaseCommand):
     args = '<ircnick>'
     help = 'Like a song'
+    song = None
 
     def handle(self, *args, **options):
 
@@ -74,5 +75,5 @@ class Command(BaseCommand):
             return -1
 
         songs = HistoryEntry.objects.values('song').order_by('-pk')[:1]
-        song = Song.objects.get(pk=songs[0]['song'])
+        self.song = Song.objects.get(pk=songs[0]['song'])
         return song.userlike(userp.user)
