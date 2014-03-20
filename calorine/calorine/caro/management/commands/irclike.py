@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 
 class Command(BaseCommand):
     args = '<ircnick>'
-    help = 'Import recursively all ogg file in a directory'
+    help = 'Like a song'
 
     def handle(self, *args, **options):
 
@@ -54,7 +54,13 @@ class Command(BaseCommand):
             self.stdout.write(msg)
             return "\n"
         else:
-            self.stdout.write(u'''Merci pour ton vote %s''' % args[0])
+            infos = (self.song.artist,
+                     self.song.title,
+                     args[0],
+                     self.song.global_score + 1)
+            msg = '''Tu aimes "%s %s" %s, je le note %d''' % infos
+            self.stdout.write(msg)
+            #self.stdout.write(u'''Merci pour ton vote %s''' % args[0])
             return "\n"
 
     def irclike(self, nick):
