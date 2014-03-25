@@ -113,6 +113,7 @@ class PlaylistEntry(models.Model):
     song = models.ForeignKey(Song)
     date_add = models.DateTimeField()
     score = models.IntegerField(verbose_name='score', blank=True)
+    rank = models.IntegerField(default=0, blank=True)
 
     def __unicode__(self):
         """

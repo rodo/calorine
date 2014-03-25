@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2013 Rodolphe Quiédeville <rodolphe@quiedeville.org>
+# Copyright (c) 2013,2014 Rodolphe Quiédeville <rodolphe@quiedeville.org>
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -158,7 +158,7 @@ class Song():
         """
         Fetch song from playlist
         """
-        query = """SELECT s.id, s.filename, s.score FROM caro_playlistentry AS p, caro_song as s WHERE s.id = p.song_id AND s.score >= 0 ORDER BY p.score DESC, p.date_add ASC LIMIT %s"""
+        query = """SELECT s.id, s.filename, s.score FROM caro_playlistentry AS p, caro_song as s WHERE s.id = p.song_id AND s.score >= 0 ORDER BY p.score DESC, p.rank, p.date_add ASC LIMIT %s"""
         rows = self.fetchfile(query, (1,))
         return rows
 

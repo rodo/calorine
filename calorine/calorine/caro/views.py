@@ -164,7 +164,7 @@ class StarUploadList(StarList):  # pylint: disable-msg=R0901
 
 
 class PlayList(ListView):
-    queryset = PlaylistEntry.objects.all().order_by('-score', 'date_add')
+    queryset = PlaylistEntry.objects.all().order_by('-score', 'rank', 'date_add')
     paginate_by = 17
     template_name = 'playlist.html'
     context_object_name = "songs"
