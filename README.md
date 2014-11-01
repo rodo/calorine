@@ -1,3 +1,5 @@
+[![Requirements Status](https://requires.io/github/rodo/calorine/requirements.svg?branch=master)](https://requires.io/github/rodo/calorine/requirements/?branch=master)
+
 Calorine
 ========
 
