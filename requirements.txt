@@ -1,7 +1,7 @@
 #
 # Required packages to run Calorine
 #
-Django>=1.4
+Django==1.6.8
 django-registration
 django-tastypie
 python-memcached
@@ -11,3 +11,4 @@ requests
 Pillow
 celery==3.1.16
 django-celery==3.1.16
+psycopg2
