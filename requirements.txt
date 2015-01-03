@@ -4,11 +4,13 @@
 Django==1.6.8
 django-registration
 django-tastypie
+django-haystack
 python-memcached
 whoosh
 mutagen
 requests
 Pillow
+Spellchecker
 celery==3.1.17
 django-celery==3.1.16
 psycopg2
