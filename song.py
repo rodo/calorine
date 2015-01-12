@@ -37,6 +37,7 @@ class Song():
 
     def __init__(self):
         """Class initialization"""
+        self.listener = ""
         self.conf = self.readopts()
         self.memcache = self._memcache_conn()
         self.conn = psycopg2.connect(self.conf)
@@ -76,7 +77,14 @@ class Song():
                           dest="port",
                           default=None)
 
+        parser.add_option("--listener",
+                          action="store",
+                          type="string",
+                          dest="listener",
+                          default=None)
+
         (options, args) = parser.parse_args()
+        self.listener = options.listener
 
         if options.dbname is None:
             print "dbname is mandatory"
@@ -152,6 +160,24 @@ class Song():
         self.conn.commit()
 
         return filename
+
+
+    def userpl(self):
+        """
+        Fetch favorites songs from a user
+        """
+        qry = " ".join(["SELECT distinct(s.filename) from caro_song s",
+                        "INNER JOIN caro_vote v on s.id=v.song_id",
+                        "INNER JOIN auth_user u on u.id=v.user_id",
+                        "WHERE u.username=%s"])
+
+        cur = self.conn.cursor()
+        cur.execute(qry, (self.listener,))
+        datas = cur.fetchall()
+        cur.close()
+
+        rows = [row[0] for row in datas]
+        return rows
 
 
     def next_playlist(self):
